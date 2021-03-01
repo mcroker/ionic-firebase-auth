@@ -1,6 +1,8 @@
 // @angular/*
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
 
 // Mal
 import { MalSharedModule } from 'ngx-firebase';
@@ -45,10 +47,10 @@ export const IONIC_AUTH_UI_ROUTER_CONFIG = [
   imports: [
     MalSharedModule,
     MalIonicModule,
+    IonicModule,
+    CommonModule,
     MalIonicUISharedModule,
-    // HTTP
-    HttpClientModule,
-    // IONIC
+    HttpClientModule
   ],
   exports: [
     COMPONENTS,

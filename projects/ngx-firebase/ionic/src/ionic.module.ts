@@ -1,6 +1,10 @@
 // @angular/*
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common'
+
+// Ionic
+import { IonicModule } from '@ionic/angular';
 
 // Mal
 import { MalSharedModule } from 'ngx-firebase';
@@ -30,14 +34,12 @@ const COMPONENTS = [
 @NgModule({
   imports: [
     MalSharedModule,
-    // HTTP
+    CommonModule,
     HttpClientModule,
-    // IONIC
+    IonicModule
   ],
   exports: COMPONENTS,
   declarations: COMPONENTS,
-  entryComponents: [
-  ],
   providers:
     [
       { provide: MalAlertsUIProviderToken, useClass: MalIonicAlertsService },
