@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, NgControl, ValidationErrors } from '@angular/forms';
-import { MalService } from 'ngx-firebase';
+import { UiService } from 'ngx-firebase';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ export class AuthUIFormFieldComponent {
       : of([])
     ),
     catchError(error => {
-      this.mal.logError(error);
+      this.ui.logError(error);
       return of([error.message]);
     })
   );
@@ -54,7 +54,7 @@ export class AuthUIFormFieldComponent {
   @Input() hintEnd?: string;
 
   constructor(
-    private mal: MalService
+    private ui: UiService
   ) { }
 
   private flattenErrors(errors: ValidationErrors | null): string[] {

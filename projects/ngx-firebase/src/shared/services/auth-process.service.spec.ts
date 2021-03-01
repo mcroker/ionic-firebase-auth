@@ -3,13 +3,14 @@ import { CrashlyticsService } from './crashlytics.service';
 import { FirestoreSyncService } from './firestore-sync.service';
 import { AuthProvider, IAuthMergeUserService, malSharedConfigFactory } from '../interfaces';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ICredentialFactoryProvider, ILoadingUIProvider, IToastUIProvider, ILegalityDialogUIProvider  } from '../interfaces';
+import { ICredentialFactoryProvider } from '../interfaces';
 import {
-    MalInternalFakeCrashlyticsService, MalInternalFakeLoadingService, MalInternalFakeToastService, MalInternalFakeAngularFireAuth,
-    MalInternalFakeUserCredential, DUMMYAUTHERROR, MalInternalFakeFirestoreSyncService
+    MalInternalFakeCrashlyticsService, MalInternalFakeAngularFireAuth,
+    MalInternalFakeUserCredential, DUMMYAUTHERROR, MalInternalFakeFirestoreSyncService, MalInternalFakeUiService
 } from '../../test/fakes';
 import { MalSharedConfig } from '../interfaces';
 import { User, AuthCredential } from '@firebase/auth-types';
+import { UiService } from './ui.service';
 
 class FakeCredFactory implements ICredentialFactoryProvider {
     isProviderSupported(provider: AuthProvider): Promise<boolean> { return Promise.resolve(true) };
@@ -26,9 +27,7 @@ describe('AuthProcessService', () => {
     let fakeFirestoreSyncService: FirestoreSyncService & MalInternalFakeFirestoreSyncService;
     let fakeAfa: AngularFireAuth & MalInternalFakeAngularFireAuth;
     let fakeCrashlticsService: MalInternalFakeCrashlyticsService & CrashlyticsService;
-    let fakeLoading: ILoadingUIProvider & MalInternalFakeLoadingService;
-    let fakeToastService: MalInternalFakeToastService & IToastUIProvider;
-    let spyLegalityDialogService: jasmine.SpyObj<ILegalityDialogUIProvider>;
+    let fakeUiService: MalInternalFakeUiService & UiService;
 
     beforeEach(() => {
 
@@ -38,9 +37,7 @@ describe('AuthProcessService', () => {
         fakeFirestoreSyncService = MalInternalFakeFirestoreSyncService.create();
         fakeAfa = MalInternalFakeAngularFireAuth.create();
         fakeCrashlticsService = MalInternalFakeCrashlyticsService.create();
-        fakeLoading = MalInternalFakeLoadingService.create();
-        fakeToastService = MalInternalFakeToastService.create();
-        spyLegalityDialogService = jasmine.createSpyObj<ILegalityDialogUIProvider>('LegalityDialogService', ['confirmTos']);
+        fakeUiService = MalInternalFakeUiService.create();
 
         aps = new AuthProcessService(
             config,
@@ -49,16 +46,14 @@ describe('AuthProcessService', () => {
             fakeFirestoreSyncService,
             fakeAfa,
             fakeCrashlticsService,
-            fakeLoading,
-            fakeToastService,
-            spyLegalityDialogService
+            fakeUiService
         );
 
     });
 
     afterEach(() => {
         // No function should leave the spinner visible
-        expect(fakeLoading.isVisible).toBeFalse();
+        expect(fakeUiService.isLoadingVisible).toBeFalse();
     });
 
     it('should create', () => {
@@ -128,7 +123,7 @@ describe('AuthProcessService', () => {
                     skipTosCheck: true
                 });
                 expect(userCred).toBe(fakeCredResponse);
-                expect(spyLegalityDialogService.confirmTos).not.toHaveBeenCalled();
+                expect(fakeUiService.confirmTos).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.sendEmailVerification).toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).toHaveBeenCalledWith(
                     { displayName: 'testDisplayName', photoURL: undefined }
@@ -150,9 +145,9 @@ describe('AuthProcessService', () => {
                     credentials: { email: 'm@m.com', password: 'p' },
                     displayName: 'testDisplayName'
                 });
-                spyLegalityDialogService.confirmTos.and.resolveTo(false);
+                fakeUiService.confirmTos.and.resolveTo(false);
                 expect(userCred).toBeNull();
-                expect(spyLegalityDialogService.confirmTos).toHaveBeenCalled();
+                expect(fakeUiService.confirmTos).toHaveBeenCalled();
                 expect(fakeAfa.createUserWithEmailAndPassword).not.toHaveBeenCalled();
             });
 
@@ -165,9 +160,9 @@ describe('AuthProcessService', () => {
                     credentials: { email: 'm@m.com', password: 'p' },
                     displayName: 'testDisplayName'
                 });
-                spyLegalityDialogService.confirmTos.and.resolveTo(false);
+                fakeUiService.confirmTos.and.resolveTo(false);
                 expect(userCred).toBeNull();
-                expect(spyLegalityDialogService.confirmTos).toHaveBeenCalled();
+                expect(fakeUiService.confirmTos).toHaveBeenCalled();
                 expect(fakeAfa.createUserWithEmailAndPassword).not.toHaveBeenCalled();
             });
 
@@ -177,7 +172,7 @@ describe('AuthProcessService', () => {
             it('User accepts Privacy Policy and/or ToS', async () => {
                 config.authUi.privacyPolicyUrl = 'not empty';
                 config.authUi.tosUrl = 'not empty';
-                spyLegalityDialogService.confirmTos.and.resolveTo(true);
+                fakeUiService.confirmTos.and.resolveTo(true);
                 const fakeCredResponse = new MalInternalFakeUserCredential();
                 fakeAfa.createUserWithEmailAndPassword.and.callFake(async () => {
                     fakeAfa._user$.next(fakeCredResponse.user);
@@ -475,7 +470,7 @@ describe('AuthProcessService', () => {
                 expect(userCred).toBeNull();
                 expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.createUserWithEmailAndPassword).not.toHaveBeenCalled();
-                expect(spyLegalityDialogService.confirmTos).not.toHaveBeenCalled();
+                expect(fakeUiService.confirmTos).not.toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
                 expect(fakeAfa.updateCurrentUser).not.toHaveBeenCalled();
                 expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
@@ -490,7 +485,7 @@ describe('AuthProcessService', () => {
                 expect(userCred).toBeNull();
                 expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInWithPopup).not.toHaveBeenCalled();
-                expect(spyLegalityDialogService.confirmTos).not.toHaveBeenCalled();
+                expect(fakeUiService.confirmTos).not.toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
                 expect(fakeAfa.updateCurrentUser).not.toHaveBeenCalled();
                 expect(fakeCrashlticsService.recordException).toHaveBeenCalled();

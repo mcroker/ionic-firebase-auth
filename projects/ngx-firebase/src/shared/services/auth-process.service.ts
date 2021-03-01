@@ -15,12 +15,13 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreSyncService } from './firestore-sync.service';
 import { CrashlyticsService } from './crashlytics.service';
 import {
-  ILoadingUIProvider, MalLoadingUIProviderToken, MalCredentialFactoryProviderToken,
-  MalMergeUserServiceToken, MalSharedConfigToken, IToastUIProvider, MalToastUIProviderToken,
-  ILegalityDialogUIProvider, MalLegaliyDialogUIProiderToken,
+  MalCredentialFactoryProviderToken,
+  MalMergeUserServiceToken, MalSharedConfigToken,
   MalSharedConfig, AuthProvider, ISignInOptions, Accounts, IAuthMergeUserService,
   ICredentialFactoryProvider, FirebaseErrorCodes
 } from '../interfaces';
+import { UiService } from './ui.service';
+import { FirebaseService } from './firebase.service';
 
 @Injectable({
   providedIn: 'root',
@@ -124,9 +125,7 @@ export class AuthProcessService {
     private fireStoreService: FirestoreSyncService,
     @Optional() private afa: AngularFireAuth,
     private crashlytics: CrashlyticsService,
-    @Inject(forwardRef(() => MalLoadingUIProviderToken)) private loading: ILoadingUIProvider,
-    @Inject(forwardRef(() => MalToastUIProviderToken)) private toast: IToastUIProvider,
-    @Inject(forwardRef(() => MalLegaliyDialogUIProiderToken)) private legalityDialogue: ILegalityDialogUIProvider
+    private ui: UiService
   ) {
     if (this.afa) {
       this.afa.user.subscribe(user => this._user$.next(user));
@@ -200,7 +199,7 @@ export class AuthProcessService {
       if (this.afa) {
         this.crashlytics.addLogMessage('Password reset email sent');
         this.afa.sendPasswordResetEmail(email);
-        this.toast.open(
+        this.ui.toast(
           'auth.resetPassword.onResetRequestedTo',
           { duration: this.config.authUi.toastDefaultDurationMil, interpolateParams: { email }, position: 'bottom' }
         );
@@ -228,7 +227,7 @@ export class AuthProcessService {
     : Promise<UserCredential | null> {
 
     this.crashlytics.addLogMessage(`SignInWithProvider; provider=${provider}`);
-    const loading = await this.loading.create();
+    const loading = await this.ui.createLoading();
     if (!this.afa) {
       return null;
     }
@@ -314,7 +313,7 @@ export class AuthProcessService {
     }
 
     this.crashlytics.addLogMessage(`reauthenicateWithProvider; provider=${provider}`);
-    const loading = await this.loading.create();
+    const loading = await this.ui.createLoading();
     try {
       let userCred: UserCredential | null = null;
 
@@ -386,7 +385,7 @@ export class AuthProcessService {
       return null;
     }
     this.crashlytics.addLogMessage(`Linking current anon user to provider; provider=${provider}`);
-    const loading = await this.loading.create();
+    const loading = await this.ui.createLoading();
     try {
       const currentUser = await this.afa.currentUser;
       if (null === currentUser) {
@@ -461,7 +460,7 @@ export class AuthProcessService {
     }
 
     this.crashlytics.addLogMessage(`SigningUp with provider; provider=${provider}`);
-    const loading = await this.loading.create();
+    const loading = await this.ui.createLoading();
     try {
 
       // If the current user is anonymous - link the credentials to the existing user.
@@ -525,7 +524,7 @@ export class AuthProcessService {
    */
   private async confirmTos() {
     if (this.config.authUi.tosUrl || this.config.authUi.privacyPolicyUrl) {
-      return await this.legalityDialogue.confirmTos();
+      return await this.ui.confirmTos();
     } else {
       return true;
     }
@@ -687,7 +686,7 @@ export class AuthProcessService {
       const successMessage = ('string' === typeof this.config.authUi.toastMessageOnAuthSuccess)
         ? this.config.authUi.toastMessageOnAuthSuccess
         : `Hello ${cred.user.displayName ? cred.user.displayName : ''}!`;
-      this.toast.open(successMessage, { duration: this.config.authUi.toastDefaultDurationMil });
+      this.ui.toast(successMessage, { duration: this.config.authUi.toastDefaultDurationMil });
     }
   }
 
@@ -734,7 +733,7 @@ export class AuthProcessService {
     this.onErrorEmitter.emit(error);
     if (this.config.authUi.toastMessageOnAuthError) {
       const message = ((error) ? error.toString() : undefined) || 'auth.common.pleaseRetry';
-      await this.toast.open(message, { duration: this.config.authUi.toastDefaultDurationMil });
+      await this.ui.toast(message, { duration: this.config.authUi.toastDefaultDurationMil });
     }
   }
 

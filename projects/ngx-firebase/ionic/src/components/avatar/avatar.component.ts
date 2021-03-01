@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PopoverController } from '@ionic/angular';
 import { LinkMenuItem, AuthPopoverMenuComponent } from '../popover-menu';
-import { AuthProcessService, MalService } from 'ngx-firebase';
+import { AuthProcessService, UiService, FirebaseService } from 'ngx-firebase';
 
 @Component({
   selector: 'mal-auth-avatar',
@@ -61,7 +61,8 @@ export class AuthAvatarComponent {
   constructor(
     public aps: AuthProcessService,
     private popoverController: PopoverController,
-    private mal: MalService
+    private ui: UiService,
+    private fire: FirebaseService
   ) {
   }
 
@@ -94,12 +95,12 @@ export class AuthAvatarComponent {
 
   async signOut() {
     try {
-      this.mal.addLogMessage('Starting signOut');
+      this.fire.addLogMessage('Starting signOut');
       await this.aps.signOut();
       // Sign-out successful.
       this.onSignOut.emit();
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 

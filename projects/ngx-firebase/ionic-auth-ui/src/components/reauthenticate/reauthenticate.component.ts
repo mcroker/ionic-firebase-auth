@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopoverController } from '@ionic/angular';
-import { AuthProcessService, AuthProvider, MalService } from 'ngx-firebase';
+import { AuthProcessService, AuthProvider, UiService } from 'ngx-firebase';
 import { map } from 'rxjs/operators';
 import { NgxAuthFirebaseuiAnimations } from '../../animations';
 
@@ -42,7 +42,7 @@ export class AuthUIReauthenticateComponent implements AfterViewInit {
   constructor(
     // tslint:disable-next-line @typescript-eslint/ban-types
     public aps: AuthProcessService,
-    private mal: MalService,
+    private ui: UiService,
     private changeDetectorRef: ChangeDetectorRef,
     private popoverController: PopoverController
   ) { }
@@ -66,7 +66,7 @@ export class AuthUIReauthenticateComponent implements AfterViewInit {
         AuthProvider.EmailAndPassword, { credentials: { email: this.aps.user.email, password: this.reauthForm.value.password } }
       );
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     } finally {
       await this.dismiss();
     }
@@ -76,7 +76,7 @@ export class AuthUIReauthenticateComponent implements AfterViewInit {
     try {
       this.aps.reauthenicateWithProvider(provider);
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 

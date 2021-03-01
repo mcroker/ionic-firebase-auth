@@ -32,6 +32,7 @@ export interface IPerformanceTrace {
     stop: () => void;
     putAttribute: (key: string, value: any) => void;
 }
+
 export interface ContextOptions {
     key: string;
     value: string | number | boolean;

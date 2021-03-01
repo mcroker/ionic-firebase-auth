@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, Inject, forwardRef } from '@angular/core';
-import { AuthProcessService, AuthProvider, MalSharedConfigToken, MalSharedConfig, MalService } from 'ngx-firebase';
+import { AuthProcessService, AuthProvider, MalSharedConfigToken, MalSharedConfig, UiService } from 'ngx-firebase';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { NgxAuthFirebaseuiAnimations } from '../../animations';
 
 export enum Layout {
@@ -60,14 +60,14 @@ export class AuthProvidersComponent {
     // Map to display type
     map(providers => providers.map(item => displayProviders[item])),
     catchError(error => {
-      this.mal.logError(error);
+      this.ui.logError(error);
       return of([]);
     })
   );
 
   constructor(
     public aps: AuthProcessService,
-    public mal: MalService,
+    public ui: UiService,
     @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig
   ) {
   }

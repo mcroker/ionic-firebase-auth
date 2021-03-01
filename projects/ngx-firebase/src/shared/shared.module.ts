@@ -37,7 +37,8 @@ import { CrashlyticsService } from './services/crashlytics.service';
 import { AnalyticsService } from './services/analytics.service';
 import { RemoteConfigService } from './services/remoteconfig.service';
 import { PerformanceService } from './services/performance.service';
-import { MalService } from './services/mal.service';
+import { FirebaseService } from './services/firebase.service';
+import { UiService } from './services/ui.service';
 
 const COMPONENTS = [
   ValueAccessorControlComponent,
@@ -153,7 +154,8 @@ export class MalSharedModule {
           },
           AnalyticsService,
           CrashlyticsService,
-          MalService,
+          FirebaseService,
+          UiService,
           RemoteConfigService,
           AuthProcessService,
           FirestoreSyncService,

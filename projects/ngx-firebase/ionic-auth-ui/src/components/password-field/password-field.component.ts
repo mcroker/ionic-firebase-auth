@@ -3,7 +3,7 @@ import {
     AbstractControl, ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators,
     FormGroup, NG_VALIDATORS, Validator, ValidationErrors, NgControl
 } from '@angular/forms';
-import { MalService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
+import { UiService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { confirmPasswordValidator, passwordStrengthValidator } from './passwordValidatorFunctions';
@@ -70,7 +70,7 @@ export class AuthUIPasswordFieldComponent implements ControlValueAccessor, Valid
         @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig,
         private injector: Injector,
         private cdRef: ChangeDetectorRef,
-        private mal: MalService
+        private ui: UiService
     ) {
         this.setValidators();
         this.form.controls.password.valueChanges
@@ -80,7 +80,7 @@ export class AuthUIPasswordFieldComponent implements ControlValueAccessor, Valid
                     this.form.controls.passwordConfirm.updateValueAndValidity();
                     this.propogateChange(val);
                 } catch (error) {
-                    this.mal.logError(error);
+                    this.ui.logError(error);
                 }
             });
         this.form.statusChanges
@@ -89,7 +89,7 @@ export class AuthUIPasswordFieldComponent implements ControlValueAccessor, Valid
                 try {
                     this.propogateValidationChange()
                 } catch (error) {
-                    this.mal.logError(error);
+                    this.ui.logError(error);
                 }
             });
     }

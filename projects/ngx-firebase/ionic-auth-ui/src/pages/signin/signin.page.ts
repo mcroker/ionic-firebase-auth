@@ -2,7 +2,7 @@ import { Component, forwardRef, Inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { NgxAuthFirebaseuiAnimations } from '../../animations';
-import { AuthProcessService, MalSharedConfigToken, MalSharedConfig, MalService } from 'ngx-firebase';
+import { AuthProcessService, MalSharedConfigToken, MalSharedConfig, UiService, FirebaseService } from 'ngx-firebase';
 
 export interface SocialProvider {
   name: string;
@@ -21,12 +21,13 @@ export class AuthSignInPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private aps: AuthProcessService,
     private navController: NavController,
-    private mal: MalService,
+    private ui: UiService,
+    private fire: FirebaseService,
     @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig,
   ) { }
 
   ngOnInit() {
-    this.mal.setScreenName('signin', 'AuthSignInPage');
+    this.fire.setScreenName('signin', 'AuthSignInPage');
   }
 
   async doSuccess(e: any) {
@@ -37,14 +38,14 @@ export class AuthSignInPage implements OnInit {
 
       if (redirectUrl) {
         // Ridirect to page on SignIn
-        this.mal.addLogMessage(`Redirecting logged in user to> ${redirectUrl}`);
+        this.fire.addLogMessage(`Redirecting logged in user to> ${redirectUrl}`);
         await this.navController.navigateRoot(redirectUrl);
 
       } else {
         switch (forOperation) {
 
           case 'deleteUser':
-            if (await this.mal.yesNoAlert(
+            if (await this.ui.yesNoAlert(
               'auth.user.message.confirmDelete',
               { interpolateParams: { userName: this.aps.user?.displayName } })
             ) {
@@ -62,7 +63,7 @@ export class AuthSignInPage implements OnInit {
         }
       }
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     } finally {
       await this.navController.navigateRoot(this.config.authUi.authGuardLoggedInURL);
     }
@@ -75,7 +76,7 @@ export class AuthSignInPage implements OnInit {
         { queryParams: { redirectUrl: this.activatedRoute.snapshot.queryParamMap.get('redirectUrl') } }
       );
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 

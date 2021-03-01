@@ -1,10 +1,7 @@
 // Mal
 export * from './FakeFirestoreSyncService';
 export * from './FakeCrashyticsService';
-export * from './FakeLoadingService';
 export * from './FakeTranslateService';
-export * from './FakeToastService';
-export * from './FakeAlertsService';
 export * from './FakeAuthProcessService';
 export * from './FakePickerService';
 export * from './FakeIAPurchaseService';
@@ -12,7 +9,8 @@ export * from './FakeRemoteConfigService';
 export * from './FakeAnalyticsService';
 export * from './FakeTranslateService';
 export * from './FakePerformanceService';
-export * from './FakeMalService';
+export * from './FakeFireService';
+export * from './FakeUiService';
 
 // @angular/fire
 export * from './angular-fire/FakeUserCredential';

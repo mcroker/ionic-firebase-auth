@@ -10,7 +10,7 @@ import { Observable, Subject } from 'rxjs';
 
 // Mal
 import { NgxAuthFirebaseuiAnimations } from '../../animations';
-import { AuthProcessService, AuthProvider, MalService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
+import { AuthProcessService, AuthProvider, UiService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
 
 
 @Component({
@@ -54,7 +54,7 @@ export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit
   constructor(
     @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig,
     public aps: AuthProcessService,
-    private mal: MalService,
+    private ui: UiService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
   }
@@ -94,7 +94,7 @@ export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit
         }
       );
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     } finally {
       this.changeDetectorRef.markForCheck();
     }
@@ -105,7 +105,7 @@ export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit
       this.changeDetectorRef.markForCheck();
       await this.aps.signInWith(AuthProvider.ANONYMOUS);
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     } finally {
       this.changeDetectorRef.markForCheck();
     }
@@ -115,7 +115,7 @@ export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit
     try {
       this.aps.registerWith(provider);
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 

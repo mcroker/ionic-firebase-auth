@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import {ROUTER_CONFIG, MalAuthUIPageModule } from 'ngx-firebase/auth-pages';
+import {ROUTER_CONFIG, MalIonicAuthUiModule } from 'ngx-firebase/ionic-auth-ui';
 
 @NgModule({
   imports: [
-    MalAuthUIPageModule,
+    MalIonicAuthUiModule,
     RouterModule.forChild(ROUTER_CONFIG)
   ]
 })

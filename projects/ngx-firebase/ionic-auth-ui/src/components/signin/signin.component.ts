@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, forwardRef, Inject, Input, Optional, Output, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, forwardRef, Inject, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthProcessService, AuthProvider, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
 import { MalIonicAlertsService } from 'ngx-firebase/ionic';

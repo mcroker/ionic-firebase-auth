@@ -1,5 +1,5 @@
 {
-  "name": "ngx-ionic-firebase",
+  "name": "ngx-firebase",
   "integrations": {
     "cordova": {},
     "capacitor": {}

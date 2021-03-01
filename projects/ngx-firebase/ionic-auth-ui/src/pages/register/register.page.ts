@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { MalService } from 'ngx-firebase';
+import { UiService, FirebaseService } from 'ngx-firebase';
 
 @Component({
   templateUrl: 'register.page.html',
@@ -10,13 +10,14 @@ import { MalService } from 'ngx-firebase';
 export class AuthRegisterPage implements OnInit {
 
   constructor(
-    private mal: MalService,
+    private ui: UiService,
+    private fire: FirebaseService,
     private activatedRoute: ActivatedRoute,
     private navController: NavController
   ) { }
 
   ngOnInit() {
-    this.mal.setScreenName('register', 'AuthRegisterPage');
+    this.fire.setScreenName('register', 'AuthRegisterPage');
   }
 
   doSuccess() {
@@ -29,7 +30,7 @@ export class AuthRegisterPage implements OnInit {
         this.navController.navigateRoot(['/']);
       }
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 
@@ -37,7 +38,7 @@ export class AuthRegisterPage implements OnInit {
     try {
       this.navController.navigateRoot(['/auth', 'signin'], { queryParams: { redirectUrl: this.activatedRoute.snapshot.queryParamMap.get('redirectUrl') } });
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 

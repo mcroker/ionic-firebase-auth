@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
-import { MalService } from 'ngx-firebase';
+import { UiService } from 'ngx-firebase';
 import { LinkMenuItem } from './interface';
 
 @Component({
@@ -13,7 +13,7 @@ export class AuthPopoverMenuComponent {
 
   constructor(
     private popoverController: PopoverController,
-    private mal: MalService
+    private ui: UiService
   ) { }
 
   doLinkClick(link: LinkMenuItem) {
@@ -23,7 +23,7 @@ export class AuthPopoverMenuComponent {
         link.callback();
       }
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 

@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 
 // Mal
-import { AuthProcessService, MalSharedConfig, MalSharedConfigToken, MalService } from 'ngx-firebase';
+import { AuthProcessService, MalSharedConfig, MalSharedConfigToken, UiService, FirebaseService } from 'ngx-firebase';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -19,7 +19,8 @@ export class AuthVerifyEmailPage implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   constructor(
-    private mal: MalService,
+    private ui: UiService,
+    private fire: FirebaseService,
     private aps: AuthProcessService,
     private route: ActivatedRoute,
     private navCtrl: NavController,
@@ -27,7 +28,7 @@ export class AuthVerifyEmailPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.mal.setScreenName('verifyemail', 'VerifyEmailPage');
+    this.fire.setScreenName('verifyemail', 'VerifyEmailPage');
 
     this.aps.user$.pipe(
       takeUntil(this.destroy$)
@@ -37,7 +38,7 @@ export class AuthVerifyEmailPage implements OnInit, OnDestroy {
           this.doRetry();
         }
       } catch (error) {
-        this.mal.logError(error);
+        this.ui.logError(error);
       }
     });
 
@@ -47,7 +48,7 @@ export class AuthVerifyEmailPage implements OnInit, OnDestroy {
       try {
         this.navCtrl.navigateRoot(this.config.authUi.authGuardFallbackURL || '/');
       } catch (error) {
-        this.mal.logError(error);
+        this.ui.logError(error);
       }
     });
   }
@@ -63,16 +64,16 @@ export class AuthVerifyEmailPage implements OnInit, OnDestroy {
       const redirect = this.route.snapshot.queryParamMap.get('redirectUrl');
       this.navCtrl.navigateRoot(redirect);
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 
   async doResendVerification() {
     try {
       await this.aps.sendNewVerificationEmail();
-      await this.mal.toast('auth.emailConfirmation.onConfirmationSuccess');
+      await this.ui.toast('auth.emailConfirmation.onConfirmationSuccess');
     } catch (error) {
-      this.mal.logError(error);
+      this.ui.logError(error);
     }
   }
 

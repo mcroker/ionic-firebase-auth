@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 // Mal
-import { CrashlyticsService, AuthProcessService, RemoteConfigService, AnalyticsService, MalService, MalLoadingUIProviderToken } from 'ngx-firebase';
+import { CrashlyticsService, AuthProcessService, RemoteConfigService, UiService, FirebaseService } from 'ngx-firebase';
 import { IAPurchaseService } from 'ngx-firebase/iap';
 
 // Ionic
@@ -23,8 +23,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 
 // Fakes
 import {
-  FakeCrashlyticsService, FakeAuthProcessService, FakeAngularFirePerformance, FakeRemoteConfigService, FakeAngularFirestore,
-  FakeAngularFireFunctions, FakeIAPurchaseService, FakeLoadingService, FakeAnalyticsService, FakeAngularFireStorage, FakeMalService
+  FakeAuthProcessService, FakeAngularFirePerformance, FakeRemoteConfigService, FakeAngularFirestore,
+  FakeAngularFireFunctions, FakeIAPurchaseService, FakeAngularFireStorage, FakeUiService, FakeFirebaseService
 } from './fakes';
 export const MODULES = [
   CommonModule,
@@ -48,12 +48,10 @@ export const MODULES = [
   providers: [
     // mal fakes
     { provide: RemoteConfigService, useClass: FakeRemoteConfigService },
-    { provide: CrashlyticsService, useClass: FakeCrashlyticsService },
     { provide: AuthProcessService, useClass: FakeAuthProcessService },
     { provide: IAPurchaseService, useClass: FakeIAPurchaseService },
-    { provide: MalLoadingUIProviderToken, useClass: FakeLoadingService },
-    { provide: AnalyticsService, useClass: FakeAnalyticsService },
-    { provide: MalService, useClass: FakeMalService },
+    { provide: UiService, useClass: FakeUiService },
+    { provide: FirebaseService, useClass: FakeFirebaseService },
     // @angular/fire
     { provide: AngularFirestore, useClass: FakeAngularFirestore },
     { provide: AngularFireFunctions, useClass: FakeAngularFireFunctions },
