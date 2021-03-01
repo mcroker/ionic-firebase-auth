@@ -1,12 +1,12 @@
 import { Observable, Subscription } from "rxjs";
 
-export type IUIProvider = ILoadingUIProvider & IAlertsUIProvider & IToastUIProvider & IPickerUIProvider;
+export type IUIProvider = ILoadingUIProvider & IAlertsUIProvider & IToastUIProvider & ILegalityDialogUIProvider;
 
 // LOADING
 
 export interface ILoadingUIProvider {
-    create(message?: string): Promise<ILoadingElem>;
-    watchObservable(
+    createLoading(message?: string): Promise<ILoadingElem>;
+    watchLoading(
         source: Observable<boolean>,
         options?: { debounce?: number, message?: string, timeoutMs?: number | null, debug?: string }
     ): Promise<Subscription>;
@@ -59,9 +59,9 @@ export interface IPickerServiceOptions {
 // TOAST
 
 export interface IToastUIProvider {
-    create(message: string, options?: IToastOptions): Promise<IToastElem>;
-    open(message: string, options?: IToastOptions): Promise<void>;
-    openError(error: Error, messagePrefix?: string, options?: IToastOptions): Promise<void>;
+    createToast(message: string, options?: IToastOptions): Promise<IToastElem>;
+    toast(message: string, options?: IToastOptions): Promise<void>;
+    errorToast(error: Error, messagePrefix?: string, options?: IToastOptions): Promise<void>;
 }
 
 export interface IToastElem {

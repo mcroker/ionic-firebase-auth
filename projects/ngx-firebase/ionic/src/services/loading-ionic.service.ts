@@ -13,10 +13,10 @@ export class MalIonicLoadingService implements ILoadingUIProvider {
         private translateService: TranslateService,
         private remoteConfig: RemoteConfigService
     ) {
-        this.watchObservable = this.watchObservable.bind(this);
+        this.watchLoading = this.watchLoading.bind(this);
     }
 
-    async create(message?: string) {
+    async createLoading(message?: string) {
         if (message) {
             message = await this.translateService.get(message).toPromise();
             return await this.loadingController.create({ message });
@@ -25,7 +25,7 @@ export class MalIonicLoadingService implements ILoadingUIProvider {
         }
     }
 
-    async watchObservable(
+    async watchLoading(
         source: Observable<boolean>,
         options?: { debounce?: number, message?: string, timeoutMs?: number | null, debug?: string }
     ): Promise<Subscription> {
@@ -34,7 +34,7 @@ export class MalIonicLoadingService implements ILoadingUIProvider {
             ? options.timeoutMs
             : await this.remoteConfig.getNumber('timeoutLoading');
 
-        const loading = await this.create(options?.message);
+        const loading = await this.createLoading(options?.message);
 
         source = !timeoutInterval ? source : source.pipe(timeout(timeoutInterval));
 

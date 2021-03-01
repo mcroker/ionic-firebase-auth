@@ -1,7 +1,6 @@
 import { Component, EventEmitter, forwardRef, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthProcessService, MalSharedConfigToken, MalSharedConfig, FirebaseErrorCodes, PHONE_NUMBER_REGEX, CrashlyticsService } from 'ngx-firebase';
-import { MalIonicToastService, MalIonicAlertsService } from 'ngx-firebase/ionic';
+import { AuthProcessService, MalSharedConfigToken, MalSharedConfig, FirebaseErrorCodes, PHONE_NUMBER_REGEX, FirebaseService, UiService } from 'ngx-firebase';
 import { takeUntil } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { NavController, PopoverController } from '@ionic/angular';
@@ -43,12 +42,11 @@ export class AuthUIUserComponent implements OnInit, OnDestroy {
 
   constructor(
     public aps: AuthProcessService,
-    private toast: MalIonicToastService,
+    private ui: UiService,
     private navController: NavController,
     @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig,
     private popoverController: PopoverController,
-    private crashlytics: CrashlyticsService,
-    private alerts: MalIonicAlertsService
+    private fire: FirebaseService
   ) {
   }
   ngOnInit() {
@@ -107,8 +105,8 @@ export class AuthUIUserComponent implements OnInit, OnDestroy {
           phoneNumber: (this.updateFormGroup.controls.phoneNumber.dirty) ? this.updateFormGroup.controls.phoneNumber.value : undefined,
         });
       } catch (error) {
-        this.crashlytics.recordException(error);
-        this.toast.open(error && error.message ? error.message : error);
+        this.fire.recordException(error);
+        this.ui.toast(error && error.message ? error.message : error);
       }
 
       await this.dismiss();
@@ -126,7 +124,7 @@ export class AuthUIUserComponent implements OnInit, OnDestroy {
         this.navController.navigateRoot(this.config.authUi.authGuardFallbackURL)
       ]);
     } catch (error) {
-      this.crashlytics.recordException(error);
+      this.fire.recordException(error);
     }
   }
 
@@ -141,14 +139,14 @@ export class AuthUIUserComponent implements OnInit, OnDestroy {
    */
   async deleteAccount() {
     try {
-      if (await this.alerts.yesNoAlert(
+      if (await this.ui.yesNoAlert(
         'auth.user.message.confirmDelete',
         { defaultToNo: true, interpolateParams: { userName: this.aps.user?.displayName } })
       ) {
         await this.aps.deleteUser();
         await Promise.all([
           this.dismiss(),
-          this.toast.open('auth.user.message.acountDeleted'),
+          this.ui.toast('auth.user.message.acountDeleted'),
           this.navController.navigateRoot(this.config.authUi.authGuardFallbackURL)
         ]);
       }
@@ -169,11 +167,11 @@ export class AuthUIUserComponent implements OnInit, OnDestroy {
               await this.aps.deleteUser();
               await Promise.all([
                 this.dismiss(),
-                this.toast.open('auth.user.message.acountDeleted'),
+                this.ui.toast('auth.user.message.acountDeleted'),
                 this.navController.navigateRoot(this.config.authUi.authGuardFallbackURL)
               ]);
             } catch (error) {
-              await this.toast.open('auth.user.message.acountDeleted', { interpolateParams: { error: error.message } });
+              await this.ui.toast('auth.user.message.acountDeleted', { interpolateParams: { error: error.message } });
             }
             resolve();
           });
@@ -181,8 +179,8 @@ export class AuthUIUserComponent implements OnInit, OnDestroy {
         });
 
       } else {
-        this.crashlytics.recordException(error);
-        await this.toast.open('auth.user.message.acountDeleted', { interpolateParams: { error: error.message } });
+        this.fire.recordException(error);
+        await this.ui.toast('auth.user.message.acountDeleted', { interpolateParams: { error: error.message } });
       }
     }
   }

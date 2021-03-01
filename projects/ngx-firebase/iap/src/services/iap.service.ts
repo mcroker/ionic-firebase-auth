@@ -1,6 +1,5 @@
 import { forwardRef, Inject, Injectable, NgZone, Optional } from '@angular/core';
-import { AuthProcessService, CrashlyticsService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
-import { AlertController } from '@ionic/angular';
+import { AuthProcessService, FirebaseService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
 import { Platform } from '@ionic/angular';
 import { InAppPurchase2, IAPProduct } from '@ionic-native/in-app-purchase-2/ngx';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -147,10 +146,9 @@ export class IAPurchaseService {
   constructor(
     private plt: Platform,
     @Optional() private store: InAppPurchase2,
-    private alertController: AlertController,
     private aps: AuthProcessService,
     private ngZone: NgZone,
-    private crashlytics: CrashlyticsService,
+    private fire: FirebaseService,
     @Inject(forwardRef(() => MalIAPOptionsToken)) private options: MalIAPOptions,
     @Inject(forwardRef(() => MalSharedConfigToken)) private sharedConfig: MalSharedConfig
   ) {
@@ -176,20 +174,20 @@ export class IAPurchaseService {
         });
 
         this.store.error((error: any) => {
-          this.crashlytics.recordException(error);
+          this.fire.recordException(error);
         });
 
         try {
           await this.load(this.options.products);
         } catch (error) {
-          this.crashlytics.recordException(error);
+          this.fire.recordException(error);
         } finally {
           this.isLoading = false;
         }
 
       });
     } else {
-      this.crashlytics.addLogMessage('Not starting IAP as not a device');
+      this.fire.addLogMessage('Not starting IAP as not a device');
       console.warn('Not starting IAP as not a device');
     }
   }
@@ -197,7 +195,7 @@ export class IAPurchaseService {
   private load(products: MalIAPProductOptions[]): Promise<IAPProduct[]> {
     return new Promise<IAPProduct[]>((resolve, reject) => {
       try {
-        this.crashlytics.addLogMessage('Error registering products');
+        this.fire.addLogMessage('Error registering products');
         this.store.register(products.map(item => {
           let type: string;
           switch (item.type) {
@@ -210,7 +208,7 @@ export class IAPurchaseService {
           };
         }));
       } catch (error) {
-        this.crashlytics.recordException(error);
+        this.fire.recordException(error);
       }
 
       this.store.ready(() => {
@@ -219,15 +217,15 @@ export class IAPurchaseService {
       });
 
       this.store.error((error: any) => {
-        this.crashlytics.recordException(error);
+        this.fire.recordException(error);
         reject(error);
       });
 
       try {
-        this.crashlytics.addLogMessage('Starting store refresh');
+        this.fire.addLogMessage('Starting store refresh');
         this.store.refresh();
       } catch (error) {
-        this.crashlytics.recordException(error);
+        this.fire.recordException(error);
       }
 
     });
@@ -270,18 +268,18 @@ export class IAPurchaseService {
           subscriber.complete();
         });
         this.store.once(product).error((error: any) => {
-          this.crashlytics.recordException(error);
+          this.fire.recordException(error);
           subscriber.error(error);
         });
         this.store.order(product).then((p: any) => {
           // Purchase in progress!
         }, (error: any) => {
-          this.crashlytics.recordException(error);
+          this.fire.recordException(error);
           subscriber.error(error);
         });
       });
     } catch (error) {
-      this.crashlytics.recordException(error);
+      this.fire.recordException(error);
       throw error;
     }
   }
@@ -297,18 +295,18 @@ export class IAPurchaseService {
           resolve(p);
         });
         this.store.once(product).error((error: any) => {
-          this.crashlytics.recordException(error);
+          this.fire.recordException(error);
           reject(error);
         });
         try {
-          this.crashlytics.addLogMessage('Starting finsih product');
+          this.fire.addLogMessage('Starting finsih product');
           product.finish();
         } catch (error) {
-          this.crashlytics.recordException(error);
+          this.fire.recordException(error);
         }
       });
     } catch (error) {
-      this.crashlytics.recordException(error);
+      this.fire.recordException(error);
     }
   }
 
@@ -316,10 +314,10 @@ export class IAPurchaseService {
   async refresh() {
     if (this.isModuleEnabled) {
       try {
-        this.crashlytics.addLogMessage('Starting store refresh');
+        this.fire.addLogMessage('Starting store refresh');
         await this.store.refresh();
       } catch (error) {
-        this.crashlytics.recordException(error);
+        this.fire.recordException(error);
       }
     }
   }

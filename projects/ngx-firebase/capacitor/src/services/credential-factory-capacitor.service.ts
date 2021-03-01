@@ -7,7 +7,7 @@ if (!firebase.auth) {
 }
 import { GoogleSignInResult, FacebookSignInResult, TwitterSignInResult, CapacitorFirebaseAuthPlugin } from 'capacitor-firebase-auth';
 import { Plugins, Capacitor, Device } from '@capacitor/core';
-import { CrashlyticsService, AuthProvider, ICredentialFactoryProvider } from 'ngx-firebase';
+import { AuthProvider, ICredentialFactoryProvider, FirebaseService } from 'ngx-firebase';
 import { SignInWithApplePlugin } from '@capacitor-community/apple-sign-in';
 
 const fbAuth = firebase.auth;
@@ -34,7 +34,7 @@ function signInWithApplePlugin(): SignInWithApplePlugin {
 export class AuthCredentialFactoryCapacitorService implements ICredentialFactoryProvider {
 
   constructor(
-    private crashlytics: CrashlyticsService
+    private fire: FirebaseService
   ) {
   }
 
@@ -64,44 +64,44 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
       case AuthProvider.Google: {
         const googleAuthProvider = new fbAuth.GoogleAuthProvider();
         const CapacitorFirebaseAuth = firebaseAuthPlugin();
-        this.crashlytics.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
+        this.fire.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
         const googleRes: GoogleSignInResult
           = await CapacitorFirebaseAuth.signIn({ providerId: googleAuthProvider.providerId }) as GoogleSignInResult;
-        this.crashlytics.addLogMessage(`Creating credential using firebase; provider=${provider}`);
+        this.fire.addLogMessage(`Creating credential using firebase; provider=${provider}`);
         return fbAuth.GoogleAuthProvider.credential(googleRes.idToken);
       }
 
       case AuthProvider.Apple: {
         const appleAuthProvider = new fbAuth.OAuthProvider('apple.com');
         const SignInWithApple = signInWithApplePlugin();
-        this.crashlytics.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
+        this.fire.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
         const appleRes = await SignInWithApple.Authorize();
-        this.crashlytics.addLogMessage(`Creating credential using firebase; provider=${provider}`);
+        this.fire.addLogMessage(`Creating credential using firebase; provider=${provider}`);
         return appleAuthProvider.credential(appleRes.response.identityToken);
       }
 
       case AuthProvider.Facebook: {
         const facebookAuthProvider = new fbAuth.FacebookAuthProvider();
         const CapacitorFirebaseAuth = firebaseAuthPlugin();
-        this.crashlytics.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
+        this.fire.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
         const facebookRes: FacebookSignInResult
           = await CapacitorFirebaseAuth.signIn({ providerId: facebookAuthProvider.providerId }) as FacebookSignInResult;
-        this.crashlytics.addLogMessage(`Creating credential using firebase; provider=${provider}`);
+        this.fire.addLogMessage(`Creating credential using firebase; provider=${provider}`);
         return fbAuth.FacebookAuthProvider.credential(facebookRes.idToken);
       }
 
       case AuthProvider.Twitter: {
         const twitterAuthProvider = new fbAuth.TwitterAuthProvider();
         const CapacitorFirebaseAuth = firebaseAuthPlugin();
-        this.crashlytics.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
+        this.fire.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
         const twitterRes: TwitterSignInResult
           = await CapacitorFirebaseAuth.signIn({ providerId: twitterAuthProvider.providerId }) as TwitterSignInResult;
-        this.crashlytics.addLogMessage(`Creating credential using firebase; provider=${provider}`);
+        this.fire.addLogMessage(`Creating credential using firebase; provider=${provider}`);
         return fbAuth.TwitterAuthProvider.credential(twitterRes.idToken, twitterRes.secret);
       }
 
       default:
-        this.crashlytics.addLogMessage(`Attempting unsupported native provider; provider=${provider}`);
+        this.fire.addLogMessage(`Attempting unsupported native provider; provider=${provider}`);
         throw new Error(`${provider} is not available as a credential provider for this platform`);
 
     }
@@ -109,7 +109,7 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
 
   public async signOut() {
     if (Capacitor.isPluginAvailable('CapacitorFirebaseAuth')) {
-      this.crashlytics.addLogMessage('signOut using CapacitorFirebaseAuth');
+      this.fire.addLogMessage('signOut using CapacitorFirebaseAuth');
       const CapacitorFirebaseAuth = firebaseAuthPlugin();
       await CapacitorFirebaseAuth.signOut({});
     }

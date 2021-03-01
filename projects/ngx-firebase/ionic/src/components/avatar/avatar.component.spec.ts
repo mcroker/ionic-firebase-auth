@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AuthAvatarComponent } from './avatar.component';
-import { AuthProcessService, CrashlyticsService, MalToastUIProviderToken } from 'ngx-firebase';
 import { IonicModule } from '@ionic/angular';
 import {MalTestingModule } from 'ngx-firebase/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import {  } from 'projects/ngx-firebase/testing';
 
 describe('AuthAvatarComponent', () => {
   let component: AuthAvatarComponent;

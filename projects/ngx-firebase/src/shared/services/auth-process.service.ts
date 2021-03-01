@@ -13,7 +13,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 // Mal
 import { FirestoreSyncService } from './firestore-sync.service';
-import { CrashlyticsService } from './crashlytics.service';
 import {
   MalCredentialFactoryProviderToken,
   MalMergeUserServiceToken, MalSharedConfigToken,
@@ -124,7 +123,7 @@ export class AuthProcessService {
     @Optional() @Inject(forwardRef(() => MalCredentialFactoryProviderToken)) public credFactory: ICredentialFactoryProvider,
     private fireStoreService: FirestoreSyncService,
     @Optional() private afa: AngularFireAuth,
-    private crashlytics: CrashlyticsService,
+    private fire: FirebaseService,
     private ui: UiService
   ) {
     if (this.afa) {
@@ -132,7 +131,7 @@ export class AuthProcessService {
       this.afa.authState.subscribe(authState => this._authState$.next(authState));
     }
     this.authState$.subscribe(user => {
-      this.crashlytics.setUserId(user?.uid || null);
+      this.fire.setUserId(user?.uid || null);
     });
     this.onSignIn$.subscribe(user => this.onSuccessEmitter.emit(user));
     this.onSignOut$.subscribe(() => this.onSignOutEmitter.emit());
@@ -197,7 +196,7 @@ export class AuthProcessService {
   public async resetPassword(email: string): Promise<void> {
     try {
       if (this.afa) {
-        this.crashlytics.addLogMessage('Password reset email sent');
+        this.fire.addLogMessage('Password reset email sent');
         this.afa.sendPasswordResetEmail(email);
         this.ui.toast(
           'auth.resetPassword.onResetRequestedTo',
@@ -226,7 +225,7 @@ export class AuthProcessService {
   public async signInWith(provider: AuthProvider, options?: ISignInOptions)
     : Promise<UserCredential | null> {
 
-    this.crashlytics.addLogMessage(`SignInWithProvider; provider=${provider}`);
+    this.fire.addLogMessage(`SignInWithProvider; provider=${provider}`);
     const loading = await this.ui.createLoading();
     if (!this.afa) {
       return null;
@@ -289,7 +288,7 @@ export class AuthProcessService {
         } catch (error) {
           // If a failure occurs in merge applyToTarget we can't do much about it (we are already logged in as new user)
           // but we should at least log it. The onus is really on the applyToTarget function to handle it's own errors.
-          this.crashlytics.recordException(error);
+          this.fire.recordException(error);
         }
       }
 
@@ -312,7 +311,7 @@ export class AuthProcessService {
       return null;
     }
 
-    this.crashlytics.addLogMessage(`reauthenicateWithProvider; provider=${provider}`);
+    this.fire.addLogMessage(`reauthenicateWithProvider; provider=${provider}`);
     const loading = await this.ui.createLoading();
     try {
       let userCred: UserCredential | null = null;
@@ -339,7 +338,7 @@ export class AuthProcessService {
           if (!firebase.auth) {
             throw new Error('firebase.auth is undefined');
           }
-          this.crashlytics.addLogMessage(`creating email credential with firebase; email=${options.credentials.email}`);
+          this.fire.addLogMessage(`creating email credential with firebase; email=${options.credentials.email}`);
           const authCred = firebase.auth.EmailAuthProvider.credential(currentUser.email, options.credentials.password);
           userCred = await currentUser.reauthenticateWithCredential(authCred);
           break;
@@ -384,7 +383,7 @@ export class AuthProcessService {
     if (!this.afa) {
       return null;
     }
-    this.crashlytics.addLogMessage(`Linking current anon user to provider; provider=${provider}`);
+    this.fire.addLogMessage(`Linking current anon user to provider; provider=${provider}`);
     const loading = await this.ui.createLoading();
     try {
       const currentUser = await this.afa.currentUser;
@@ -405,9 +404,9 @@ export class AuthProcessService {
           if (!firebase.auth) {
             throw new Error('firebase.auth is undefined');
           }
-          this.crashlytics.addLogMessage(`creating email credential with firebase; email=${options.credentials.email}`);
+          this.fire.addLogMessage(`creating email credential with firebase; email=${options.credentials.email}`);
           const authCred = firebase.auth.EmailAuthProvider.credential(options.credentials.email, options.credentials.password);
-          this.crashlytics.addLogMessage(`linking userCredential to email authCredential`);
+          this.fire.addLogMessage(`linking userCredential to email authCredential`);
           userCred = await currentUser.linkWithCredential(authCred);
           break;
 
@@ -433,7 +432,7 @@ export class AuthProcessService {
         userData.displayName
         && (userCred.user.displayName !== userData.displayName || userCred.user.photoURL !== userData.displayName)
       ) {
-        this.crashlytics.addLogMessage(`Updating user profile; displayName=${userData.displayName}, photoUrl=${userData.photoURL}`);  // tslint:disable-line max-line-length
+        this.fire.addLogMessage(`Updating user profile; displayName=${userData.displayName}, photoUrl=${userData.photoURL}`);  // tslint:disable-line max-line-length
         await this.updateUserInfo({ displayName: userData.displayName, photoURL: userData.photoURL });
       }
       await this.handleSignInSuccess(userCred);
@@ -459,7 +458,7 @@ export class AuthProcessService {
       return null;
     }
 
-    this.crashlytics.addLogMessage(`SigningUp with provider; provider=${provider}`);
+    this.fire.addLogMessage(`SigningUp with provider; provider=${provider}`);
     const loading = await this.ui.createLoading();
     try {
 
@@ -474,7 +473,7 @@ export class AuthProcessService {
         if (!options?.skipTosCheck) {
           // Don't show TOS if currentUser (assume current user has aleady agreed)
           if (!await this.confirmTos()) {
-            this.crashlytics.addLogMessage('User declined TOS during register');
+            this.fire.addLogMessage('User declined TOS during register');
             return null;
           }
         }
@@ -487,7 +486,7 @@ export class AuthProcessService {
             throw new Error('Credentials & displayName required to SignUp by email');
           }
           await loading.present();
-          this.crashlytics.addLogMessage(`creaating user with email and password; email=${options.credentials.email}`);
+          this.fire.addLogMessage(`creaating user with email and password; email=${options.credentials.email}`);
           userCred = await this.afa.createUserWithEmailAndPassword(options.credentials.email, options.credentials.password);
           if (null === userCred.user) {
             throw new Error('User is null following successful signUp');
@@ -542,7 +541,7 @@ export class AuthProcessService {
         }
         await currentUser.sendEmailVerification();
       } catch (error) {
-        this.crashlytics.recordException(error);
+        this.fire.recordException(error);
         throw error;
       }
     }
@@ -608,7 +607,7 @@ export class AuthProcessService {
         this.onUserUpdatedEmitter.emit();
 
       } catch (error) {
-        this.crashlytics.recordException(error);
+        this.fire.recordException(error);
       }
     }
   }
@@ -676,10 +675,10 @@ export class AuthProcessService {
     if (this.config.authUi.enableFirestoreSync) {
       try {
         const userData = this.parseUserInfo(cred.user);
-        this.crashlytics.addLogMessage(`About to create user data in firestore; user=${JSON.stringify(userData)}`);
+        this.fire.addLogMessage(`About to create user data in firestore; user=${JSON.stringify(userData)}`);
         // Now done by server-side trigger await this.fireStoreService.createUserData(userData);
       } catch (error) {
-        this.crashlytics.recordException(error);
+        this.fire.recordException(error);
       }
     }
     if (this.config.authUi.toastMessageOnAuthSuccess) {
@@ -718,7 +717,7 @@ export class AuthProcessService {
         this.onUserDeletedEmitter.emit();
       } catch (error) {
         if (error.code !== FirebaseErrorCodes.requiresRecentLogin) {
-          this.crashlytics.recordException(error);
+          this.fire.recordException(error);
         }
         throw (error);
       }
@@ -729,7 +728,7 @@ export class AuthProcessService {
    * Logs the error and provides user error notifcation if appropriate
    */
   async handleError(error: any) {
-    await this.crashlytics.recordException(error);
+    await this.fire.recordException(error);
     this.onErrorEmitter.emit(error);
     if (this.config.authUi.toastMessageOnAuthError) {
       const message = ((error) ? error.toString() : undefined) || 'auth.common.pleaseRetry';

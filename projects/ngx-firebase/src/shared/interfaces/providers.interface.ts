@@ -3,6 +3,8 @@ import { AuthProvider } from './authprovider.enum';
 import { ICredentials } from './main.interface';
 import { UserInfo, User, AuthProvider as FirebaseAuthProvider, AuthCredential } from '@firebase/auth-types';
 
+export type IFirebaseProvider = IAnalyticsProvider & ICrashlyticsProvider & IPerformanceProvider;
+
 export interface IAnalyticsProvider {
     logEvent(name: string, params?: { [key: string]: any }): Promise<void>;
     setScreenName(screenName: string, screenClass?: string): Promise<void>;
@@ -25,6 +27,10 @@ export interface ICredentialFactoryProvider {
     isProviderSupported(provider: AuthProvider): Promise<boolean>;
     getCredential(provider: AuthProvider): Promise<AuthCredential>;
     signOut(): Promise<void>;
+}
+
+export interface IPerformanceProvider {
+    createTrace(label: string): Promise<IPerformanceTrace>;
 }
 
 export interface IPerformanceTrace {

@@ -3,8 +3,7 @@ import {
   SimpleChanges, TemplateRef, ViewChild
 } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { MalIonicToastService } from 'ngx-firebase/ionic';
-import { AuthProcessService, CrashlyticsService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
+import { AuthProcessService, FirebaseService, MalSharedConfig, MalSharedConfigToken, UiService } from 'ngx-firebase';
 
 interface VerifyEmailContext {
   email: string;
@@ -40,8 +39,8 @@ export class EmailConfirmationComponent implements OnInit, OnChanges {
     private aps: AuthProcessService,
     private changeDetectorRef: ChangeDetectorRef,
     private navController: NavController,
-    private crashlytics: CrashlyticsService,
-    private toast: MalIonicToastService,
+    private fire: FirebaseService,
+    private ui: UiService,
     @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig,
   ) {
   }
@@ -78,7 +77,7 @@ export class EmailConfirmationComponent implements OnInit, OnChanges {
       this.isLoading = true;
       this.changeDetectorRef.markForCheck();
       await this.aps.sendNewVerificationEmail();
-      this.toast.open('auth.emailConfirmation.onConfirmationSuccess');
+      this.ui.toast('auth.emailConfirmation.onConfirmationSuccess');
     } catch (error) {
       this.notifyError(error);
     } finally {
@@ -95,10 +94,10 @@ export class EmailConfirmationComponent implements OnInit, OnChanges {
   }
 
   private notifyError(error: any) {
-    this.crashlytics.recordException(error);
+    this.fire.recordException(error);
     if (this.config.authUi.toastMessageOnAuthError) {
       const message = error.toString() || 'Sorry, something went wrong. Please retry later.';
-      this.toast.open(message, { duration: this.config.authUi.toastDefaultDurationMil });
+      this.ui.toast(message, { duration: this.config.authUi.toastDefaultDurationMil });
     }
   }
 }

@@ -1,21 +1,24 @@
-import { FirebaseService } from 'ngx-firebase';
-import { FakeCrashlyticsService } from './FakeCrashyticsService';
-import { FakeAnalyticsService } from './FakeAnalyticsService';
-import { FakePerformanceService } from './FakePerformanceService';
+import { FirebaseService, IFirebaseProvider, IPerformanceTrace } from 'ngx-firebase';
 
-export class FakeFirebaseService {
+export class PerformanceTraceNoop implements IPerformanceTrace {
+    start() { }
+    stop() { }
+    putAttribute(key: string, value: any) { }
+}
 
-    private crashlyticsService: FakeCrashlyticsService = FakeCrashlyticsService.create();
-    private analyticsService: FakeAnalyticsService = FakeAnalyticsService.create();
-    private performanceService: FakePerformanceService = FakePerformanceService.create();
+export class FakeFirebaseService implements jasmine.SpyObj<IFirebaseProvider> {
 
-    recordException = this.crashlyticsService.recordException.bind(this.crashlyticsService);
-    addLogMessage = this.crashlyticsService.addLogMessage.bind(this.crashlyticsService);
+    dataCollectionEnabled = Promise.resolve(false);
 
-    setScreenName = this.analyticsService.setScreenName.bind(this.analyticsService);
-    logEvent = this.analyticsService.logEvent.bind(this.analyticsService);
+    recordException: jasmine.Spy<(e: any) => Promise<void>> = jasmine.createSpy('recordException');
+    addLogMessage: jasmine.Spy<(message: string) => Promise<void>> = jasmine.createSpy('addLogMessage');
 
-    createTrace = this.performanceService.trace.bind(this.performanceService);
+    setUserId: jasmine.Spy<(uid: string | null) => void> = jasmine.createSpy('setUserId');
+
+    setScreenName = jasmine.createSpy<(name: string) => Promise<void>>('setScreenName');
+    logEvent = jasmine.createSpy<(name: string, params?: { [key: string]: any; }) => Promise<void>>('logEvent');
+
+    createTrace = jasmine.createSpy<(label: string) => Promise<IPerformanceTrace>>('createTrace');
 
     static create(): FakeFirebaseService & FirebaseService {
         return new FakeFirebaseService() as any as FakeFirebaseService & FirebaseService;
@@ -23,6 +26,7 @@ export class FakeFirebaseService {
 
     constructor(
     ) {
+        this.createTrace.and.resolveTo(new PerformanceTraceNoop());
     }
 
 }

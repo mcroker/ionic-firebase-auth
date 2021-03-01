@@ -6,7 +6,19 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 // Mal
-import { CrashlyticsService, AuthProcessService, RemoteConfigService, UiService, FirebaseService } from 'ngx-firebase';
+import {
+  AuthProcessService,
+  RemoteConfigService,
+  UiService,
+  FirebaseService,
+  AnalyticsService,
+  MalLegaliyDialogUIProiderToken,
+  CrashlyticsService,
+  MalToastUIProviderToken,
+  MalAlertsUIProviderToken,
+  MalLoadingUIProviderToken,
+  PerformanceService
+} from 'ngx-firebase';
 import { IAPurchaseService } from 'ngx-firebase/iap';
 
 // Ionic
@@ -23,9 +35,18 @@ import { AngularFireStorage } from '@angular/fire/storage';
 
 // Fakes
 import {
-  FakeAuthProcessService, FakeAngularFirePerformance, FakeRemoteConfigService, FakeAngularFirestore,
-  FakeAngularFireFunctions, FakeIAPurchaseService, FakeAngularFireStorage, FakeUiService, FakeFirebaseService
+  FakeAuthProcessService,
+  FakeAngularFirePerformance,
+  FakeRemoteConfigService,
+  FakeAngularFirestore,
+  FakeAngularFireFunctions,
+  FakeIAPurchaseService,
+  FakeAngularFireStorage,
+  FakeUiService,
+  FakeFirebaseService,
+  FakeAvatarComponent
 } from './fakes';
+
 export const MODULES = [
   CommonModule,
   IonicModule,
@@ -34,7 +55,12 @@ export const MODULES = [
   RouterTestingModule,
 ];
 
+const COMPONENTS = [
+  FakeAvatarComponent
+];
+
 @NgModule({
+  declarations: COMPONENTS,
   imports: [
     ...MODULES,
     TranslateModule.forRoot({
@@ -43,6 +69,7 @@ export const MODULES = [
   ],
   exports: [
     ...MODULES,
+    ...COMPONENTS,
     TranslateModule
   ],
   providers: [
@@ -50,8 +77,17 @@ export const MODULES = [
     { provide: RemoteConfigService, useClass: FakeRemoteConfigService },
     { provide: AuthProcessService, useClass: FakeAuthProcessService },
     { provide: IAPurchaseService, useClass: FakeIAPurchaseService },
+    // UiFakes
     { provide: UiService, useClass: FakeUiService },
+    { provide: MalLegaliyDialogUIProiderToken, useClass: FakeUiService },
+    { provide: MalToastUIProviderToken, useClass: FakeUiService },
+    { provide: MalAlertsUIProviderToken, useClass: FakeUiService },
+    { provide: MalLoadingUIProviderToken, useClass: FakeUiService },
+    // Firebase Fakes
     { provide: FirebaseService, useClass: FakeFirebaseService },
+    { provide: CrashlyticsService, useClass: FakeFirebaseService },
+    { provide: AnalyticsService, useClass: FakeFirebaseService },
+    { provide: PerformanceService, useClass: FakeFirebaseService },
     // @angular/fire
     { provide: AngularFirestore, useClass: FakeAngularFirestore },
     { provide: AngularFireFunctions, useClass: FakeAngularFireFunctions },

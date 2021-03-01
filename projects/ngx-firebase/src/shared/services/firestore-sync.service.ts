@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { UserInfo } from '@firebase/auth-types';
 import { IUserDatabaseProvider } from '../interfaces';
-import { CrashlyticsService } from './crashlytics.service';
+import { FirebaseService } from './firebase.service';
 
 const USER_COLLECTION = 'users';
 
@@ -13,7 +13,7 @@ export class FirestoreSyncService implements IUserDatabaseProvider {
 
   constructor(
     public afs: AngularFirestore,
-    public crashlytics: CrashlyticsService
+    public fire: FirebaseService
   ) {
   }
 
@@ -22,7 +22,7 @@ export class FirestoreSyncService implements IUserDatabaseProvider {
       const doc = await this.getUserDocRefByUID(uid).get().toPromise();
       return doc.data() || null;
     } catch (error) {
-      this.crashlytics.recordException(error);
+      this.fire.recordException(error);
       return null;
     }
   }
@@ -35,7 +35,7 @@ export class FirestoreSyncService implements IUserDatabaseProvider {
     try {
       return this.getUserDocRefByUID(uid).update({ ...user, uid });
     } catch (error) {
-      this.crashlytics.recordException(error);
+      this.fire.recordException(error);
     }
   }
 

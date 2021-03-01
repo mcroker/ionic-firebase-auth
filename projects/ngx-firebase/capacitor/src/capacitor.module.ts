@@ -4,7 +4,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 // Configuration
 import {
   IAnalyticsProvider, ICrashlyticsProvider, ICredentialFactoryProvider,
-  MalSharedConfig, MalUserProvidedConfig, CrashlyticsService,
+  MalSharedConfig, MalUserProvidedConfig, FirebaseService,
   MalCredentialFactoryProviderToken, MalSharedConfigToken, MalAnalyticsProviderToken, MalCrashlyticsProviderToken
 } from 'ngx-firebase';
 
@@ -49,7 +49,7 @@ export class MalCapacitorModule {
           {
             provide: MalCredentialFactoryProviderToken,
             useFactory: credFactoryProviderFactory,
-            deps: [CrashlyticsService]
+            deps: [FirebaseService]
           }
         ],
     };
@@ -81,9 +81,9 @@ function crashlyticsProviderFactory(config: MalSharedConfig): ICrashlyticsProvid
   return null;
 }
 
-function credFactoryProviderFactory(crashlytics: CrashlyticsService): ICredentialFactoryProvider | null {
+function credFactoryProviderFactory(fire: FirebaseService): ICredentialFactoryProvider | null {
   if (Capacitor.isNative) {
-    return new AuthCredentialFactoryCapacitorService(crashlytics);
+    return new AuthCredentialFactoryCapacitorService(fire);
   } else {
     return null;
   }

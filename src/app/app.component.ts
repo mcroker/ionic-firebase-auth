@@ -10,7 +10,7 @@ import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { CapacitorFirebaseDynamicLinks } = Plugins;
 
 // Mal
-import { RemoteConfigService, AuthProcessService, MalService } from 'ngx-firebase';
+import { RemoteConfigService, AuthProcessService, UiService, FireService } from 'ngx-firebase';
 
 // Firebase
 import { User } from '@firebase/auth-types';
@@ -43,7 +43,7 @@ export class AppComponent {
     private remoteConfig: RemoteConfigService,
     private route: ActivatedRoute,
     // private profilePopover: AuthUIProfilePopoverService,
-    private mal: MalService
+    private mal: UiService, FireService
   ) {
     this.initializeApp();
   }

@@ -12,7 +12,7 @@ export class MalIonicToastService implements IToastUIProvider {
     ) {
     }
 
-    async create(message: string, options: IToastOptions = {}) {
+    async createToast(message: string, options: IToastOptions = {}) {
         return await this.toastControl.create({
             message: await this.translateService.get(message, options.interpolateParams).toPromise(),
             duration: options.duration || 3000,
@@ -20,18 +20,18 @@ export class MalIonicToastService implements IToastUIProvider {
         });
     }
 
-    async open(message: string, options: IToastOptions = {}) {
+    async toast(message: string, options: IToastOptions = {}) {
         // TODO Add OK button if duration is not set....
-        const toast = await this.create(message, options);
+        const toast = await this.createToast(message, options);
         await toast.present();
         await toast.onDidDismiss();
     }
 
-    async openError(error: Error, messagePrefix?: string, options: IToastOptions = {}) {
+    async errorToast(error: Error, messagePrefix?: string, options: IToastOptions = {}) {
         if (messagePrefix) {
-            await this.open(`${messagePrefix}: ${error.message}`, options);
+            await this.toast(`${messagePrefix}: ${error.message}`, options);
         } else {
-            await this.open(error.message, options);
+            await this.toast(error.message, options);
         }
     }
 

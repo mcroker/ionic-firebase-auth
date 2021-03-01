@@ -1,6 +1,6 @@
 import { Injectable, Optional } from '@angular/core';
 import { AngularFirePerformance } from '@angular/fire/performance';
-import { IPerformanceTrace } from '../interfaces';
+import { IPerformanceTrace, IPerformanceProvider } from '../interfaces';
 
 export class PerformanceTraceNoop implements IPerformanceTrace {
     start() { }
@@ -9,11 +9,11 @@ export class PerformanceTraceNoop implements IPerformanceTrace {
 }
 
 @Injectable({ providedIn: 'root' })
-export class PerformanceService {
+export class PerformanceService implements IPerformanceProvider {
 
     dataCollectionEnabled = Promise.resolve(false);
 
-    trace(label: string): Promise<IPerformanceTrace> {
+    createTrace(label: string): Promise<IPerformanceTrace> {
         return Promise.resolve(new PerformanceTraceNoop());
     }
 
@@ -21,7 +21,7 @@ export class PerformanceService {
         @Optional() performanceProvider: AngularFirePerformance
     ) {
         if (performanceProvider) {
-            this.trace = performanceProvider.trace;
+            this.createTrace = performanceProvider.trace;
         }
     }
 
