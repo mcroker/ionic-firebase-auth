@@ -1,0 +1,8 @@
+<ng-container *ngIf="(user$ | async) as user">
+  <ion-avatar name='auth-avatar' class="avatar" *ngIf="user?.photoURL || !(displayNameInitials$ | async)" (click)="openAvatarMenu($event)">
+    <img [alt]="user.name" [src]="user.photoURL" onerror="this.onerror=null;this.src='/assets/images/person.png';">
+  </ion-avatar>
+  <ion-button class="avatar" *ngIf="!user?.photoURL && (displayNameInitials$ | async)" (click)="openAvatarMenu($event)">
+    {{ displayNameInitials$ | async }}
+  </ion-button>
+</ng-container>

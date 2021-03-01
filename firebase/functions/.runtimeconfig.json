@@ -1,0 +1,15 @@
+{
+  "fovea": {
+    "secret": "68f1062e-0be0-4790-843a-81d57b1b3975"
+  },
+  "jwt": {
+    "passphrase": "3jfn9femXX739239fj",
+    "kid": "3f5c47400de61e5ae62db866acfed3ac"
+  },
+  "fb": {
+    "token": "1//03t3nwXIQ767sCgYIARAAGAMSNwF-L9IrpM_DsUUbqtDf7kwNIcm3GEbPTZZEilBkgn4jYGmYCSTrRGBHTsPK0PdfZ9EDJoqYZNE"
+  },
+  "user": {
+    "inactivity_limit": ""
+  }
+}

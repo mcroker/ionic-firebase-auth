@@ -1,0 +1,484 @@
+{
+  "deps": {
+    "CacheMap": [],
+    "EntitlementService": [
+      "CrashlyticsService",
+      "AuthProcessService",
+      "AngularFireFunctions",
+      "EntitlementStore"
+    ],
+    "AbstractQuery": [
+      "AbstractStore<T>"
+    ],
+    "AbstractStore": [
+      "string }"
+    ],
+    "ActiveClassService": [
+      "ClassQuery",
+      "ClassService"
+    ],
+    "PupilStore": [
+      "ID"
+    ],
+    "PupilQuery": [
+      "PupilStore"
+    ],
+    "AbstractService": [
+      "AbstractStore<T>",
+      "AngularFirestore"
+    ],
+    "RecordsFactoryService": [
+      "ChildQuery",
+      "RouterQueryHelper",
+      "PupilFactoryService",
+      "AngularFirestore"
+    ],
+    "LibraryQuery": [
+      "LibraryStore"
+    ],
+    "ClassQuery": [
+      "EntitlementQuery",
+      "ClassStore",
+      "RemoteConfigService"
+    ],
+    "PupilService": [
+      "PupilStore",
+      "ID",
+      "RouterQueryHelper",
+      "AngularFirestore"
+    ],
+    "RecordsQuery": [
+      "RecordsStore"
+    ],
+    "RecordsStore": [
+      "string"
+    ],
+    "LibraryService": [
+      "LibraryStore",
+      "ID",
+      "RouterQueryHelper",
+      "AngularFirestore"
+    ],
+    "SessionService": [
+      "SessionStore",
+      "AuthProcessService"
+    ],
+    "LibraryStore": [
+      "ID"
+    ],
+    "ClassStore": [],
+    "LibraryFactoryService": [
+      "ClassQuery",
+      "RouterQueryHelper",
+      "AngularFirestore"
+    ],
+    "ChildQuery": [
+      "ChildStore"
+    ],
+    "SessionQuery": [
+      "SessionStore"
+    ],
+    "EntitlementStore": [],
+    "AbstractFactoryService": [
+      "boolean = false",
+      "Observable<undefined | ID | ID[]>"
+    ],
+    "ChildService": [
+      "ChildStore",
+      "ChildQuery",
+      "CrashlyticsService",
+      "AuthProcessService",
+      "RouterQueryHelper",
+      "AngularFirestore"
+    ],
+    "EntitlementQuery": [
+      "AuthProcessService",
+      "EntitlementStore"
+    ],
+    "SessionStore": [],
+    "ChildStore": [],
+    "ClassService": [
+      "ClassStore",
+      "NgZone",
+      "CrashlyticsService",
+      "AuthProcessService",
+      "RouterQueryHelper",
+      "AngularFireFunctions",
+      "AngularFirestore"
+    ],
+    "RecordsService": [
+      "RecordsStore",
+      "ID",
+      "RouterQueryHelper",
+      "AngularFirestore"
+    ],
+    "PupilFactoryService": [
+      "ClassQuery",
+      "RouterQueryHelper",
+      "AngularFirestore"
+    ],
+    "AppComponent": [
+      "ChildService",
+      "ClassModalController",
+      "ActivatedRoute",
+      "LibraryFactoryService",
+      "ClassQuery",
+      "ChildQuery",
+      "RemoteConfigService",
+      "NavController",
+      "RecordsFactoryService",
+      "SessionService",
+      "EntitlementService",
+      "AlertsService",
+      "AuthProcessService",
+      "RouterQueryHelper",
+      "PupilFactoryService",
+      "Platform",
+      "ClassService"
+    ],
+    "AuthUIReauthenticateComponent": [
+      "PopoverController",
+      "disable-next-line @typescript-eslint/ban-types",
+      "ChangeDetectorRef",
+      "AuthProcessService"
+    ],
+    "AuthUIUserComponent": [
+      "PopoverController",
+      "NavController",
+      "ToastService",
+      "AlertsService",
+      "AuthProcessService"
+    ],
+    "AuthProvidersComponent": [
+      "AuthProcessService"
+    ],
+    "AuthUIFormFieldComponent": [],
+    "AuthUIResetPasswordFormComponent": [
+      "ChangeDetectorRef",
+      "AuthProcessService"
+    ],
+    "AuthUINameFieldComponent": [
+      "ChangeDetectorRef",
+      "Injector"
+    ],
+    "AuthUIEmailFieldComponent": [
+      "ChangeDetectorRef",
+      "Injector"
+    ],
+    "AuthUIPasswordFieldComponent": [
+      "ChangeDetectorRef",
+      "Injector"
+    ],
+    "AuthUIRegisterComponent": [
+      "ChangeDetectorRef",
+      "AuthProcessService"
+    ],
+    "AuthUISignInComponent": [
+      "disable-next-line @typescript-eslint/ban-types",
+      "ChangeDetectorRef",
+      "AuthProcessService"
+    ],
+    "EmailConfirmationComponent": [
+      "ChangeDetectorRef",
+      "CrashlyticsService",
+      "NavController",
+      "ToastService",
+      "AuthProcessService"
+    ],
+    "ValueAccessorControlComponent": [
+      "ChangeDetectorRef",
+      "Injector"
+    ],
+    "AuthPopoverMenuComponent": [
+      "PopoverController"
+    ],
+    "AuthAvatarComponent": [
+      "PopoverController",
+      "NavController",
+      "AuthProcessService"
+    ],
+    "MalSharedModule": [
+      ""
+    ],
+    "ToastService": [
+      "ToastController",
+      "TranslateService"
+    ],
+    "AlertsService": [
+      "AlertController",
+      "TranslateService"
+    ],
+    "FirestoreSyncService": [
+      "CrashlyticsService",
+      "AngularFirestore"
+    ],
+    "PickerService": [
+      "PickerController"
+    ],
+    "CrashlyticsService": [],
+    "RemoteConfigService": [
+      "",
+      "Injector"
+    ],
+    "LegalityDialogService": [
+      "AlertController",
+      "TranslateService"
+    ],
+    "LoadingService": [
+      "LoadingController",
+      "RemoteConfigService",
+      "TranslateService"
+    ],
+    "AuthValidatorsService": [],
+    "AuthCredentialFactoryCapacitorService": [
+      "CrashlyticsService"
+    ],
+    "AnalyticsService": [],
+    "AuthProcessService": [
+      "LoadingService",
+      "CrashlyticsService",
+      "AngularFireAuth",
+      "LegalityDialogService",
+      "ToastService",
+      "FirestoreSyncService"
+    ],
+    "LoggedInGuard": [
+      "MalSharedConfig",
+      "Router",
+      "AuthProcessService"
+    ],
+    "AuthUserPage": [],
+    "AuthRegisterPage": [
+      "NavController",
+      "ActivatedRoute",
+      "AnalyticsService"
+    ],
+    "AuthSignInPage": [
+      "ActivatedRoute",
+      "NavController",
+      "AuthProcessService",
+      "AlertsService",
+      "AnalyticsService"
+    ],
+    "AppRoutingModule": [],
+    "ParentModule": [
+      "ChildService"
+    ],
+    "HomePage": [
+      "ClassModalController",
+      "ActivatedRoute",
+      "LoadingService",
+      "ClassQuery",
+      "NavController",
+      "AuthProcessService",
+      "AnalyticsService"
+    ],
+    "ClassAdminPage": [
+      "LoadingService",
+      "ClassQuery",
+      "ActionSheetController",
+      "InviteService",
+      "CrashlyticsService",
+      "NavController",
+      "AuthProcessService",
+      "AlertsService",
+      "ActiveClassService",
+      "AnalyticsService",
+      "ClassService"
+    ],
+    "PupilListPage": [
+      "LoadingService",
+      "ClassQuery",
+      "NavController",
+      "TeacherService",
+      "PupilModalController",
+      "PupilFactoryService",
+      "AnalyticsService"
+    ],
+    "JoinProPage": [
+      "ChangeDetectorRef",
+      "AlertsService",
+      "InAppPurchaseService",
+      "AnalyticsService"
+    ],
+    "PupilReadingHistoryPage": [
+      "BookScanService",
+      "LoadingService",
+      "TeacherService",
+      "RecordsFactoryService",
+      "PupilFactoryService",
+      "AnalyticsService"
+    ],
+    "PupilReadingEventPage": [
+      "BookScanService",
+      "LoadingService",
+      "ClassQuery",
+      "TeacherService",
+      "NavController",
+      "RecordsFactoryService",
+      "AlertsService",
+      "RouterQueryHelper",
+      "PupilFactoryService",
+      "AnalyticsService",
+      "MalDeviceInfoService"
+    ],
+    "PupilAdminPage": [
+      "LoadingService",
+      "ClassQuery",
+      "InviteService",
+      "CrashlyticsService",
+      "NavController",
+      "AuthProcessService",
+      "AlertsService",
+      "PupilFactoryService",
+      "AnalyticsService"
+    ],
+    "AboutPage": [
+      "AnalyticsService"
+    ],
+    "BookModalPage": [
+      "BookScanService",
+      "ClassQuery",
+      "AlertsService",
+      "AnalyticsService",
+      "ModalController"
+    ],
+    "BookModalController": [
+      "ModalController"
+    ],
+    "PupilPage": [
+      "BookScanService",
+      "LoadingService",
+      "ClassQuery",
+      "TeacherService",
+      "RecordsFactoryService",
+      "PupilFactoryService",
+      "AnalyticsService"
+    ],
+    "InfoPage": [
+      "RemoteConfigService",
+      "SessionQuery",
+      "AuthProcessService",
+      "AnalyticsService"
+    ],
+    "IssueBookPage": [
+      "LoadingService",
+      "LibraryFactoryService",
+      "NavController",
+      "TeacherService",
+      "PupilFactoryService",
+      "AnalyticsService"
+    ],
+    "ClassModalPage": [
+      "ClassQuery",
+      "RemoteConfigService",
+      "AlertsService",
+      "AnalyticsService",
+      "ModalController"
+    ],
+    "ClassModalController": [
+      "LoadingController",
+      "ClassService",
+      "ModalController"
+    ],
+    "BookAlertService": [
+      "ToastController",
+      "AlertController"
+    ],
+    "BookPage": [
+      "BookScanService",
+      "LoadingService",
+      "ClassQuery",
+      "LibraryFactoryService",
+      "BookAlertService",
+      "NavController",
+      "AlertsService",
+      "AnalyticsService"
+    ],
+    "ClassPage": [
+      "ClassQuery"
+    ],
+    "RedeemInvitePage": [
+      "ActivatedRoute",
+      "LoadingService",
+      "InviteService",
+      "NavController",
+      "AlertsService",
+      "AnalyticsService"
+    ],
+    "PupilModalController": [
+      "PupilFactoryService",
+      "ModalController"
+    ],
+    "PupilModalPage": [
+      "ClassQuery",
+      "AnalyticsService",
+      "ModalController"
+    ],
+    "BookListPage": [
+      "BookScanService",
+      "LoadingService",
+      "ClassQuery",
+      "LibraryFactoryService",
+      "NavController",
+      "AnalyticsService"
+    ],
+    "ChildPage": [
+      "ChildService",
+      "BookScanService",
+      "LoadingService",
+      "ChildQuery",
+      "TeacherService",
+      "RecordsFactoryService",
+      "AnalyticsService"
+    ],
+    "ChildReadingEventPage": [
+      "LoadingService",
+      "ChildQuery",
+      "TeacherService",
+      "NavController",
+      "RecordsFactoryService",
+      "RouterQueryHelper",
+      "AnalyticsService",
+      "MalDeviceInfoService"
+    ],
+    "InAppPurchaseService": [
+      "InAppPurchase2",
+      "AlertController",
+      "AuthProcessService",
+      "Platform"
+    ],
+    "BookScanService": [
+      "PickerService",
+      "LoadingService",
+      "LibraryFactoryService",
+      "HttpClient",
+      "AngularFireStorage",
+      "RecordsFactoryService",
+      "AlertsService",
+      "BarcodeScanner",
+      "BookModalController",
+      "PupilFactoryService"
+    ],
+    "RouterQueryHelper": [
+      "RouterQuery"
+    ],
+    "TeacherService": [
+      "LibraryFactoryService",
+      "RecordsFactoryService",
+      "PupilFactoryService"
+    ],
+    "InviteService": [
+      "CrashlyticsService",
+      "AngularFireFunctions",
+      "AngularFirePerformance"
+    ],
+    "MergeUserService": [
+      "LoadingService",
+      "ClassQuery",
+      "InviteService",
+      "CrashlyticsService",
+      "AlertsService"
+    ]
+  }
+}

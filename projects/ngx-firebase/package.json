@@ -1,0 +1,38 @@
+{
+  "name": "ngx-firebase",
+  "version": "0.0.1",
+  "ngPackage": {
+    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../../dist/ngx-firebase",
+    "lib": {
+      "entryFile": "src/public-api.ts",
+      "umdModuleIds": {
+        "@ionic/angular": "ionic.angular",
+        "@ngx-translate/core": "ngx-translate",
+        "@firebase/app": "firebase",
+        "ionic4-tooltips": "ionic4-tooltips"
+      }
+    }
+  },
+  "peerDependencies": {
+    "@angular/animations": "~11.1.2",
+    "@angular/cdk": "^11.1.2",
+    "@angular/common": "^11.1.2",
+    "@angular/core": "^11.1.2",
+    "@angular/fire": "^6.1.4",
+    "@angular/flex-layout": "^11.0.0-beta.33",
+    "@angular/forms": "^11.1.2",
+    "@angular/platform-browser": "^11.1.2",
+    "@angular/platform-browser-dynamic": "~11.1.2",
+    "@angular/router": "^11.1.2",
+    "@ionic/angular": "^5.5.0",
+    "@ngx-translate/core": "^13.0.0",
+    "ionic4-tooltips": "^2.0.2",
+    "rxjs": "~6.5.4",
+    "zone.js": "^0.11.3",
+    "firebase": "^8.2.6"
+  },
+  "dependencies": {
+    "tslib": "^2.0.3"
+  }
+}

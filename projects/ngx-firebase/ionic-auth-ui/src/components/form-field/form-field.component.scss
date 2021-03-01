@@ -1,0 +1,31 @@
+ion-item.form-field {
+    // border-radius: 10%;
+    // border-style: solid;
+    --background: rgb(255, 255, 255, 0.4) !important;
+    width: 100%;
+    div.input-wrap {
+        display: flex;
+        flex-wrap: nowrap;
+        width: 100%;
+        ion-icon.invalid {
+            color: var(--ion-color-danger, red);
+            align-items: right;
+            height: 100%;
+        }
+    }
+}
+
+ion-grid.footer-messages {
+    text-align: left;
+    margin: 0px;
+    padding: 0px;
+    font-size: small;
+    ion-row.error-message ion-col {
+        color: var(--ion-color-danger, red);
+        margin: 0px;
+        padding: 0px;
+    }
+    span.hint-end {
+        float: right;
+    }
+}

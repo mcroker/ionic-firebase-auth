@@ -1,0 +1,11 @@
+<mal-authui-form-field [control]="parentControl"
+                label="auth.email.label"
+                errorPrefix="auth.email.errors">
+
+    <ion-input [placeholder]="'auth.email.placeholder' | translate"
+               [formControl]="control"
+               type="email"
+               autocomplete="email">
+    </ion-input>
+
+</mal-authui-form-field>

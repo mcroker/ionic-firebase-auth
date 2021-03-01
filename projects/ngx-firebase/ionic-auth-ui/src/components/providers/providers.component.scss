@@ -1,0 +1,61 @@
+$google: #db4437;
+$apple: #000000;
+$facebook: #385899;
+$twitter: #1da1f2;
+$github: #000000;
+$phone: #02bd7e;
+$microsoft: #0078d4;
+$microsoft_fab: #f8f9fa;
+$yahoo: #720e9e;
+
+:host {
+  display: block;
+}
+
+.space-full-xs {
+  width: 100%;
+  margin: 0.4rem;
+}
+
+.buttons-ionic {
+  ion-button {
+    @media screen and (max-width: 599px) {
+      width: 80%;
+    }
+    --background: white;
+  }
+  ion-button.google {
+    color: $google !important;
+  }
+
+  ion-button.apple {
+    color: $apple !important;
+  }
+
+  ion-button.facebook {
+    color: $facebook !important;
+    ion-icon {
+      width: 3em;
+    }
+  }
+
+  ion-button.twitter {
+    color: $twitter !important;
+  }
+
+  ion-button.github {
+    color: $github !important;
+  }
+
+  ion-button.microsoft {
+    color: $microsoft !important;
+  }
+
+  ion-button.yahoo {
+    color: $yahoo !important;
+  }
+
+  ion-button.phone {
+    color: $phone;
+  }
+}

@@ -1,0 +1,6 @@
+<ion-button *ngFor="let link of links"
+            expand="block"
+            [disabled]="link.disabled"
+            (click)="doLinkClick(link)">
+            {{ link.text | translate }}
+</ion-button>

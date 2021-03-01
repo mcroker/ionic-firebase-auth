@@ -1,0 +1,33 @@
+.separator {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 20px auto 6px auto;
+    position: relative;
+    overflow: hidden;
+    width: 100px;
+
+    .text {
+        display: inline-flex;
+        position: relative;
+        padding: 0 8px;
+        z-index: 9999;
+
+        &:before,
+        &:after {
+            content: "";
+            display: block;
+            width: 30px;
+            position: absolute;
+            top: 10px;
+            border-top: 1px solid;
+        }
+
+        &:before {
+            right: 100%;
+        }
+
+        &:after {
+            left: 100%;
+        }
+    }
+}

@@ -1,0 +1,32 @@
+{
+  "ngPackage": {
+    "lib": {
+      "entryFile": "src/public-api.ts",
+      "umdModuleIds": {
+        "@ionic/angular": "ionic.angular",
+        "@capacitor/core": "Capacitor",
+        "@ngx-translate/core": "ngx-translate",
+        "ionic4-tooltips": "ionic4-tooltips"
+      }
+    }
+  },
+  "peerDependencies": {
+    "@angular/animations": "~11.1.2",
+    "@angular/cdk": "^11.1.2",
+    "@angular/common": "^11.1.2",
+    "@angular/core": "^11.1.2",
+    "@angular/flex-layout": "^11.0.0-beta.33",
+    "@angular/forms": "^11.1.2",
+    "@angular/platform-browser": "^11.1.2",
+    "@angular/platform-browser-dynamic": "~11.1.2",
+    "@angular/router": "^11.1.2",
+    "@ionic-native/core": "^5.30.0",
+    "@ionic/angular": "^5.5.0",
+    "@ngx-translate/core": "^13.0.0",
+    "@capacitor/core": "2.4.2",
+    "@capacitor/ios": "^2.4.3",
+    "ionic4-tooltips": "^2.0.2",
+    "zone.js": "^0.11.3",
+    "rxjs": "~6.5.4"
+  }
+}

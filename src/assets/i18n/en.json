@@ -1,0 +1,127 @@
+{
+    "auth": {
+        "user": {
+            "title": "User",
+            "edit": "Edit",
+            "notLoggedIn": "You are not logged in!",
+            "actions": {
+                "save": "Save changes",
+                "deleteAccount": "Delete account",
+                "signOut": "Sign out"
+            },
+            "mesage": {
+                "confirmDelete": "Confirm you wish to delete the current account {{userName}}. This operations is not reversible.",
+                "acountDeleted": "Your account has been successfully deleted!",
+                "deleteError": "Error occurred while deleting your account: {{error}}"
+            }
+        },
+        "menu": {
+            "signIn": "Sign in",
+            "register": "Register",
+            "signOut": "Sign out",
+            "profile": "Profile"
+        },
+        "reauthenticate": {
+            "tabTitle": "Authentication Required"
+        },
+        "signIn": {
+            "pageTitle": "Sign in",
+            "cardTitle": "Signing in",
+            "signInButton": "Sign in",
+            "forgotPasswordButton": "Forgot Password ?",
+            "forgotPassword": "Forgot Password?",
+            "dontHaveAccount": "Don't have an account?",
+            "createAccountButton": "Create account"
+        },
+        "common": {
+            "orLabel": "OR",
+            "pleaseRetry": "Sorry, something went wrong. Please retry later."
+        },
+        "email": {
+            "label": "Email",
+            "placeholder": "Email",
+            "errors": {
+                "required": "Email is required",
+                "email": "Please enter a valid email address"
+            },
+            "notVerified": "email is not verified",
+            "isVerified": "email is verified"
+        },
+        "name": {
+            "label": "Name",
+            "placeholder": "Name",
+            "errors": {
+                "required": "Name is required",
+                "minlength": "The name is too short!",
+                "maxlength": "The name is too long!"
+            }
+        },
+        "password": {
+            "label": "Password",
+            "confirmLabel": "Confirm Password",
+            "placeholder": "Password",
+            "confirmPlaceholder": "Confirm Password",
+            "errors": {
+                "required": "Password is required",
+                "passwordConfirmationRequired": "Password confirmation is required",
+                "passwordsNotMatching": "Password must match",
+                "passwordStrength": "Password does not meet compliexity rules",
+                "minlength": "The password is too short!",
+                "maxlength": "The password is too long!"
+            }
+        },
+        "phoneNumber": {
+            "label": "Phone Number",
+            "hintEnd": "The phone number is international. Therefore, it should start with a + sign or 00, followed by the country code, - and national number e.g: +49-12345678 or 0041-1234567890 NOTE : the phone number must be a valid phone credential !!",
+            "errors": {
+                "pattern": "Please enter a valid phone number"
+            },
+            "placeholder": "Phone number"
+        },
+        "resetPassword": {
+            "tabText": "Reset e-mail address to password",
+            "inputText": "Reset e-mail address to password",
+            "errors": {
+                "emailRequired": "E-mail is required to reset the password!",
+                "pattern": "Please enter a valid e-mail address"
+            },
+            "actionButton": "Reset",
+            "onResetRequested": "Reset requested. Check your e-mail instructions.",
+            "onResetRequestedTo": "Password reset requested for {{email}}. Check your e-mail instructions."
+        },
+        "legal": {
+            "subHeader": "Terms and Conditions",
+            "legalRequirements": "Legal requirements",
+            "agreeTo": "I agree to the",
+            "readAndAccept": "I read and accept the",
+            "termsAndConditions": "terms and conditions",
+            "tosAndConditions": "Terms of Service and Conditions",
+            "privacyPolicy": "privacy policy",
+            "declineButton": "Decline",
+            "acceptButton": "Accept",
+            "confirmButton": "Confirm"
+        },
+        "register": {
+            "pageTitle": "Create Account",
+            "cardTitle": "Registration",
+            "buttonText": "Register",
+            "guestButton": "Continue as guest",
+            "createAccountButton": "Create account",
+            "alreadyHaveAccount": "Already have an account?",
+            "passwordConfirmation": "Password Confirmation",
+            "signInButton": "Sign in",
+            "errors": {}
+        },
+        "emailConfirmation": {
+            "pageTitle": "Confirm e-mail",
+            "title": "Confirm your e-mail address!",
+            "bodyText": "A confirmation e-mail has been sent to you. Check your inbox and click on the link \"Confirm my e-mail\" to confirm your e-mail address.",
+            "bodyHtml": "<P>A confirmation e-mail has been sent to you. Check your inbox and click on the link \"Confirm my e-mail\" to confirm your e-mail address.</P>",
+            "goBack": "Go back",
+            "refreshStatus": "Completed",
+            "signOut": "Sign Out",
+            "sendNewVerificationEmail": "Send new confirmation e-mail",
+            "onConfirmationSuccess": "A new confirmation e-mail has been sent. Please check your inbox."
+        }
+    }
+}

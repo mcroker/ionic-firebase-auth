@@ -1,0 +1,14 @@
+<ion-item class="ion-no-padding input form-field">
+  <ion-label class="text-size-xs" position="floating">{{ label | translate }}</ion-label>
+  <div class="input-wrap">
+    <ng-content></ng-content>
+    <ion-icon size="large" *ngIf="!(isValid$ | async) && !(isDisabled$ | async)" class="invalid" name="remove-circle"></ion-icon>
+    <ion-icon size="large" *ngIf="icon" class="custom" [name]="icon"></ion-icon>
+  </div>
+</ion-item>
+<ion-grid class="footer-messages">
+  <span class="hint-end" *ngIf="hintEnd">{{ hintEnd | translate:translateParams }}</span>
+  <ion-row *ngFor="let error of (errors$ | async)" class="error-message">
+    <ion-col>{{ error | translate:translateParams }} </ion-col>
+  </ion-row>
+</ion-grid>

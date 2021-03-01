@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar class="box-shadow" color="tertiary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title id="auth_signin_title">{{ "auth.signIn.pageTitle" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="auth-page">
+  <mal-authui-signin (onCreateAccountRequested)="doCreateAccountRequested()" (onSuccess)="doSuccess($event)"
+                     [providers]="['google', 'apple', 'facebook']"></mal-authui-signin>
+</ion-content>

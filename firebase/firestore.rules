@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+
+  function isClassValid(class) {
+    return class.name != ''
+  }
+  
+  function isBookValid(book) {
+    return book.title != ''
+  }
+  
+  function isPupilValid(pupil) {
+    return pupil.name != ''
+    && pupil.classid != ''
+  }
+  
+  function isRecordValid(record) {
+    return null != record.issueDate;
+  }
+    
+  match /databases/{database}/documents {
+
+    match /{somePath=**}/pupils/{pupilid} {
+      function getPupil() {
+        return get(/databases/$(database)/documents/$(somePath)/pupils/$(pupilid)).data;
+      }
+       
+     function isParent(pupil) {
+        return request.auth != null && request.auth.uid in pupil.parents;
+     }
+     
+    allow read: if isParent(resource.data);
+      match /records/{recordId} {
+        allow create, update: if isRecordValid(request.resource.data) && isParent(getPupil());
+        allow delete, read: if isParent(getPupil());
+      }
+    }
+  
+    match /classes/{classid} {
+  
+      function getClass() {
+        return get(/databases/$(database)/documents/classes/$(classid)).data;
+      }
+      
+      function isTeacher(class) {
+        return null != request.auth && (request.auth.uid in class.teachers.keys());
+      }
+      
+      function isOwner(class) {
+        return null != request.auth && 'owner' == class.teachers[request.auth.uid].role;
+      }
+      
+      allow create: if isClassValid(request.resource.data) && isOwner(request.resource.data);
+      allow update: if isClassValid(request.resource.data) && isOwner(resource.data);
+      allow delete: if isOwner(resource.data);
+      allow read: if isTeacher(resource.data);
+      
+      match /books/{bookid} {
+        allow create, update: if isBookValid(request.resource.data) && isTeacher(getClass());        
+        allow delete, read: if isTeacher(getClass());   
+      }
+      
+      match /pupils/{pupilid} {
+       allow create, update: if isPupilValid(request.resource.data) && isTeacher(getClass());
+       allow delete, read : if isTeacher(getClass());
+       
+       match /records/{recordId} {
+          allow create, update: if isRecordValid(request.resource.data) && isTeacher(getClass());
+          allow delete, read: if isTeacher(getClass());
+       }
+      
+    }
+    
+    }
+    
+    match /users/{userid} {
+      allow read, write: if request.auth.uid == userid;
+  	}
+    
+  }
+}
