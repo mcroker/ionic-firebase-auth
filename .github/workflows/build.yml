@@ -9,7 +9,7 @@ on:
 jobs:
 
   build:
-    name: UnitTest
+    name: Build
     runs-on: macOS-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - uses: actions/cache@v2
-        name: actions/cache@v2 .npm
+        name: actions/cache@v2 ~/.npm
         id: npm-cache
         with:
           path: ~/.npm
@@ -27,34 +27,34 @@ jobs:
             ${{ runner.os }}-node-
 
       - uses: actions/cache@v2
-        name: actions/cache@v2 nodemodules-app-cache
+        name: actions/cache@v2 ./node_modules
         id: nodemodules-app-cache
         with:
           path: './node_modules'
           key: ${{ runner.os }}-nodemodules-app-${{ hashFiles('./package-lock.json') }}
 
       - uses: actions/cache@v2
-        name: actions/cache@v2 nodemodules-lib-cache
+        name: actions/cache@v2 ./projects/ngx-firebase/node_modules
         id: nodemodules-lib-cache
         with:
           path: './projects/ngx-firebase/node_modules'
           key: ${{ runner.os }}-nodemodules-lib-${{ hashFiles('./projects/ngx-firebase/package-lock.json') }}
 
       - uses: actions/cache@v2
-        name: actions/cache@v2 sonar-scanner
+        name: actions/cache@v2 ./sonar-scanner
         id: sonar-scanner-cache
         with:
           path: './sonar-scanner'
           key: ${{ runner.os }}-sonar-scanner-4.6.0.2311
 
       - uses: actions/cache@v2
-        name: actions/cache@v2 dist
+        name: actions/cache@v2 outputs
         id: output-cache
         with:
           path: |
             './dist'
             '**/reports'
-          key: ${{ runner.os }}-output-${{ github.run_id }}
+          key: output-${{ github.run_id }}
 
       - name: Use Node.js
         uses: actions/setup-node@v1
