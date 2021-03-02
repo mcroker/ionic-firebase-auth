@@ -18,7 +18,8 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - uses: actions/cache@v2
-        id: node-cache
+        name: actions/cache@v2 .npm
+        id: npm-cache
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -26,20 +27,34 @@ jobs:
             ${{ runner.os }}-node-
 
       - uses: actions/cache@v2
+        name: actions/cache@v2 nodemodules-app-cache
         id: nodemodules-app-cache
         with:
           path: './node_modules'
           key: ${{ runner.os }}-nodemodules-app-${{ hashFiles('./package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nodemodules-app-
 
       - uses: actions/cache@v2
+        name: actions/cache@v2 nodemodules-lib-cache
         id: nodemodules-lib-cache
         with:
           path: './projects/ngx-firebase/node_modules'
           key: ${{ runner.os }}-nodemodules-lib-${{ hashFiles('./projects/ngx-firebase/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nodemodules-lib-
+
+      - uses: actions/cache@v2
+        name: actions/cache@v2 sonar-scanner
+        id: sonar-scanner-cache
+        with:
+          path: './sonar-scanner'
+          key: ${{ runner.os }}-sonar-scanner-4.6.0.2311
+
+      - uses: actions/cache@v2
+        name: actions/cache@v2 dist
+        id: output-cache
+        with:
+          path: |
+            './dist'
+            '**/reports'
+          key: ${{ runner.os }}-output-${{ github.run_id }}
 
       - name: Use Node.js
         uses: actions/setup-node@v1
@@ -54,16 +69,18 @@ jobs:
         if: steps.nodemodules-lib-cache.outputs.cache-hit != 'true'
         run: npm ci --prefix ./projects/ngx-firebase
 
+      - name: Install Sonar-Scanner
+        if: steps.sonar-scanner-cache.cache-hit != 'true'
+        run: |
+          [ ! -d sonar-scanner ] && mkdir sonar-scanner
+          curl -o sonar-scanner/sonar-scanner-cli-4.6.0.2311-macosx.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.0.2311-macosx.zip
+          unzip -d sonar-scanner sonar-scanner/sonar-scanner-cli-4.6.0.2311-macosx.zip
+
       - run: npm run build:ci
       - run: npm run test:ci
 
-      - uses: mathrix-education/sonar-scanner@master
-        name: Sonar Scanner
-        with:
-          version: 4.2.0.1873 # required
-          typescript: true
-          scan: true
-          args: -Dsonar.host.url=https://sonarcloud.io
+      - name: Sonar-Scanner
+      - run: ./sonar-scanner/sonar-scanner-4.6.0.2311-macosx/bin/sonar-scanner -Dsonar.host.url=https://sonarcloud.io
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
