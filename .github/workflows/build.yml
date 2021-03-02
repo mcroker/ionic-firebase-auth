@@ -12,22 +12,29 @@ jobs:
     name: UnitTest
     runs-on: macOS-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x]
-
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Use Node.js ${{ matrix.node-version }}
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 12.x
+
       - run: npm ci
       - run: npm ci --prefix ./projects/ngx-firebase
+
       - run: npm run build:ci
       - run: npm run test:ci
+
       - uses: mathrix-education/sonar-scanner@master
         name: Sonar Scanner
         with:
