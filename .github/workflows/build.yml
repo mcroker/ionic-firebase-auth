@@ -62,7 +62,7 @@ jobs:
           node-version: 12.x
 
       - name: Install dependencies (app)
-        if: steps.nodemodules-app-cache.cache-hit != 'true'
+        if: steps.nodemodules-app-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Install dependencies (lib)
@@ -70,7 +70,7 @@ jobs:
         run: npm ci --prefix ./projects/ngx-firebase
 
       - name: Install Sonar-Scanner
-        if: steps.sonar-scanner-cache.cache-hit != 'true'
+        if: steps.sonar-scanner-cache.outputs.cache-hit != 'true'
         run: |
           [ ! -d sonar-scanner ] && mkdir sonar-scanner
           curl -o sonar-scanner/sonar-scanner-cli-4.6.0.2311-macosx.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.0.2311-macosx.zip
