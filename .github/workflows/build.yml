@@ -28,11 +28,12 @@ jobs:
       - run: npm ci --prefix ./projects/ngx-firebase
       - run: npm run build:ci
       - run: npm run test:ci
-      # Install sonar
-      - run: mkdir tmp
-      - run: curl -o tmp/sonar-scanner-cli-4.6.0.2311-macosx.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.0.2311-macosx.zip
-      - run: unzip -d tmp tmp/sonar-scanner-cli-4.6.0.2311-macosx.zip
-      - run: ./tmp/sonar-scanner-4.6.0.2311-macosx/bin/sonar-scanner -Dsonar.host.url=https://sonarcloud.io
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - uses: mathrix-education/sonar-scanner@master
+        with:
+          version: 4.2.0.1873 # required
+          typescript: true
+          scan: true
+          args: --debug -Dsonar.host.url=https://sonarcloud.io
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
