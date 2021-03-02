@@ -29,11 +29,12 @@ jobs:
       - run: npm run build:ci
       - run: npm run test:ci
       - uses: mathrix-education/sonar-scanner@master
+        name: Sonar Scanner
         with:
           version: 4.2.0.1873 # required
           typescript: true
           scan: true
           args: -Dsonar.host.url=https://sonarcloud.io
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
