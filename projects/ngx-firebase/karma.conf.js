@@ -25,7 +25,11 @@ module.exports = function (config) {
       // source files, that you wanna generate coverage for
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
-      'src/**/*.js': ['coverage']
+      'src/**/*.js': ['coverage'],
+      'capacitor/src/**/*.js': ['coverage'],
+      'iap/src/**/*.js': ['coverage'],
+      'ionic/src/**/*.js': ['coverage'],
+      'ionic-auth-ui/src/**/*.js': ['coverage']
     },
 
     // optionally, configure the reporter
