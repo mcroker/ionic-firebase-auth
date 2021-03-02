@@ -6,11 +6,12 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { ICredentialFactoryProvider } from '../interfaces';
 import {
     MalInternalFakeCrashlyticsService, MalInternalFakeAngularFireAuth,
-    MalInternalFakeUserCredential, DUMMYAUTHERROR, MalInternalFakeFirestoreSyncService, MalInternalFakeUiService
+    MalInternalFakeUserCredential, DUMMYAUTHERROR, MalInternalFakeFirestoreSyncService, MalInternalFakeUiService, MalInternalFakeFirebaseService
 } from '../../test/fakes';
 import { MalSharedConfig } from '../interfaces';
 import { User, AuthCredential } from '@firebase/auth-types';
 import { UiService } from './ui.service';
+import { FirebaseService } from './firebase.service';
 
 class FakeCredFactory implements ICredentialFactoryProvider {
     isProviderSupported(provider: AuthProvider): Promise<boolean> { return Promise.resolve(true) };
@@ -26,8 +27,8 @@ describe('AuthProcessService', () => {
     let spyCredFactory: jasmine.SpyObj<ICredentialFactoryProvider>;
     let fakeFirestoreSyncService: FirestoreSyncService & MalInternalFakeFirestoreSyncService;
     let fakeAfa: AngularFireAuth & MalInternalFakeAngularFireAuth;
-    let fakeCrashlticsService: MalInternalFakeCrashlyticsService & CrashlyticsService;
     let fakeUiService: MalInternalFakeUiService & UiService;
+    let fakeFirebaseService: MalInternalFakeFirebaseService & FirebaseService;
 
     beforeEach(() => {
 
@@ -36,8 +37,8 @@ describe('AuthProcessService', () => {
         spyCredFactory = jasmine.createSpyObj(FakeCredFactory, ['getCredential']);
         fakeFirestoreSyncService = MalInternalFakeFirestoreSyncService.create();
         fakeAfa = MalInternalFakeAngularFireAuth.create();
-        fakeCrashlticsService = MalInternalFakeCrashlyticsService.create();
         fakeUiService = MalInternalFakeUiService.create();
+        fakeFirebaseService = MalInternalFakeFirebaseService.create();
 
         aps = new AuthProcessService(
             config,
@@ -45,7 +46,7 @@ describe('AuthProcessService', () => {
             spyCredFactory,
             fakeFirestoreSyncService,
             fakeAfa,
-            fakeCrashlticsService,
+            fakeFirebaseService,
             fakeUiService
         );
 
@@ -90,7 +91,7 @@ describe('AuthProcessService', () => {
                 fakeAfa.signInWithEmailAndPassword.and.rejectWith(DUMMYAUTHERROR.notFound);
                 const userCred = await aps.signInWith(AuthProvider.EmailAndPassword, { credentials: { email: 'm@m.com', password: 'p' } });
                 expect(userCred).toBeNull();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
             });
 
             // These should not record a crashlytics exception
@@ -133,7 +134,7 @@ describe('AuthProcessService', () => {
                 );
                 expect(fakeAfa.updateCurrentUser).toHaveBeenCalled();
                 expect(fakeAfa.createUserWithEmailAndPassword).toHaveBeenCalled();
-                expect(fakeCrashlticsService.recordException).not.toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
             });
 
             /**
@@ -197,7 +198,7 @@ describe('AuthProcessService', () => {
                 });
                 expect(userCred).toBeNull();
                 expect(fakeAfa.createUserWithEmailAndPassword).not.toHaveBeenCalled();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeCredResponse.user.sendEmailVerification).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).not.toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
@@ -214,7 +215,7 @@ describe('AuthProcessService', () => {
                 });
                 expect(userCred).toBeNull();
                 expect(fakeAfa.createUserWithEmailAndPassword).not.toHaveBeenCalled();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeCredResponse.user.sendEmailVerification).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).not.toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
@@ -234,7 +235,7 @@ describe('AuthProcessService', () => {
                     displayName: 'displayName'
                 });
                 expect(userCred).toBeNull();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.createUserWithEmailAndPassword).toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
             });
@@ -254,7 +255,7 @@ describe('AuthProcessService', () => {
                 expect(fakeCredResponse.user.sendEmailVerification).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).not.toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.createUserData).not.toHaveBeenCalled();
-                expect(fakeCrashlticsService.recordException).not.toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
             });
 
             it('Success (all userData)', async () => {
@@ -275,7 +276,7 @@ describe('AuthProcessService', () => {
                 expect(fakeCredResponse.user.sendEmailVerification).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).not.toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.createUserData).not.toHaveBeenCalled();
-                expect(fakeCrashlticsService.recordException).not.toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
             });
 
             it('Success - account already exists (same provider)');
@@ -310,7 +311,7 @@ describe('AuthProcessService', () => {
                 const userCred = await aps.signInWith(AuthProvider.ANONYMOUS);
                 expect(userCred).toBeNull();
                 expect(fakeAfa.signInAnonymously).not.toHaveBeenCalled();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
             });
 
         });
@@ -325,7 +326,7 @@ describe('AuthProcessService', () => {
                     credentials: { email: 'm@m.com', password: 'p' }
                 });
                 expect(userCred).toBe(fakeCredResponse);
-                expect(fakeCrashlticsService.recordException).not.toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
                 expect(spyMergeUserService.prepareSource).toHaveBeenCalled();
                 expect(spyMergeUserService.applyToTarget).toHaveBeenCalled();
             });
@@ -341,7 +342,7 @@ describe('AuthProcessService', () => {
                     credentials: { email: 'm@m.com', password: 'p' }
                 });
                 expect(userCred).toBe(fakeCredResponse);
-                expect(fakeCrashlticsService.recordException).not.toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
                 expect(spyMergeUserService.prepareSource).toHaveBeenCalled();
                 expect(spyMergeUserService.applyToTarget).not.toHaveBeenCalled();
             });
@@ -358,7 +359,7 @@ describe('AuthProcessService', () => {
                     credentials: { email: 'm@m.com', password: 'p' }
                 });
                 expect(userCred).toBeNull();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInWithEmailAndPassword).not.toHaveBeenCalled();
                 expect(spyMergeUserService.prepareSource).toHaveBeenCalled();
                 expect(spyMergeUserService.applyToTarget).not.toHaveBeenCalled();
@@ -377,7 +378,7 @@ describe('AuthProcessService', () => {
                     credentials: { email: 'm@m.com', password: 'p' }
                 });
                 expect(userCred).toEqual(fakeCredResponse);
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(spyMergeUserService.prepareSource).toHaveBeenCalled();
                 expect(spyMergeUserService.applyToTarget).toHaveBeenCalled();
             });
@@ -431,7 +432,7 @@ describe('AuthProcessService', () => {
             it('SignIn - anonymous', async () => {
                 const userCred = await aps.signInWith(AuthProvider.ANONYMOUS);
                 expect(userCred).toBeNull();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInAnonymously).toHaveBeenCalled();
                 expect(fakeAfa.signInWithEmailAndPassword).not.toHaveBeenCalled();
                 expect(fakeAfa.signInWithPopup).not.toHaveBeenCalled();
@@ -442,7 +443,7 @@ describe('AuthProcessService', () => {
                     credentials: { email: 'm@m.com', password: 'p' }
                 });
                 expect(userCred).toBeNull();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInAnonymously).not.toHaveBeenCalled();
                 expect(fakeAfa.signInWithEmailAndPassword).toHaveBeenCalled();
                 expect(fakeAfa.signInWithPopup).not.toHaveBeenCalled();
@@ -451,7 +452,7 @@ describe('AuthProcessService', () => {
             it('SignIn - social (web)', async () => {
                 const userCred = await aps.signInWith(AuthProvider.Facebook);
                 expect(userCred).toBeNull();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInAnonymously).not.toHaveBeenCalled();
                 expect(fakeAfa.signInWithEmailAndPassword).not.toHaveBeenCalled();
                 expect(fakeAfa.signInWithPopup).toHaveBeenCalled();
@@ -468,12 +469,12 @@ describe('AuthProcessService', () => {
                     skipTosCheck: true
                 });
                 expect(userCred).toBeNull();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.createUserWithEmailAndPassword).not.toHaveBeenCalled();
                 expect(fakeUiService.confirmTos).not.toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
                 expect(fakeAfa.updateCurrentUser).not.toHaveBeenCalled();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
             });
 
             it('Register - social (web)', async () => {
@@ -483,12 +484,12 @@ describe('AuthProcessService', () => {
                     skipTosCheck: true
                 });
                 expect(userCred).toBeNull();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInWithPopup).not.toHaveBeenCalled();
                 expect(fakeUiService.confirmTos).not.toHaveBeenCalled();
                 expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
                 expect(fakeAfa.updateCurrentUser).not.toHaveBeenCalled();
-                expect(fakeCrashlticsService.recordException).toHaveBeenCalled();
+                expect(fakeFirebaseService.recordException).toHaveBeenCalled();
             });
 
             it('Register - social (device)');

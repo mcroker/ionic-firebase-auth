@@ -267,7 +267,6 @@ export class AuthProcessService {
         default:
           if (this.isWebPlatform) {
             userCred = await this.afa.signInWithPopup(this.getAuthProvider(provider));
-            console.log('SI WITH WEB', userCred);
           } else if (this.credFactory) {
             userCred = await this.afa.signInWithCredential(await this.credFactory.getCredential(provider));
           } else {

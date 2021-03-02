@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 
 // Imported
 import { TranslateModule } from '@ngx-translate/core';
-import { TooltipsModule } from 'ionic4-tooltips';
 
 // Configuration
 import { malSharedConfigFactory, MalSharedConfig, MalUserProvidedConfig, UseEmulatorArguments } from './interfaces';
@@ -50,8 +49,7 @@ const MODULES = [
   HttpClientModule,
   AngularFireAuthModule,
   AngularFirestoreModule,
-  AngularFireFunctionsModule,
-  TooltipsModule
+  AngularFireFunctionsModule
 ];
 
 @NgModule({

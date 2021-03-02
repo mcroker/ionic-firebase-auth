@@ -4,6 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 
+import { TooltipsModule } from 'ionic4-tooltips';
+
 // Mal
 import { MalSharedModule } from 'ngx-firebase';
 import { MalIonicModule } from 'ngx-firebase/ionic';
@@ -49,6 +51,7 @@ export const IONIC_AUTH_UI_ROUTER_CONFIG = [
     MalIonicModule,
     IonicModule,
     CommonModule,
+    TooltipsModule,
     MalIonicUISharedModule,
     HttpClientModule
   ],

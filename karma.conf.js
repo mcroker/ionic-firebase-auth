@@ -12,7 +12,6 @@ module.exports = function (config) {
       require('karma-junit-reporter'),
       require('karma-spec-reporter'),
       require('karma-verbose-reporter'),
-      // require('karma-coverage-istanbul-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
