@@ -10,7 +10,7 @@ jobs:
 
   build:
     name: UnitTest
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
 
     strategy:
       matrix:
