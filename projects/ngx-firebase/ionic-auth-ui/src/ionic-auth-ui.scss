@@ -52,6 +52,12 @@ div.forgot-password {
     font-size: 0.9em;
 }
 
+@media (prefers-color-scheme: dark) {
+    a {
+        color: white;
+    }
+}
+
 div.authui-logo img {
     display: block;
     margin-left: auto;

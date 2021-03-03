@@ -5,6 +5,7 @@ import { MalSharedConfigToken, MalSharedConfig, ValueAccessorControlComponent } 
 @Component({
     selector: 'mal-authui-name-field',
     templateUrl: 'name-field.component.html',
+    styleUrls: ['../../ionic-auth-ui.scss'],
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AuthUINameFieldComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: AuthUINameFieldComponent, multi: true }]

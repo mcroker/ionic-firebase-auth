@@ -25,7 +25,6 @@
         <a (click)="doPasswordReset()"
            *ngIf="resetPasswordEnabled"
            [@animate]="{ value: '*', params: { x: '-50px' } }"
-           color="secondary"
            class="forgot-password"
            type="button">
           {{ "auth.signIn.forgotPassword" | translate }}
@@ -57,10 +56,11 @@
          class="authui-alternate-action"
          fxLayout="column"
          fxLayoutAlign="center center">
-      <span [@animate]="{ value: '*', params: { x: '100px' } }"
-            class="text">
+      <ion-text [@animate]="{ value: '*', params: { x: '100px' } }"
+                color="text"
+                class="text">
         {{"auth.signIn.dontHaveAccount" | translate}}
-      </span>
+      </ion-text>
       <a (click)="onCreateAccountRequested.emit()"
          [@animate]="{ value: '*', params: { x: '-100px' } }"
          id="createAccountButton">

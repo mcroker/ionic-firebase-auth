@@ -43,8 +43,7 @@ import {
   FakeIAPurchaseService,
   FakeAngularFireStorage,
   FakeUiService,
-  FakeFirebaseService,
-  FakeAvatarComponent
+  FakeFirebaseService
 } from './fakes';
 
 export const MODULES = [
@@ -56,7 +55,6 @@ export const MODULES = [
 ];
 
 const COMPONENTS = [
-  FakeAvatarComponent
 ];
 
 @NgModule({

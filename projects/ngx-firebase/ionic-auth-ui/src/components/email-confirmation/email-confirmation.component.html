@@ -2,21 +2,21 @@
 <ng-template #defaultVerifyEmail let-email="email" let-goBackURL="goBackURL">
   <ion-card class="verify-email">
     <ion-card-content fxLayout="column" fxLayoutAlign="center center">
-      <ion-icon name="mail-outline"></ion-icon>
+      <ion-icon color="text" name="mail-outline"></ion-icon>
       <p class="title" fxLayout="column" fxLayoutAlign="center center">
         <span class="mat-subheading-2">{{ "auth.emailConfirmation.title" | translate }}</span>
-        <span class="mat-body-2">{{  "auth.email.label" | translate }}</span>
+        <span class="mat-body-2">{{ "auth.email.label" | translate }}</span>
       </p>
       <p class="subtitle">{{ "auth.emailConfirmation.bodyText" | translate }}</p>
       <ion-progress-bar *ngIf="isLoading" type="indeterminate"></ion-progress-bar>
     </ion-card-content>
-    <ion-button (click)="continue()" *ngIf="goBackURL" class="go-back-button action-button">
+    <ion-button color="primary" (click)="continue()" *ngIf="goBackURL" class="go-back-button action-button">
       {{ "auth.emailConfirmation.goBack" | translate }}
     </ion-button>
-    <ion-button (click)="sendNewVerificationEmail()" class="send-new-mail-button action-button">
+    <ion-button (color="primary" click)="sendNewVerificationEmail()" class="send-new-mail-button action-button">
       {{ "auth.emailConfirmation.sendNewVerificationEmail" | translate }}
     </ion-button>
-    <ion-button (click)="this.signOut.emit()" class="sign-out-button action-button" color="warn">
+    <ion-button color="primary" (click)="this.signOut.emit()" class="sign-out-button action-button" color="warn">
       {{ "auth.emailConfirmation.signOut" | translate }}
     </ion-button>
   </ion-card>

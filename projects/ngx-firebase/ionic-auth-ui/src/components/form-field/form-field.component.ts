@@ -9,7 +9,7 @@ type ControlType = NgControl | FormControl | undefined | null;
 @Component({
   selector: 'mal-authui-form-field',
   templateUrl: 'form-field.component.html',
-  styleUrls: ['form-field.component.scss']
+  styleUrls: ['form-field.component.scss', '../../ionic-auth-ui.scss']
 })
 export class AuthUIFormFieldComponent {
 

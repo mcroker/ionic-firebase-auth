@@ -29,7 +29,7 @@ declare type ProviderType = AuthProvider[] | AuthProvider;
 @Component({
   selector: 'mal-authui-providers',
   templateUrl: 'providers.component.html',
-  styleUrls: ['providers.component.scss'],
+  styleUrls: ['providers.component.scss', '../../ionic-auth-ui.scss'],
   animations: NgxAuthFirebaseuiAnimations
 })
 export class AuthProvidersComponent {

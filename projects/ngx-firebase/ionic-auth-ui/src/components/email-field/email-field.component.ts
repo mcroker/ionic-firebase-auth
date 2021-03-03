@@ -5,6 +5,7 @@ import { ValueAccessorControlComponent } from 'ngx-firebase';
 @Component({
     selector: 'mal-authui-email-field',
     templateUrl: 'email-field.component.html',
+    styleUrls: ['../../ionic-auth-ui.scss'],
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AuthUIEmailFieldComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: AuthUIEmailFieldComponent, multi: true }]

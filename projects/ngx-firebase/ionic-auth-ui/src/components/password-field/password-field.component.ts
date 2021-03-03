@@ -13,6 +13,7 @@ type ValueType = string | undefined;
 @Component({
     selector: 'mal-authui-password-field',
     templateUrl: 'password-field.component.html',
+    styleUrls: ['../../ionic-auth-ui.scss'],
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AuthUIPasswordFieldComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: AuthUIPasswordFieldComponent, multi: true }]

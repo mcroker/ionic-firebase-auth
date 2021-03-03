@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 // ionic
 import { IonicModule } from '@ionic/angular';
@@ -29,8 +30,8 @@ const COMPONENTS = [
 @NgModule({
   imports: [
     MalSharedModule,
-    // Angular & Ionic
     FormsModule,
+    CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     IonicModule

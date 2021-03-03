@@ -25,11 +25,11 @@
       <ion-grid class="terms">
         <ion-row *ngIf="this.tosUrl">
           <ion-col size="2">
-            <ion-checkbox attr.aria-label="{{ 'auth.legal.readAndAccept' | translate }} {{ 'auth.legal.termsAndConditions'
+            <ion-checkbox color="primary" attr.aria-label="{{ 'auth.legal.readAndAccept' | translate }} {{ 'auth.legal.termsAndConditions'
                           | translate }}" formControlName="tos"> </ion-checkbox>
           </ion-col>
           <ion-col>
-            {{ "auth.legal.readAndAccept" | translate }}
+            <ion-text color="text"> {{ "auth.legal.readAndAccept" | translate }}</ion-text>
             <a target="_blank" [href]="this.tosUrl">
               {{ "auth.legal.termsAndConditions" | translate }}
             </a>
@@ -37,11 +37,11 @@
         </ion-row>
         <ion-row *ngIf="this.privacyPolicyUrl">
           <ion-col size="2">
-            <ion-checkbox attr.aria-label="{{ 'auth.legal.readAndAccept' | translate }} {{ 'auth.legal.privacyPolicy'
+            <ion-checkbox color="primary" attr.aria-label="{{ 'auth.legal.readAndAccept' | translate }} {{ 'auth.legal.privacyPolicy'
             | translate }}" formControlName="privacyPolicy"></ion-checkbox>
           </ion-col>
           <ion-col>
-            {{ "auth.legal.readAndAccept" | translate }}
+            <ion-text color="text">{{ "auth.legal.readAndAccept" | translate }}</ion-text>
             <a target="_blank" [href]="this.privacyPolicyUrl">
               {{ "auth.legal.privacyPolicy" | translate }}
             </a>
@@ -84,13 +84,12 @@
          fxLayout="column"
          fxLayoutAlign="center center">
 
-      <span [@animate]="{ value: '*', params: { x: '100px' } }" class="text">
+      <ion-text color="text" [@animate]="{ value: '*', params: { x: '100px' } }">
         {{ "auth.register.alreadyHaveAccount" | translate }}
-      </span>
+      </ion-text>
 
       <a (click)="onLoginRequested.emit()"
          [@animate]="{ value: '*', params: { x: '-100px' } }"
-         color="primary"
          id="loginButton">
         {{"auth.register.signInButton" | translate}}
       </a>

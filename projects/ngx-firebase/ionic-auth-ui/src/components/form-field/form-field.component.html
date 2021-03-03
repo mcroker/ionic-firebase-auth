@@ -1,5 +1,5 @@
 <ion-item class="ion-no-padding input form-field">
-  <ion-label class="text-size-xs" position="floating">{{ label | translate }}</ion-label>
+  <ion-label color="text" class="text-size-xs" position="floating">{{ label | translate }}</ion-label>
   <div class="input-wrap">
     <ng-content></ng-content>
     <ion-icon size="large" *ngIf="!(isValid$ | async) && !(isDisabled$ | async)" class="invalid" name="remove-circle"></ion-icon>

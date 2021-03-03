@@ -6,16 +6,18 @@
        fxLayout.xs="column"
        class="buttons-ionic">
 
-    <ion-button *ngFor="let provider of (displayProviders$ | async)"
-                (click)="providerClick.emit(provider.name)"
-                [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"
-                [class]="provider.name"
-                [ngClass.xs]="{'space-full-xs':true}">
+    <div>
+      <ion-button *ngFor="let provider of (displayProviders$ | async)"
+                  (click)="providerClick.emit(provider.name)"
+                  [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"
+                  [class]="provider.name"
+                  [ngClass.xs]="{'space-full-xs':true}">
 
-      <ion-icon *ngIf="provider.icon" slot="start" [name]="provider.icon"></ion-icon>
-      <ion-label slot="end">{{ provider.label }}</ion-label>
+        <ion-icon *ngIf="provider.icon" slot="start" [name]="provider.icon"></ion-icon>
+        <ion-label slot="end">{{ provider.label }}</ion-label>
 
-    </ion-button>
+      </ion-button>
+    </div>
 
   </div>
 </div>
