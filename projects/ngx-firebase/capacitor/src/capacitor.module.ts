@@ -1,10 +1,10 @@
 // @angular/*
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 // Configuration
 import {
   IAnalyticsProvider, ICrashlyticsProvider, ICredentialFactoryProvider,
-  MalSharedConfig, MalUserProvidedConfig, FirebaseService,
+  MalSharedConfig, FirebaseService,
   MalCredentialFactoryProviderToken, MalSharedConfigToken, MalAnalyticsProviderToken, MalCrashlyticsProviderToken
 } from 'ngx-firebase';
 
@@ -21,38 +21,29 @@ import { CrashlyticsFirebaseCapacitorService } from './services/crashlytics-fire
 import { AuthCredentialFactoryCapacitorService } from './services/credential-factory-capacitor.service';
 
 @NgModule({
+  providers:
+    [
+      {
+        provide: MalAnalyticsProviderToken,
+        useFactory: analyticsProviderFactory,
+        deps: [MalSharedConfigToken]
+      },
+      {
+        provide: MalCrashlyticsProviderToken,
+        useFactory: crashlyticsProviderFactory,
+        deps: [MalSharedConfigToken]
+      },
+      {
+        provide: MalCredentialFactoryProviderToken,
+        useFactory: credFactoryProviderFactory,
+        deps: [FirebaseService]
+      }
+    ]
 })
 export class MalCapacitorModule {
 
   constructor(
   ) {
-  }
-
-  static forRoot(
-    config: MalUserProvidedConfig,
-    appNameFactory: () => string | undefined = () => undefined,
-  ): ModuleWithProviders<MalCapacitorModule> {
-    return {
-      ngModule: MalCapacitorModule,
-      providers:
-        [
-          {
-            provide: MalAnalyticsProviderToken,
-            useFactory: analyticsProviderFactory,
-            deps: [MalSharedConfigToken]
-          },
-          {
-            provide: MalCrashlyticsProviderToken,
-            useFactory: crashlyticsProviderFactory,
-            deps: [MalSharedConfigToken]
-          },
-          {
-            provide: MalCredentialFactoryProviderToken,
-            useFactory: credFactoryProviderFactory,
-            deps: [FirebaseService]
-          }
-        ],
-    };
   }
 
 }

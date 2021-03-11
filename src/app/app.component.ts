@@ -10,7 +10,7 @@ import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { CapacitorFirebaseDynamicLinks } = Plugins;
 
 // Mal
-import { RemoteConfigService, AuthProcessService, UiService, FireService } from 'ngx-firebase';
+import { RemoteConfigService, AuthProcessService, UiService, FirebaseService } from 'ngx-firebase';
 
 // Firebase
 import { User } from '@firebase/auth-types';
@@ -43,7 +43,8 @@ export class AppComponent {
     private remoteConfig: RemoteConfigService,
     private route: ActivatedRoute,
     // private profilePopover: AuthUIProfilePopoverService,
-    private mal: UiService, FireService
+    private ui: UiService,
+    private fire: FirebaseService
   ) {
     this.initializeApp();
   }
@@ -55,7 +56,7 @@ export class AppComponent {
     try {
       await this.navController.navigateForward('/auth/signin');
     } catch (error) {
-      this.mal.recordException(error);
+      this.fire.recordException(error);
     }
   }
 
@@ -64,7 +65,7 @@ export class AppComponent {
       await this.aps.signOut();
       await this.navController.navigateRoot('/');
     } catch (error) {
-      this.mal.recordException(error);
+      this.fire.recordException(error);
     }
   }
 
@@ -84,13 +85,13 @@ export class AppComponent {
           CapacitorFirebaseDynamicLinks.addListener('deepLinkOpen', (data: { url: string }) => {
             const slug = data.url.split(environment.uri.web).pop();
             if (slug) {
-              this.mal.addLogMessage(`Deeplink slug=${slug}`);
+              this.fire.addLogMessage(`Deeplink slug=${slug}`);
               this.navController.navigateRoot(slug);
             }
           });
         }
       } catch (error) {
-        this.mal.recordException(error);
+        this.fire.recordException(error);
       }
     });
 
