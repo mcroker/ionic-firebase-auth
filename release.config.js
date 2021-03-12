@@ -1,4 +1,6 @@
 module.exports = {
-    pkgRoot: 'dist/ngx-firebase',
-    branches: ['master', { name: 'beta', prerelease: true }],
-  };
+  branches: ['master', { name: 'beta', prerelease: true }],
+  plugins: ["@semantic-release/npm", {
+    "pkgRoot": "dist/npx-firebase"
+  }]
+};

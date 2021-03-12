@@ -13,14 +13,13 @@
     "build:lib:prod": "ng build ngx-firebase --prod",
     "test:lib": "ng test ngx-firebase --browsers Chrome",
     "test:lib:prod": "ng test ngx-firebase --browsers HeadlessChrome --watch=false --code-coverage",
-    "pack:lib": "cd dist/ngx-firebase && npm pack",
     "package": "npm run build:lib && npm run pack:lib",
     "e2e": "ng e2e --webdriver-update=false",
     "e2e:update": "ng e2e --configuration=stubbed",
     "e2e:noserve": "ng e2e --webdriver-update=false --configuration=noserve",
     "postinstall": "ngcc",
     "prepare": "husky install",
-    "semantic-release": "semantic-release"
+    "semantic-release": "npx semantic-release"
   },
   "typings": "./dist/ngx-firebase/public-api.d.ts",
   "private": true,
