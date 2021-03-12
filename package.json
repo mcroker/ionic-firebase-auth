@@ -1,13 +1,13 @@
 {
   "name": "ngx-firebase",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "author": "Martin Croker",
   "homepage": "https://github.com/mcroker/ngx-firebase",
   "scripts": {
     "ng": "ng",
     "start": "ng serve app",
     "build": "ng build && ng build app && npx cap copy",
-    "test": "ng test --browsers Chrome",
+    "test": "ng test ngx-firebase --watch=false --browsers HeadlessChrome",
     "lint": "ng lint",
     "build:lib": "ng build ngx-firebase",
     "test:lib": "ng test ngx-firebase --browsers Chrome",
@@ -18,7 +18,8 @@
     "e2e:update": "ng e2e --configuration=stubbed",
     "e2e:noserve": "ng e2e --webdriver-update=false --configuration=noserve",
     "postinstall": "ngcc",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "semantic-release": "semantic-release"
   },
   "typings": "./dist/ngx-firebase/public-api.d.ts",
   "private": true,
@@ -52,12 +53,13 @@
     "checkdigit": "^1.1.1",
     "cordova-plugin-purchase": "^10.5.3",
     "firebase": "^8.2.6",
+    "ionic4-tooltips": "^2.0.2",
     "ios-deploy": "^1.11.3",
     "karma-coverage": "^2.0.3",
     "native-run": "^1.2.2",
     "rxjs": "~6.5.4",
+    "semantic-release-cli": "^5.4.3",
     "ts-common": "^1.0.0",
-    "ionic4-tooltips": "^2.0.2",
     "tslib": "^2.0.3",
     "uuid": "^8.3.1",
     "zone.js": "^0.11.3"
@@ -115,7 +117,12 @@
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.0.5"
+    "typescript": "~4.0.5",
+    "semantic-release": "^17.4.2"
   },
-  "description": "Sample Application for ngx-firebase"
+  "description": "Sample Application for ngx-firebase",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcroker/ngx-firebase.git"
+  }
 }

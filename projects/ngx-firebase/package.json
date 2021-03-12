@@ -1,6 +1,6 @@
 {
   "name": "ngx-firebase",
-  "version": "0.0.1",
+  "version": "0.0.0-semantically-versioned",
   "ngPackage": {
     "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
     "dest": "../../dist/ngx-firebase",
@@ -34,5 +34,9 @@
   },
   "dependencies": {
     "tslib": "^2.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcroker/ngx-firebase.git"
   }
 }
