@@ -11,7 +11,7 @@ import { MalSharedModule } from 'ngx-firebase';
 
 // components
 import { AuthAvatarComponent } from './components/avatar/avatar.component';
-import { AuthPopoverMenuComponent } from './components/popover-menu';
+import { AuthPopoverMenuComponent } from './components/popover-menu/popover-menu.component';
 
 // services
 import { MalIonicAlertsService } from './services/alerts-ionic.service';

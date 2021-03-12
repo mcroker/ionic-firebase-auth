@@ -1,2 +1,2 @@
-export * from './avatar';
-export * from './popover-menu';
+export * from './avatar/index';
+export * from './popover-menu/index';

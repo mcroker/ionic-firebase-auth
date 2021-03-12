@@ -1,10 +1,9 @@
 // This token is the official token containing the final configuration; ie. the merge between default and user provided configurations
 import { InjectionToken } from '@angular/core';
 
-import {
-    MalSharedConfig, MalUserProvidedConfig, IAnalyticsProvider, IAuthMergeUserService, IAuthProcessService, ICrashlyticsProvider,
-    ICredentialFactoryProvider, ILoadingUIProvider, IAlertsUIProvider, IPickerUIProvider, IToastUIProvider, ILegalityDialogUIProvider
-} from './';
+import { MalSharedConfig, MalUserProvidedConfig } from './config.interface';
+import { IAnalyticsProvider, IAuthMergeUserService, IAuthProcessService, ICrashlyticsProvider, ICredentialFactoryProvider } from './providers.interface';
+import { ILoadingUIProvider, IAlertsUIProvider, IPickerUIProvider, IToastUIProvider, ILegalityDialogUIProvider} from './ui-providers.interface'
 
 // Firebase Functional Areas
 export const MalAnalyticsProviderToken = new InjectionToken<IAnalyticsProvider>('MalAnalyticsProviderToken');

@@ -9,8 +9,10 @@ import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 
 // Configuration
-import { malSharedConfigFactory, MalSharedConfig, MalUserProvidedConfig, UseEmulatorArguments } from './interfaces';
-import { MalSharedConfigToken, MalUserProvidedConfigToken } from './interfaces/tokens';
+import {
+  malSharedConfigFactory, MalSharedConfig, MalUserProvidedConfig, UseEmulatorArguments,
+  MalSharedConfigToken, MalUserProvidedConfigToken
+} from './interfaces';
 
 // @angular/fire
 import { FIREBASE_APP_NAME, FIREBASE_OPTIONS, FirebaseAppConfig, FirebaseApp, FirebaseOptions, AngularFireModule } from '@angular/fire';
@@ -26,8 +28,8 @@ import { USE_EMULATOR as FUNCTIONS_EMULATOR, AngularFireFunctionsModule, REGION 
 import { LoggedInGuard, VerifyEmailGuard } from './guards';
 
 // Components
-import { ValueAccessorControlComponent } from './types/ValueAccessorControlComponent';
-import { ValueAccessorValueComponent } from './types/ValueAccessorValueComponent';
+// import { ValueAccessorControlComponent } from './types/ValueAccessorControlComponent';
+// import { ValueAccessorValueComponent } from './types/ValueAccessorValueComponent';
 
 // services
 import { FirestoreSyncService } from './services/firestore-sync.service';
@@ -39,11 +41,6 @@ import { PerformanceService } from './services/performance.service';
 import { FirebaseService } from './services/firebase.service';
 import { UiService } from './services/ui.service';
 
-const COMPONENTS = [
-  ValueAccessorControlComponent,
-  ValueAccessorValueComponent
-];
-
 const MODULES = [
   IonicModule,
   HttpClientModule,
@@ -53,25 +50,17 @@ const MODULES = [
 ];
 
 @NgModule({
-  declarations: COMPONENTS,
   imports: [
     ...MODULES,
     TranslateModule.forChild(),
     AngularFireModule,
   ],
   exports: [
-    ...COMPONENTS,
     ...MODULES,
     TranslateModule
-  ],
-  entryComponents: COMPONENTS
+  ]
 })
 export class MalSharedModule {
-
-  constructor(
-    @Optional() performanceProvider: AngularFirePerformance
-  ) {
-  }
 
   static forRoot(
     config: MalUserProvidedConfig,
@@ -167,7 +156,7 @@ export class MalSharedModule {
 
 }
 
-function performanceProviderFactory(
+export function performanceProviderFactory(
   config: MalSharedConfig,
   app: FirebaseApp,
   dataCollectionEnabled: boolean,
@@ -181,7 +170,7 @@ function performanceProviderFactory(
   return null;
 }
 
-function remoteConfigFirebaseService(
+export function remoteConfigFirebaseService(
   config: MalSharedConfig,
   options: FirebaseOptions,
   nameOrConfig: string | FirebaseAppConfig,
@@ -196,7 +185,7 @@ function remoteConfigFirebaseService(
   return null;
 }
 
-function authEmulatorFactory(config: MalSharedConfig): UseEmulatorArguments | undefined {
+export function authEmulatorFactory(config: MalSharedConfig): UseEmulatorArguments | undefined {
   if (true === config.services.firebaseAuth) {
     return undefined;
   } else {
@@ -204,7 +193,7 @@ function authEmulatorFactory(config: MalSharedConfig): UseEmulatorArguments | un
   }
 }
 
-function firestoreEmulatorFactory(config: MalSharedConfig): UseEmulatorArguments | undefined {
+export function firestoreEmulatorFactory(config: MalSharedConfig): UseEmulatorArguments | undefined {
   if (true === config.services.firebaseFirestore) {
     return undefined;
   } else {
@@ -212,7 +201,7 @@ function firestoreEmulatorFactory(config: MalSharedConfig): UseEmulatorArguments
   }
 }
 
-function functionsEmulatorFactory(config: MalSharedConfig): UseEmulatorArguments | undefined {
+export function functionsEmulatorFactory(config: MalSharedConfig): UseEmulatorArguments | undefined {
   if (true === config.services.firebaseFunctions) {
     return undefined;
   } else {

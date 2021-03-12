@@ -1,0 +1,1 @@
+npm i @angular/animations@latest @angular/cdk@latest @angular/common@latest @angular/core@latest @angular/flex-layout@latest @angular/forms@latest @angular/platform-browser@latest @angular/platform-browser-dynamic@latest @angular/router@latest @angular/cli@latest @angular/compiler@latest @angular/compiler-cli@latest @angular/language-service@latest

@@ -5,7 +5,8 @@
             "umdModuleIds": {
                 "@ionic/angular": "ionic.angular",
                 "@capacitor/core": "Capacitor",
-                "@ionic-native/in-app-purchase-2/ngx": "InAppPurchase2"
+                "@ionic-native/in-app-purchase-2/ngx": "InAppPurchase2",
+                "@ionic-native/in-app-purchase-2/ngx/index": "InAppPurchase2"
             }
         }
     },

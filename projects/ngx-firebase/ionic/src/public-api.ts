@@ -1,4 +1,5 @@
-export * from './components';
-export * from './animations';
-export * from './services';
+export * from './components/index';
+export * from './animations/index';
+export * from './services/index';
+
 export * from './ionic.module';

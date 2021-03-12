@@ -1,6 +1,5 @@
 import { forwardRef, Inject, Injectable, Optional } from '@angular/core';
-import { IAnalyticsProvider } from '../interfaces/providers.interface';
-import { MalAnalyticsProviderToken } from '../interfaces/tokens';
+import { IAnalyticsProvider, MalAnalyticsProviderToken } from '../interfaces';
 
 @Injectable()
 export class AnalyticsService implements IAnalyticsProvider {

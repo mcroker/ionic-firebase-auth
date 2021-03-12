@@ -1,8 +1,7 @@
 import { Injectable, Injector, Optional } from '@angular/core';
-import { AngularFireRemoteConfig, mapToObject } from '@angular/fire/remote-config';
+import { AngularFireRemoteConfig, mapToObject, DEFAULTS as REMOTE_CONFIG_DEFAULTS } from '@angular/fire/remote-config';
 import { of } from 'rxjs';
 import { Value, ValueSource } from '@firebase/remote-config-types';
-import { DEFAULTS as REMOTE_CONFIG_DEFAULTS } from '@angular/fire/remote-config';
 
 class StaticValue implements Value {
     constructor(private value: any) { }

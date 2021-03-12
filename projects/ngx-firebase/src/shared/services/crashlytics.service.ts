@@ -1,7 +1,5 @@
 import { Injectable, Optional, forwardRef, Inject } from '@angular/core';
-
-import { AndroidException, ICrashlyticsProvider, iOSException } from '../interfaces';
-import { MalCrashlyticsProviderToken } from '../interfaces/tokens';
+import { AndroidException, ICrashlyticsProvider, iOSException, MalCrashlyticsProviderToken } from '../interfaces';
 
 @Injectable()
 export class CrashlyticsService implements ICrashlyticsProvider {
@@ -9,7 +7,7 @@ export class CrashlyticsService implements ICrashlyticsProvider {
     // Crashlyitcs
     private _recordException = (_options: iOSException | AndroidException) => Promise.resolve();
     private _addLogMessage = (message: string) => Promise.resolve();
-    private _setUserId = (uid: string | null) => {};
+    private _setUserId = (uid: string | null) => { };
 
     constructor(
         @Optional() @Inject(forwardRef(() => MalCrashlyticsProviderToken)) private crashlyticsProvider: ICrashlyticsProvider,

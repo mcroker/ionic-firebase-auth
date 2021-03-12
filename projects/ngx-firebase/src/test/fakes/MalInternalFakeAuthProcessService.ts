@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AuthProcessService } from 'ngx-firebase';
+import { AuthProcessService } from '../../shared/services';
 import { User } from '@firebase/auth-types';
 
 export class MalInternalFakeAuthProcessService {

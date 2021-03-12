@@ -1,12 +1,12 @@
-import { Input, Output, EventEmitter, Component } from '@angular/core';
+import { Input, Output, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, Validator, ValidationErrors, AbstractControl } from '@angular/forms';
 
 declare type ValueAccessorHandler<T> = (_: T) => void;
 declare type ValidatorChangeHandler = () => void;
 
-@Component({
+/* @Component({
   template: ''
-})
+}) */
 export class ValueAccessorValueComponent<T> implements ControlValueAccessor, Validator {
 
   @Input()

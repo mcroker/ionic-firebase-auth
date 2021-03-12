@@ -1,6 +1,6 @@
 import { Observable, Subscription } from 'rxjs';
-import { ILoadingElem, IOkAlertOptions, ITextAlertOptions, IToastElem, IToastOptions, IYesNoAlertOptions } from '../../shared';
-import { UiService } from '../../shared/services/ui.service';
+import { UiService } from '../../shared/services';
+import { ILoadingElem, IOkAlertOptions, ITextAlertOptions, IToastElem, IToastOptions, IYesNoAlertOptions } from '../../shared/interfaces';
 
 export class MalInternalFakeUiService {
 

@@ -1,14 +1,11 @@
 import { AuthProcessService } from './auth-process.service';
-import { CrashlyticsService } from './crashlytics.service';
 import { FirestoreSyncService } from './firestore-sync.service';
-import { AuthProvider, IAuthMergeUserService, malSharedConfigFactory } from '../interfaces';
+import { AuthProvider, IAuthMergeUserService, malSharedConfigFactory, MalSharedConfig, ICredentialFactoryProvider } from '../interfaces';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ICredentialFactoryProvider } from '../interfaces';
 import {
-    MalInternalFakeCrashlyticsService, MalInternalFakeAngularFireAuth,
+    MalInternalFakeAngularFireAuth,
     MalInternalFakeUserCredential, DUMMYAUTHERROR, MalInternalFakeFirestoreSyncService, MalInternalFakeUiService, MalInternalFakeFirebaseService
 } from '../../test/fakes';
-import { MalSharedConfig } from '../interfaces';
 import { User, AuthCredential } from '@firebase/auth-types';
 import { UiService } from './ui.service';
 import { FirebaseService } from './firebase.service';

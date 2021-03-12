@@ -41,14 +41,9 @@ import { AuthCredentialFactoryCapacitorService } from './services/credential-fac
     ]
 })
 export class MalCapacitorModule {
-
-  constructor(
-  ) {
-  }
-
 }
 
-function analyticsProviderFactory(config: MalSharedConfig): IAnalyticsProvider | null {
+export function analyticsProviderFactory(config: MalSharedConfig): IAnalyticsProvider | null {
   if (config.services.firebaseAnalytics) {
     if (Capacitor.platform === 'web') {
       console.info('Unable to instantiate firebaseeAnalytics, Capacitor plugin not supported on web platforn.');
@@ -61,7 +56,7 @@ function analyticsProviderFactory(config: MalSharedConfig): IAnalyticsProvider |
   return null;
 }
 
-function crashlyticsProviderFactory(config: MalSharedConfig): ICrashlyticsProvider | null {
+export function crashlyticsProviderFactory(config: MalSharedConfig): ICrashlyticsProvider | null {
   if (true === config.services.firebaseCrashlytics) {
     if (Capacitor.isPluginAvailable('FirebaseCrashlytics')) {
       return new CrashlyticsFirebaseCapacitorService();
@@ -72,7 +67,7 @@ function crashlyticsProviderFactory(config: MalSharedConfig): ICrashlyticsProvid
   return null;
 }
 
-function credFactoryProviderFactory(fire: FirebaseService): ICredentialFactoryProvider | null {
+export function credFactoryProviderFactory(fire: FirebaseService): ICredentialFactoryProvider | null {
   if (Capacitor.isNative) {
     return new AuthCredentialFactoryCapacitorService(fire);
   } else {

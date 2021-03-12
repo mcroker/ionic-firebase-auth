@@ -1,11 +1,11 @@
-import { Input, Output, EventEmitter, OnDestroy, AfterViewInit, Injector, ChangeDetectorRef, OnInit, Component } from '@angular/core';
+import { Input, Output, EventEmitter, OnDestroy, AfterViewInit, Injector, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, Validator, ValidationErrors, AbstractControl, FormControl, NgControl } from '@angular/forms';
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-@Component({
+/* @Component({
   template: ''
-})
+}) */
 export class ValueAccessorControlComponent<T> implements ControlValueAccessor, Validator, OnInit, OnDestroy, AfterViewInit {
 
   public parentControl?: NgControl | null;

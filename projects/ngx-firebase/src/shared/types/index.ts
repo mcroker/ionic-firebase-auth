@@ -1,4 +1,4 @@
 export * from './Location';
-export * from './Types';
+export * from './DisplayWidth';
 export * from './ValueAccessorValueComponent';
 export * from './ValueAccessorControlComponent';
