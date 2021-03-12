@@ -9,7 +9,7 @@
     }
   },
   "peerDependencies": {
-    "@angular/core": "^11.1.2",
+    "@angular/core": "^11.2.5",
     "@capacitor/core": "2.4.2",
     "@capacitor/ios": "^2.4.3",
     "@capacitor-community/apple-sign-in": "0.0.12",
