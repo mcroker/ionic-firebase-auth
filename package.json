@@ -17,7 +17,6 @@
     "e2e": "ng e2e --webdriver-update=false",
     "e2e:update": "ng e2e --configuration=stubbed",
     "e2e:noserve": "ng e2e --webdriver-update=false --configuration=noserve",
-    "postinstall": "ngcc",
     "prepare": "husky install",
     "semantic-release": "npx semantic-release"
   },
