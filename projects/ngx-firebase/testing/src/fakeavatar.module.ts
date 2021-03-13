@@ -1,6 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { MalTestingModule } from 'ngx-firebase/testing/test.module';
+import { MalTestingModule } from './test.module';
 // Fakes
 import {
   FakeAvatarComponent
