@@ -17,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./auth-pages-routing.module').then(m => m.AuthPagesRoutingModule)
+    loadChildren: () => import('./auth-pages-routing.module').then(m => m.AuthUIPageModule)
   },
   {
     path: '**',

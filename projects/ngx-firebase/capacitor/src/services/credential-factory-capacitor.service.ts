@@ -8,7 +8,6 @@ if (!firebase.auth) {
 import { GoogleSignInResult, FacebookSignInResult, TwitterSignInResult, CapacitorFirebaseAuthPlugin } from 'capacitor-firebase-auth';
 import { Plugins, Capacitor, Device } from '@capacitor/core';
 import { AuthProvider, ICredentialFactoryProvider, FirebaseService } from 'ngx-firebase';
-import { SignInWithApplePlugin } from '@capacitor-community/apple-sign-in';
 
 const fbAuth = firebase.auth;
 
@@ -18,14 +17,6 @@ function firebaseAuthPlugin(): CapacitorFirebaseAuthPlugin {
     throw new Error('Capacitor Plugin CapacitorFirebaseAuth not available');
   }
   return pi as CapacitorFirebaseAuthPlugin;
-}
-
-function signInWithApplePlugin(): SignInWithApplePlugin {
-  const pi = Plugins.SignInWithApple;
-  if (!pi) {
-    throw new Error('Capacitor Plugin SignInWithApple not available');
-  }
-  return pi as SignInWithApplePlugin;
 }
 
 @Injectable({
@@ -38,11 +29,15 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
   ) {
   }
 
+  private async deviceSupportsNativeApple() {
+    const osMajor = parseInt((await Device.getInfo()).osVersion.split('.')[0], 10);
+    return osMajor >= 13 && Capacitor.platform === 'ios' && Capacitor.isPluginAvailable('SignInWithApple');
+  }
+
   public async isProviderSupported(provider: AuthProvider): Promise<boolean> {
     switch (provider) {
       case AuthProvider.Apple:
-        const osMajor = parseInt((await Device.getInfo()).osVersion.split('.')[0], 10);
-        return osMajor >= 13 && Capacitor.platform === 'ios' && Capacitor.isPluginAvailable('SignInWithApple');
+        return await this.deviceSupportsNativeApple();
 
       case AuthProvider.Google:
       case AuthProvider.Facebook:
@@ -73,9 +68,9 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
 
       case AuthProvider.Apple: {
         const appleAuthProvider = new fbAuth.OAuthProvider('apple.com');
-        const SignInWithApple = signInWithApplePlugin();
+        const SignInWithApple = Plugins.SignInWithApple;
         this.fire.addLogMessage(`signIn using CapacitorFirebaseAuth; provider=${provider}`);
-        const appleRes = await SignInWithApple.Authorize();
+        const appleRes = await SignInWithApple.authorize();
         this.fire.addLogMessage(`Creating credential using firebase; provider=${provider}`);
         return appleAuthProvider.credential(appleRes.response.identityToken);
       }

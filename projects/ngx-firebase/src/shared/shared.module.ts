@@ -42,7 +42,6 @@ import { FirebaseService } from './services/firebase.service';
 import { UiService } from './services/ui.service';
 
 const MODULES = [
-  IonicModule,
   HttpClientModule,
   AngularFireAuthModule,
   AngularFirestoreModule,

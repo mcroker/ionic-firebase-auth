@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import {ROUTER_CONFIG, MalIonicAuthUiModule } from 'ngx-firebase/ionic-auth-ui';
+import { IONIC_AUTH_UI_ROUTER_CONFIG, MalIonicAuthUiModule } from 'ngx-firebase/ionic-auth-ui';
 
 @NgModule({
   imports: [
     MalIonicAuthUiModule,
-    RouterModule.forChild(ROUTER_CONFIG)
+    RouterModule.forChild(IONIC_AUTH_UI_ROUTER_CONFIG)
   ]
 })
 export class AuthUIPageModule { }
