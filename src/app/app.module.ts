@@ -1,5 +1,5 @@
 // Angular
-import { NgModule } from '@angular/core';
+import { Inject, NgModule, PLATFORM_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -11,11 +11,11 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { MalSharedModule, AuthProvider } from 'ngx-firebase';
 
 // Capacitor
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { environment } from '../environments/environment';
 
 // App
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 
 // Pages
 import { HomePage } from './components/home-page/home.page';
@@ -26,6 +26,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from './shared.module';
+import { MalIonicModule } from 'projects/ngx-firebase/ionic';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,6 @@ import { SharedModule } from './shared.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MalSharedModule,
     IonicModule.forRoot({
       animated: !environment.e2eAutomation
     }),
@@ -52,6 +52,8 @@ import { SharedModule } from './shared.module';
         deps: [HttpClient]
       }
     }),
+    MalIonicModule,
+    AppRoutingModule,
     MalSharedModule.forRoot({
       firebase: environment.firebase,
       services: environment.services,
@@ -73,12 +75,16 @@ import { SharedModule } from './shared.module';
     TooltipsModule.forRoot()
   ],
   providers: [
-    BarcodeScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
+
+  constructor(@Inject(PLATFORM_ID) id: any) {
+    console.log('ID>', id);
+  }
+
 }
 
 export function createTranslateLoader(http: HttpClient) {

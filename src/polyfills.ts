@@ -58,7 +58,7 @@ import './zone-flags';
  * Zone JS is required by default for Angular itself.
  */
 
-import 'projects/ngx-firebase/src/node_modules/zone.js/dist/zone';  // Included with Angular CLI.
+import 'node_modules/zone.js/dist/zone';  // Included with Angular CLI.
 
 
 /***************************************************************************************************

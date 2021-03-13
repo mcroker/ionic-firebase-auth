@@ -1,12 +1,12 @@
 import { FirebaseOptions } from '@angular/fire';
-import { UiService, FireServicesConifg } from 'ngx-firebase';
+import { UiService, MalServicesConifg } from 'ngx-firebase';
 import { LinkConfig } from '@turnoutt/capacitor-firebase-dynamic-links';
 
 export interface EnvConfig {
     production: boolean;
     e2eAutomation?: boolean;
     configDefaults: { [key: string]: any };
-    services?: Partial<UiService, FireServicesConifg>;
+    services?: Partial<UiService & MalServicesConifg>;
     firebase: FirebaseOptions;
     uri: {
         web: string,

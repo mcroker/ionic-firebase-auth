@@ -8,14 +8,13 @@ export const environment: EnvConfig = {
     inAppPurchase: false
   },
   firebase: {
-    apiKey: 'AIzaSyA3li57QdPrUfHRfLs28s691xljlVq3kxU',
-    authDomain: 'readtrack-dev-64a12.firebaseapp.com',
-    databaseURL: 'https://readtrack-dev-64a12.firebaseio.com',
-    projectId: 'readtrack-dev-64a12',
-    storageBucket: 'readtrack-dev-64a12.appspot.com',
-    messagingSenderId: '742690746406',
-    appId: '1:742690746406:web:1e8baeffe18294350af6e7',
-    measurementId: 'G-87ZR2Y0VY0'
+    apiKey: process.env.FIREBASE_CONFIG_API_KEY,
+    authDomain: process.env.FIREBASE_CONFIG_AUTH_DOMAIN,
+    databaseURL: process.env.FIREBASE_CONFIG_DATABASE_URL,
+    projectId: process.env.FIREBASE_CONFIG_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_CONFIG_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_CONFIG_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_CONFIG_WEB_APP_ID
   },
   uri: {
     web: '',
