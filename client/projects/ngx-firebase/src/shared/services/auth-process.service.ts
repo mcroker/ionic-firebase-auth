@@ -709,7 +709,6 @@ export class AuthProcessService {
         throw new Error('Unable to delete currentUser if null');
       }
       try {
-        // It's not ideal but we have to delete from firestore first as we need the permissions.
         // If currentUser.delete fails we are left with a user, but not synced data.
         await this.fireStoreService.deleteUserData(currentUid);
         await currentUser.delete();

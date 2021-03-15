@@ -69,6 +69,7 @@ import { MalIonicModule } from 'projects/ngx-firebase/ionic';
         supportedProviders: [AuthProvider.Apple, AuthProvider.Facebook, AuthProvider.Google],
         tosUrl: environment.uri.tosUrl,
         privacyPolicyUrl: environment.uri.privacyUrl,
+        enableFirestoreSync: false,
         guestEnabled: true
       }
     }),

@@ -39,10 +39,10 @@ jobs:
           node-version: 12.x
 
       - name: Install dependencies (app)
-        run: npm ci
+        run: npm ci --prefix ./client
 
       - name: Install dependencies (lib)
-        run: npm ci --prefix ./projects/ngx-firebase
+        run: npm ci --prefix ./client/projects/ngx-firebase
 
       - name: Install Sonar-Scanner
         if: steps.sonar-scanner-cache.outputs.cache-hit != 'true'
@@ -52,10 +52,10 @@ jobs:
           unzip -d sonar-scanner sonar-scanner/sonar-scanner-cli-4.6.0.2311-macosx.zip
 
       - name: Build
-        run: npm run build:lib:prod
+        run: npm --prefix ./client run build:lib:prod
 
       - name: Test
-        run: npm run test:lib:prod
+        run: npm --prefix ./client run test:lib:prod
 
       - name: Sonar-Scanner
         run: ./sonar-scanner/sonar-scanner-4.6.0.2311-macosx/bin/sonar-scanner -Dsonar.host.url=https://sonarcloud.io

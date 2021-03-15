@@ -29,7 +29,7 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
   ) {
   }
 
-  private async deviceSupportsNativeApple() {
+  private async deviceSupportsNativeApple(): Promise<boolean> {
     const osMajor = parseInt((await Device.getInfo()).osVersion.split('.')[0], 10);
     return osMajor >= 13 && Capacitor.platform === 'ios' && Capacitor.isPluginAvailable('SignInWithApple');
   }

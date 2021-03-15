@@ -17,5 +17,20 @@ $RECYCLE.BIN/
 log.txt
 npm-debug.log*
 
-.scannerwork
+/.idea
+/.ionic
+/.sass-cache
+/.sourcemaps
+/.versions
+/.vscode
+/coverage
+/dist
+/out-tsc
 /node_modules
+/platforms
+/plugins
+/www
+/tmp
+
+/reports
+.scannerwork

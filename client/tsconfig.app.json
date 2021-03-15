@@ -11,6 +11,7 @@
     "src/polyfills.ts"
   ],
   "exclude": [
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "firebase"
   ]
 }
