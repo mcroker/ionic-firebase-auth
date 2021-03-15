@@ -51,10 +51,10 @@ jobs:
           curl -o sonar-scanner/sonar-scanner-cli-4.6.0.2311-macosx.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.0.2311-macosx.zip
           unzip -d sonar-scanner sonar-scanner/sonar-scanner-cli-4.6.0.2311-macosx.zip
 
-      - name: Build
+      - name: Build Client
         run: npm --prefix ./client run build:lib:prod
 
-      - name: Test
+      - name: Test Client
         run: npm --prefix ./client run test:lib:prod
 
       - name: Sonar-Scanner
@@ -63,8 +63,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Release
-        run: npm run semantic-release
+      - name: Release Client
+        run: npm --prefix ./client run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

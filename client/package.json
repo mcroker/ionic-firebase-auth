@@ -56,7 +56,6 @@
     "karma-coverage": "^2.0.3",
     "native-run": "^1.2.2",
     "rxjs": "~6.5.4",
-    "semantic-release-cli": "^5.4.3",
     "ts-common": "^1.0.0",
     "tslib": "^2.0.3",
     "uuid": "^8.3.1",
