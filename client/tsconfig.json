@@ -33,6 +33,6 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true,
     "fullTemplateTypeCheck": true,
-    "enableIvy": true
+    "enableIvy": false
   }
 }
