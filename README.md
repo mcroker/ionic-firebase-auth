@@ -1,3 +1,3 @@
 # ngx-firebase
 
-![Architecture Overview](docs/arch_overview.png)
+![Architecture Overview](docs/assets/arch_overview.png)
