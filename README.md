@@ -5,4 +5,4 @@
 # Contributors
 
 -- Martin Croker
-Origionally a fork of https://github.com/AnthonyNahas/ngx-auth-firebaseui
+-- Origionally a fork of https://github.com/AnthonyNahas/ngx-auth-firebaseui
