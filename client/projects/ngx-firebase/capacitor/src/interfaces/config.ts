@@ -1,7 +1,7 @@
 import { InjectionToken } from "@angular/core";
 
 export interface MalSignInWithAppleConfig {
-    authUrl: string;
+    authUrl?: string;
     redirectUrl: string;
     redirectDeekLink: string;
     scopes?: string;

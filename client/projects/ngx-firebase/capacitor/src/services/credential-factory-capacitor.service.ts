@@ -140,7 +140,7 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
               resolve(null);
             });
             await Browser.open({
-              url: `${signInConfig.authUrl}`
+              url: `${signInConfig.authUrl || 'http://appleid.apple.com/auth/authorize'}`
                 + `?nonce=${encodeURIComponent(sha256(nonce))}`
                 + `&client_id=${encodeURIComponent(signInConfig.clientId)}`
                 + `&redirect_uri=${encodeURIComponent(signInConfig.redirectUrl)}`
