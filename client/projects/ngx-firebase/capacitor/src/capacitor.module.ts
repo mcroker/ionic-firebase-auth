@@ -1,5 +1,5 @@
 // @angular/*
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 
 // Configuration
 import {
@@ -19,28 +19,38 @@ import { Capacitor } from '@capacitor/core';
 import { AnalyticsFirebaseCapacitorService } from './services/analytics-firebase-capacitor.service';
 import { CrashlyticsFirebaseCapacitorService } from './services/crashlytics-firebase-capacitor.service';
 import { AuthCredentialFactoryCapacitorService } from './services/credential-factory-capacitor.service';
+import { MalCapacitorConfig, MalCapacitorConfigToken } from './interfaces';
 
-@NgModule({
-  providers:
-    [
-      {
-        provide: MalAnalyticsProviderToken,
-        useFactory: analyticsProviderFactory,
-        deps: [MalSharedConfigToken]
-      },
-      {
-        provide: MalCrashlyticsProviderToken,
-        useFactory: crashlyticsProviderFactory,
-        deps: [MalSharedConfigToken]
-      },
-      {
-        provide: MalCredentialFactoryProviderToken,
-        useFactory: credFactoryProviderFactory,
-        deps: [FirebaseService]
-      }
-    ]
-})
+@NgModule()
 export class MalCapacitorModule {
+
+  static forRoot(config: MalCapacitorConfig): ModuleWithProviders<MalCapacitorModule> {
+    return {
+      ngModule: MalCapacitorModule,
+      providers:
+        [
+          {
+            provide: MalCapacitorConfigToken,
+            useValue: config
+          },
+          {
+            provide: MalAnalyticsProviderToken,
+            useFactory: analyticsProviderFactory,
+            deps: [MalSharedConfigToken]
+          },
+          {
+            provide: MalCrashlyticsProviderToken,
+            useFactory: crashlyticsProviderFactory,
+            deps: [MalSharedConfigToken]
+          },
+          {
+            provide: MalCredentialFactoryProviderToken,
+            useFactory: credFactoryProviderFactory,
+            deps: [FirebaseService, MalSharedConfigToken, MalCapacitorConfigToken]
+          }
+        ]
+    }
+  }
 }
 
 export function analyticsProviderFactory(config: MalSharedConfig): IAnalyticsProvider | null {
@@ -67,9 +77,9 @@ export function crashlyticsProviderFactory(config: MalSharedConfig): ICrashlytic
   return null;
 }
 
-export function credFactoryProviderFactory(fire: FirebaseService): ICredentialFactoryProvider | null {
+export function credFactoryProviderFactory(fire: FirebaseService, sharedConfig: MalSharedConfig, capConfig: MalCapacitorConfig): ICredentialFactoryProvider | null {
   if (Capacitor.isNative) {
-    return new AuthCredentialFactoryCapacitorService(fire);
+    return new AuthCredentialFactoryCapacitorService(fire, sharedConfig, capConfig);
   } else {
     return null;
   }

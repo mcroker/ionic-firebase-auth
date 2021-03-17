@@ -233,7 +233,6 @@ export class AuthProcessService {
     try {
       let userCred: UserCredential | null = null;
 
-
       const currentUser = await this.afa.currentUser;
 
       // Only merge an anonymous user >>> non-anonymous user
@@ -247,13 +246,16 @@ export class AuthProcessService {
 
       switch (provider) {
         case AuthProvider.ANONYMOUS:
-          if (currentUser && currentUser.isAnonymous) {
-            throw new Error('Cannot signIn anonymously whilst already signedIn anonymously, SignOut first');
+          if (currentUser) {
+            throw new Error('Cannot signIn anonymously whilst already signedIn, SignOut first');
           }
           userCred = await this.afa.signInAnonymously();
           break;
 
         case AuthProvider.EmailAndPassword:
+          if (currentUser && !currentUser.isAnonymous) {
+            throw new Error('Cannot signIn whilst already signedIn, SignOut first');
+          }
           if (!options?.credentials) {
             throw new Error('Credentials are required when signing in with AuthProvider.EmailAndPassword');
           }
@@ -265,33 +267,38 @@ export class AuthProcessService {
           break;
 
         default:
-          if (this.isWebPlatform) {
+          if (currentUser && !currentUser.isAnonymous) {
+            throw new Error('Cannot signIn whilst already signedIn, SignOut first');
+          }
+          if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
+            const factoryCred = await this.credFactory.getCredential(provider);
+            if (factoryCred) {
+              userCred = await this.afa.signInWithCredential(factoryCred);
+            }
+          } else if (this.isWebPlatform) {
             userCred = await this.afa.signInWithPopup(this.getAuthProvider(provider));
-          } else if (this.credFactory) {
-            userCred = await this.afa.signInWithCredential(await this.credFactory.getCredential(provider));
           } else {
             throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
           }
           break;
       }
-      if (!userCred) {
-        throw new Error('Credential is null, that shouldn\'t happen');
-      }
 
-      await this.handleSignInSuccess(userCred);
-      loading.dismiss();
-
-      if (userCred.user && mergeContext && this.mergeService) {
-        try {
-          await this.mergeService.applyToTarget(userCred.user, mergeContext);
-        } catch (error) {
-          // If a failure occurs in merge applyToTarget we can't do much about it (we are already logged in as new user)
-          // but we should at least log it. The onus is really on the applyToTarget function to handle it's own errors.
-          this.fire.recordException(error);
+      // Will be null if user cancels operation
+      if (userCred) {
+        await this.handleSignInSuccess(userCred);
+        if (userCred.user && mergeContext && this.mergeService) {
+          try {
+            await this.mergeService.applyToTarget(userCred.user, mergeContext);
+          } catch (error) {
+            // If a failure occurs in merge applyToTarget we can't do much about it (we are already logged in as new user)
+            // but we should at least log it. The onus is really on the applyToTarget function to handle it's own errors.
+            this.fire.recordException(error);
+          }
         }
       }
 
-      return userCred;
+      await loading.dismiss();
+      return userCred || null;
 
     } catch (error) {
       // code auth/user-not-found
@@ -347,22 +354,21 @@ export class AuthProcessService {
           break;
 
         default:
-          if (this.isWebPlatform) {
+          if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
+            const factoryCred = await this.credFactory.getCredential(provider);
+            if (factoryCred) {
+              userCred = await currentUser.reauthenticateWithCredential(factoryCred);
+            }
+          } else if (this.isWebPlatform) {
             userCred = await currentUser.reauthenticateWithPopup(this.getAuthProvider(provider));
-          } else if (this.credFactory) {
-            userCred = await currentUser.reauthenticateWithCredential(await this.credFactory.getCredential(provider));
           } else {
             throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
           }
           break;
       }
-      if (!userCred) {
-        throw new Error('Credential is null, that shouldn\'t happen');
-      }
 
       await loading.dismiss();
-
-      return userCred;
+      return userCred || null;
 
     } catch (error) {
       // code auth/user-not-found
@@ -413,30 +419,32 @@ export class AuthProcessService {
           throw new Error('Linking phone number not suported');
 
         default:
-          if (this.isWebPlatform) {
+          if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
+            const factoryCred = await this.credFactory.getCredential(provider);
+            if (factoryCred) {
+              userCred = await currentUser.linkWithCredential(factoryCred);
+            }
+          } else if (this.isWebPlatform) {
             userCred = await currentUser.linkWithPopup(this.getAuthProvider(provider));
-          } else if (this.credFactory) {
-            userCred = await currentUser.linkWithCredential(await this.credFactory.getCredential(provider));
           } else {
             throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
           }
       }
 
-      if (!userCred?.user) {
-        throw new Error('userCred.user null following linkWithPopup or linkWithCredental');
+      if (userCred && userCred.user) { // Null if user cancels (or perhaps fails) sign-in
+        const userData = this.parseUserInfo(userCred.user);
+        if (
+          userData.displayName
+          && (userCred.user.displayName !== userData.displayName || userCred.user.photoURL !== userData.displayName)
+        ) {
+          this.fire.addLogMessage(`Updating user profile; displayName=${userData.displayName}, photoUrl=${userData.photoURL}`);  // tslint:disable-line max-line-length
+          await this.updateUserInfo({ displayName: userData.displayName, photoURL: userData.photoURL });
+        }
+        await this.handleSignInSuccess(userCred);
       }
 
-      const userData = this.parseUserInfo(userCred.user);
-      if (
-        userData.displayName
-        && (userCred.user.displayName !== userData.displayName || userCred.user.photoURL !== userData.displayName)
-      ) {
-        this.fire.addLogMessage(`Updating user profile; displayName=${userData.displayName}, photoUrl=${userData.photoURL}`);  // tslint:disable-line max-line-length
-        await this.updateUserInfo({ displayName: userData.displayName, photoURL: userData.photoURL });
-      }
-      await this.handleSignInSuccess(userCred);
       await loading.dismiss();
-      return userCred;
+      return userCred || null;
 
     } catch (error) {
       // Merge
@@ -499,7 +507,7 @@ export class AuthProcessService {
           this.emailToConfirm = userCred.user.email || undefined;
           await this.handleSignInSuccess(userCred);
           await loading.dismiss();
-          return userCred;
+          return userCred || null;
 
         default:
           return this.signInWith(provider, { ...options, skipTosCheck: true });
@@ -553,7 +561,7 @@ export class AuthProcessService {
     if (this.afa) {
       try {
         await this.afa.signOut();
-        if (!this.isWebPlatform) {
+        if (this.credFactory) {
           this.credFactory.signOut();
         }
       } catch (error) {
@@ -729,7 +737,16 @@ export class AuthProcessService {
     await this.fire.recordException(error);
     this.onErrorEmitter.emit(error);
     if (this.config.authUi.toastMessageOnAuthError) {
-      const message = ((error) ? error.toString() : undefined) || 'auth.common.pleaseRetry';
+      let message: string = 'auth.common.pleaseRetry';
+      if (error && typeof error === 'string') {
+        message = error;
+      } else if (error && error.message) {
+        message = error.message;
+      } else if (error && typeof error === 'object') {
+        message = JSON.stringify(error);
+      } else if (error) {
+        message = error.toString();
+      }
       await this.ui.toast(message, { duration: this.config.authUi.toastDefaultDurationMil });
     }
   }

@@ -27,6 +27,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from './shared.module';
 import { MalIonicModule } from 'projects/ngx-firebase/ionic';
+import { MalCapacitorModule } from 'projects/ngx-firebase/capacitor';
 
 @NgModule({
   declarations: [
@@ -53,11 +54,10 @@ import { MalIonicModule } from 'projects/ngx-firebase/ionic';
       }
     }),
     MalIonicModule,
+    MalCapacitorModule.forRoot(environment),
     AppRoutingModule,
     MalSharedModule.forRoot({
-      firebase: environment.firebase,
-      services: environment.services,
-      configDefaults: environment.configDefaults,
+      ...environment,
       authUi: {
         toastMessageOnAuthSuccess: false,
         authGuardFallbackURL: '/home',

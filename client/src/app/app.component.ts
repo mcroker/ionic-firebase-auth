@@ -81,7 +81,7 @@ export class AppComponent {
         if (Capacitor.isPluginAvailable('SplashScreen')) {
           SplashScreen.hide();
         }
-        if (Capacitor.platform !== 'web') {
+        /* if (Capacitor.platform !== 'web') {
           CapacitorFirebaseDynamicLinks.addListener('deepLinkOpen', (data: { url: string }) => {
             const slug = data.url.split(environment.uri.web).pop();
             if (slug) {
@@ -90,6 +90,7 @@ export class AppComponent {
             }
           });
         }
+        */
       } catch (error) {
         this.fire.recordException(error);
       }

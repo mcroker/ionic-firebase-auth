@@ -31,7 +31,8 @@ describe('AuthProcessService', () => {
 
         config = malSharedConfigFactory({ firebase: null });
         spyMergeUserService = jasmine.createSpyObj('AuthMergeUserService', ['prepareSource', 'applyToTarget']);
-        spyCredFactory = jasmine.createSpyObj(FakeCredFactory, ['getCredential']);
+        spyCredFactory = jasmine.createSpyObj(FakeCredFactory, ['getCredential', 'isProviderSupported']);
+        spyCredFactory.isProviderSupported.and.resolveTo(false);
         fakeFirestoreSyncService = MalInternalFakeFirestoreSyncService.create();
         fakeAfa = MalInternalFakeAngularFireAuth.create();
         fakeUiService = MalInternalFakeUiService.create();
@@ -430,7 +431,7 @@ describe('AuthProcessService', () => {
                 const userCred = await aps.signInWith(AuthProvider.ANONYMOUS);
                 expect(userCred).toBeNull();
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
-                expect(fakeAfa.signInAnonymously).toHaveBeenCalled();
+                expect(fakeAfa.signInAnonymously).not.toHaveBeenCalled();
                 expect(fakeAfa.signInWithEmailAndPassword).not.toHaveBeenCalled();
                 expect(fakeAfa.signInWithPopup).not.toHaveBeenCalled();
             });
@@ -442,7 +443,7 @@ describe('AuthProcessService', () => {
                 expect(userCred).toBeNull();
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInAnonymously).not.toHaveBeenCalled();
-                expect(fakeAfa.signInWithEmailAndPassword).toHaveBeenCalled();
+                expect(fakeAfa.signInWithEmailAndPassword).not.toHaveBeenCalled();
                 expect(fakeAfa.signInWithPopup).not.toHaveBeenCalled();
             });
 
@@ -452,7 +453,7 @@ describe('AuthProcessService', () => {
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInAnonymously).not.toHaveBeenCalled();
                 expect(fakeAfa.signInWithEmailAndPassword).not.toHaveBeenCalled();
-                expect(fakeAfa.signInWithPopup).toHaveBeenCalled();
+                expect(fakeAfa.signInWithPopup).not.toHaveBeenCalled();
             });
 
         });

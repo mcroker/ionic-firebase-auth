@@ -10,15 +10,16 @@
   },
   "peerDependencies": {
     "@angular/core": "^11.2.5",
-    "@capacitor/core": "2.4.2",
-    "@capacitor/ios": "^2.4.3",
-    "@capacitor-community/apple-sign-in": "1.0.0",
+    "@capacitor/core": "2.4.7",
+    "scriptjs": "^2.5.9",
     "@capacitor-community/firebase-analytics": "^0.2.0",
     "@capacitor-community/firebase-crashlytics": "^0.3.0",
-    "@capacitor-community/firebase-remote-config": "file:../../../capacitor-community-firebase-remote-config-0.1.3.tgz",
-    "capacitor-firebase-auth": "file:../../../capacitor-firebase-auth-2.3.2-firebase8.tgz",
+    "@capacitor-community/firebase-remote-config": "https://github.com/Sebschock/firebase-remote-config/releases/download/v0.1.4/capacitor-community-firebase-remote-config-0.1.4.tgz",
+    "@turnoutt/capacitor-firebase-dynamic-links": "^0.2.3",
+    "capacitor-firebase-auth": "2.4.0",
     "rxjs": "~6.5.4",
     "zone.js": "^0.11.3",
+    "js-sha256": "^0.9.0",
     "firebase": "^8.2.6"
   }
 }

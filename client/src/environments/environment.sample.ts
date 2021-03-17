@@ -15,6 +15,13 @@ export const environment: EnvConfig = {
     messagingSenderId: '',
     appId: ''
   },
+  signInWithApple: {
+    authUrl: 'http://appleid.apple.com/auth/authorize',
+    redirectUrl: 'https://MYPROJECT.cloudfunctions.net/appleAuthHandler',
+    redirectDeekLink: 'https://MYDEEPLINK/apple_response_url',
+    scopes: "email name",
+    clientId: "MYSERVICEID"
+  },
   uri: {
     web: '',
     tosUrl: '',
@@ -22,13 +29,6 @@ export const environment: EnvConfig = {
   },
   iap: {
     validatorUrl: ''
-  },
-  dynamicLink: {
-    domainUriPrefix: '',
-    iosParameters: {
-      bundleId: '',
-      customScheme: ''
-    }
   },
   google: {
     apiKey: ''

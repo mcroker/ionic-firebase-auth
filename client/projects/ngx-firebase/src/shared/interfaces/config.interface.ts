@@ -74,6 +74,7 @@ export interface MalServicesConifg {
   firebaseRegion?: string;
 }
 
+
 export interface MalUserProvidedConfig<T extends ConfigTemplate = ConfigTemplate> {
   firebase: FirebaseAppConfig;
   services?: Partial<MalServicesConifg>;
