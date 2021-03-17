@@ -38,6 +38,9 @@ jobs:
         with:
           node-version: 12.x
 
+      - name: Install dependencies (root)
+        run: npm ci 
+
       - name: Install dependencies (app)
         run: npm ci --prefix ./client
 
