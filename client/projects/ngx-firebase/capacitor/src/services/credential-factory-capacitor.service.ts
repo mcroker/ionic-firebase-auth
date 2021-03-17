@@ -109,7 +109,7 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
             = await CapacitorFirebaseAuth.signIn({ providerId: appleAuthProvider.providerId }) as AppleSignInResult;
           if (appleRes.idToken) {
             this.fire.addLogMessage(`Creating credential using firebase; provider=${provider}`);
-            return appleAuthProvider.credential(appleRes.idToken);
+            return appleAuthProvider.credential(appleRes);
           } else {
             return null;
           }
