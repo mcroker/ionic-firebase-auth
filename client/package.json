@@ -16,8 +16,7 @@
     "package": "npm run build:lib && npm run pack:lib",
     "e2e": "ng e2e --webdriver-update=false",
     "e2e:update": "ng e2e --configuration=stubbed",
-    "e2e:noserve": "ng e2e --webdriver-update=false --configuration=noserve",
-    "semantic-release": "npx semantic-release"
+    "e2e:noserve": "ng e2e --webdriver-update=false --configuration=noserve"
   },
   "typings": "./dist/ngx-firebase/public-api.d.ts",
   "private": false,

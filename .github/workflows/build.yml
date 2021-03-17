@@ -38,9 +38,6 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Install dependencies (root)
-        run: npm ci 
-
       - name: Install dependencies (app)
         run: npm ci --prefix ./client
 
@@ -67,7 +64,7 @@ jobs:
   #        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Release Client
-        run: npm --prefix ./client run semantic-release
+        run: npx --package semantic-release --package @semantic-release/exec semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
