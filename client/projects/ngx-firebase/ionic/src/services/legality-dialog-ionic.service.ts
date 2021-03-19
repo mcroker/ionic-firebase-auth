@@ -54,21 +54,20 @@ export class MalIonicLegalityDialogService implements ILegalityDialogUIProvider 
           privacyLink = ` <a target="_blank" href="${this.config.authUi.privacyPolicyUrl}" >${privacyLabel}</a> `;
         }
 
-        const [header, subHeader, declineButton, acceptButton] =
-          await this.translate.get([
-            'brand.name',
-            'auth.legal.subHeader',
-            'auth.legal.declineButton',
-            'auth.legal.acceptButton'
-          ]).toPromise();
+        const txd = await this.translate.get([
+          'brand.name',
+          'auth.legal.subHeader',
+          'auth.legal.declineButton',
+          'auth.legal.acceptButton'
+        ]).toPromise();
         const alert = await this.alertController.create({
-          header,
-          subHeader,
+          header: txd['brand.name'],
+          subHeader: txd['auth.legal.subHeader'],
           message: `${readMessage}${tosLink}${privacyLink}`,
           inputs,
           buttons: [
-            { text: declineButton, handler: _ => resolve(false), role: 'cancel' },
-            { text: acceptButton, handler: _ => resolve(true), cssClass: 'confirm' }
+            { text: txd['auth.legal.declineButton'], handler: _ => resolve(false), role: 'cancel' },
+            { text: txd['auth.legal.acceptButton'], handler: _ => resolve(true), cssClass: 'confirm' }
           ],
         });
         await alert.present();
