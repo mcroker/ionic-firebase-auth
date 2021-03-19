@@ -10,7 +10,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <ion-button expand="block" (click)="doLogin()">Sign In</ion-button>
-    <ion-button expand="block" (click)="doRegister()">Create Account</ion-button>
-    <ion-button expand="block" (click)="doContinueAnonymously()">Continue Anonymously</ion-button>
+    <ion-button expand="block" [disabled]="!(canSignIn$ | async)" (click)="doSignIn()">Sign In</ion-button>
+    <ion-button expand="block" [disabled]="!(canSignOut$ | async)" (click)="doSignOut()">Sign Out</ion-button>
+    <ion-button expand="block" [disabled]="!(canRegister$ | async)" (click)="doRegister()">Create Account</ion-button>
+    <ion-button expand="block" [disabled]="!(canSignInAsGuest$ | async)" (click)="doContinueAnonymously()">Continue Anonymously</ion-button>
+    <ion-button expand="block" routerLink="/guarded">Route-Guarded Page</ion-button>
 </ion-content>

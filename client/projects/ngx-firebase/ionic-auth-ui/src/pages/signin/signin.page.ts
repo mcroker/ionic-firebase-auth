@@ -31,17 +31,17 @@ export class AuthSignInPage implements OnInit {
   }
 
   async doSuccess(e: any) {
-    try {
 
-      const redirectUrl = this.activatedRoute.snapshot.queryParamMap.get('redirectUrl');
-      const forOperation = this.activatedRoute.snapshot.queryParamMap.get('forOperation');
+    const redirectUrl = this.activatedRoute.snapshot.queryParamMap.get('redirectUrl');
+    const forOperation = this.activatedRoute.snapshot.queryParamMap.get('forOperation');
 
-      if (redirectUrl) {
-        // Ridirect to page on SignIn
-        this.fire.addLogMessage(`Redirecting logged in user to> ${redirectUrl}`);
-        await this.navController.navigateRoot(redirectUrl);
+    if (redirectUrl) {
+      // Ridirect to page on SignIn
+      this.fire.addLogMessage(`Redirecting logged in user to> ${redirectUrl}`);
+      await this.navController.navigateRoot(redirectUrl);
 
-      } else {
+    } else {
+      try {
         switch (forOperation) {
 
           case 'deleteUser':
@@ -61,11 +61,11 @@ export class AuthSignInPage implements OnInit {
             throw new Error(`Unknown forOperation: ${forOperation}`);
 
         }
+      } catch (error) {
+        this.ui.logError(error);
+      } finally {
+        await this.navController.navigateRoot(this.config.authUi.authGuardLoggedInURL);
       }
-    } catch (error) {
-      this.ui.logError(error);
-    } finally {
-      await this.navController.navigateRoot(this.config.authUi.authGuardLoggedInURL);
     }
   }
 

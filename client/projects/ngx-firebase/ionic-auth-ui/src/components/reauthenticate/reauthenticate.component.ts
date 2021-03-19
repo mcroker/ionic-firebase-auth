@@ -23,7 +23,7 @@ export class AuthUIReauthenticateComponent implements AfterViewInit {
 
   // Events
   // tslint:disable no-output-on-prefix
-  @Output() onSuccess: any = this.aps.onSuccessEmitter;
+  @Output() onSuccess: any = this.aps.onSignInEmitter;
   @Output() onError: any = this.aps.onErrorEmitter;
   @Output() onCreateAccountRequested: EventEmitter<void> = new EventEmitter<void>();
   @Output() onResetPasswordRequested: EventEmitter<void> = new EventEmitter<void>();

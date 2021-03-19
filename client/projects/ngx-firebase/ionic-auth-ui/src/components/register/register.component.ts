@@ -27,7 +27,7 @@ export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit
 
   // Events
   // tslint:disable no-output-on-prefix
-  @Output() onSuccess: EventEmitter<any> = this.aps.onSuccessEmitter;
+  @Output() onSuccess: EventEmitter<any> = this.aps.onSignInEmitter;
   @Output() onError: EventEmitter<any> = this.aps.onErrorEmitter;
   @Output() onLoginRequested: EventEmitter<void> = new EventEmitter<void>();
   // tslint:enable no-output-on-prefix

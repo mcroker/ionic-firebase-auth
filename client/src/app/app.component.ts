@@ -2,18 +2,12 @@
 import { Component } from '@angular/core';
 import { NavController, Platform } from '@ionic/angular';
 
-// Rxjs
-import { Observable } from 'rxjs';
-
 // Capacitor
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { CapacitorFirebaseDynamicLinks } = Plugins;
 
 // Mal
 import { RemoteConfigService, AuthProcessService, UiService, FirebaseService } from 'ngx-firebase';
-
-// Firebase
-import { User } from '@firebase/auth-types';
 
 // Local
 import { environment } from 'src/environments/environment';
@@ -25,11 +19,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AppComponent {
 
-  public readonly user$: Observable<User | null> = this.aps.user$;
-  public readonly showRegister$: Observable<boolean> = this.aps.canRegister$;
-  public readonly showLogin$: Observable<boolean> = this.aps.canSignIn$;
-  public readonly showSignOut$: Observable<boolean> = this.aps.canSignOut$;
-  public readonly canEdit$: Observable<boolean> = this.aps.canEdit$;
 
   public readonly enableAnimations: boolean = !environment.e2eAutomation;
 

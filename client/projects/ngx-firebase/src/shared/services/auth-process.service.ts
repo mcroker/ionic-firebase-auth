@@ -2,7 +2,7 @@
 import { EventEmitter, forwardRef, Inject, Injectable, Optional } from '@angular/core';
 
 // RXJS
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 
 // Firebase & AngularFire
@@ -27,8 +27,8 @@ import { FirebaseService } from './firebase.service';
 })
 export class AuthProcessService {
 
-  public readonly onSuccessEmitter: EventEmitter<any> = new EventEmitter<any>();
   public readonly onErrorEmitter: EventEmitter<any> = new EventEmitter<any>();
+  public readonly onSignInEmitter: EventEmitter<User> = new EventEmitter<User>();
   public readonly onSignOutEmitter: EventEmitter<void> = new EventEmitter<void>();
   public readonly onUserUpdatedEmitter: EventEmitter<UserInfo> = new EventEmitter<UserInfo>();
   public readonly onUserDeletedEmitter: EventEmitter<void> = new EventEmitter<void>();
@@ -36,23 +36,20 @@ export class AuthProcessService {
 
   /**
    * Useful to know about auth state even between reloads.
-   */
-  get user$(): Observable<User | null> {
-    return this._user$.asObservable();
-  }
+   *
+   **/
   private _user$ = new BehaviorSubject<User | null>(null);
-
   get user(): User | null {
     return this._user$.value;
   }
 
+  public readonly user$ = this.afa.user;
+
   /**
    * Useful to know about auth state even between reloads.
-   */
-  private get authState$(): Observable<User | null> {
-    return this._authState$.asObservable();
-  }
+   **/
   private _authState$ = new BehaviorSubject<User | null>(null);
+  public readonly authState$ = this.afa.authState;
 
   /**
    * Obersable for current user - that only emits when the uid changes
@@ -122,18 +119,16 @@ export class AuthProcessService {
     @Optional() @Inject(forwardRef(() => MalMergeUserServiceToken)) public mergeService: IAuthMergeUserService,
     @Optional() @Inject(forwardRef(() => MalCredentialFactoryProviderToken)) public credFactory: ICredentialFactoryProvider,
     private fireStoreService: FirestoreSyncService,
-    @Optional() private afa: AngularFireAuth,
+    private afa: AngularFireAuth, // TODO should be private
     private fire: FirebaseService,
     private ui: UiService
   ) {
-    if (this.afa) {
-      this.afa.user.subscribe(user => this._user$.next(user));
-      this.afa.authState.subscribe(authState => this._authState$.next(authState));
-    }
+    this.afa.user.subscribe(user => this._user$.next(user));
+    this.afa.authState.subscribe(authState => this._authState$.next(authState));
     this.authState$.subscribe(user => {
       this.fire.setUserId(user?.uid || null);
     });
-    this.onSignIn$.subscribe(user => this.onSuccessEmitter.emit(user));
+    this.onSignIn$.subscribe(user => this.onSignInEmitter.emit(user));
     this.onSignOut$.subscribe(() => this.onSignOutEmitter.emit());
   }
 
@@ -153,34 +148,30 @@ export class AuthProcessService {
   }
 
   public async refreshToken(): Promise<void> {
-    if (this.afa) {
-      const user = await this.afa.currentUser;
-      if (user) {
-        await user.getIdToken(true);
-        await this.tokenRefreshed$.next();
-      }
+    const user = await this.afa.currentUser;
+    if (user) {
+      await user.getIdToken(true);
+      await this.tokenRefreshed$.next();
     }
   }
 
   public selectCurrentUserClaim<T>(claim: string): Observable<T | null | undefined> {
     return new Observable<T | null | undefined>(subscriber => {
-      if (this.afa) {
-        const handleTokenRefresh = async (user: User | null) => {
-          if (user) {
-            const token = await user.getIdTokenResult();
-            subscriber.next(token.claims[claim]);
-          } else {
-            subscriber.next(null);
-          }
-        };
-        this.tokenRefreshed$.subscribe(async () => {
-          const user = await this.afa.currentUser;
-          await handleTokenRefresh(user);
-        });
-        this.afa.user.subscribe(async user => {
-          await handleTokenRefresh(user);
-        });
-      }
+      const handleTokenRefresh = async (user: User | null) => {
+        if (user) {
+          const token = await user.getIdTokenResult();
+          subscriber.next(token.claims[claim]);
+        } else {
+          subscriber.next(null);
+        }
+      };
+      this.tokenRefreshed$.subscribe(async () => {
+        const user = await this.afa.currentUser;
+        await handleTokenRefresh(user);
+      });
+      this.afa.user.subscribe(async user => {
+        await handleTokenRefresh(user);
+      });
     });
   }
 
@@ -195,14 +186,12 @@ export class AuthProcessService {
    */
   public async resetPassword(email: string): Promise<void> {
     try {
-      if (this.afa) {
-        this.fire.addLogMessage('Password reset email sent');
-        this.afa.sendPasswordResetEmail(email);
-        this.ui.toast(
-          'auth.resetPassword.onResetRequestedTo',
-          { duration: this.config.authUi.toastDefaultDurationMil, interpolateParams: { email }, position: 'bottom' }
-        );
-      }
+      this.fire.addLogMessage('Password reset email sent');
+      this.afa.sendPasswordResetEmail(email);
+      this.ui.toast(
+        'auth.resetPassword.onResetRequestedTo',
+        { duration: this.config.authUi.toastDefaultDurationMil, interpolateParams: { email }, position: 'bottom' }
+      );
     } catch (error) {
       await this.handleError(error);
     }
@@ -227,9 +216,6 @@ export class AuthProcessService {
 
     this.fire.addLogMessage(`SignInWithProvider; provider=${provider}`);
     const loading = await this.ui.createLoading();
-    if (!this.afa) {
-      return null;
-    }
     try {
       let userCred: UserCredential | null = null;
 
@@ -313,10 +299,6 @@ export class AuthProcessService {
   public async reauthenicateWithProvider(provider: AuthProvider, options?: ISignInOptions)
     : Promise<UserCredential | null> {
 
-    if (!this.afa) {
-      return null;
-    }
-
     this.fire.addLogMessage(`reauthenicateWithProvider; provider=${provider}`);
     const loading = await this.ui.createLoading();
     try {
@@ -385,9 +367,6 @@ export class AuthProcessService {
    */
   public async linkCurrentUserToProvider(provider: AuthProvider, options?: ISignInOptions): Promise<UserCredential | null> {
 
-    if (!this.afa) {
-      return null;
-    }
     this.fire.addLogMessage(`Linking current anon user to provider; provider=${provider}`);
     const loading = await this.ui.createLoading();
     try {
@@ -460,10 +439,6 @@ export class AuthProcessService {
    * If AuthProvider.EmailAndPassword is specified credentials and displayname must also be provided.
    */
   public async registerWith(provider: AuthProvider, options?: ISignInOptions): Promise<UserCredential | null> {
-
-    if (!this.afa) {
-      return null;
-    }
 
     this.fire.addLogMessage(`SigningUp with provider; provider=${provider}`);
     const loading = await this.ui.createLoading();
@@ -540,17 +515,15 @@ export class AuthProcessService {
    * Send the currently authenticated user another verficiation email.
    */
   async sendNewVerificationEmail(): Promise<void> {
-    if (this.afa) {
-      try {
-        const currentUser = await this.afa.currentUser;
-        if (!currentUser) {
-          throw new Error('No signed in user');
-        }
-        await currentUser.sendEmailVerification();
-      } catch (error) {
-        this.fire.recordException(error);
-        throw error;
+    try {
+      const currentUser = await this.afa.currentUser;
+      if (!currentUser) {
+        throw new Error('No signed in user');
       }
+      await currentUser.sendEmailVerification();
+    } catch (error) {
+      this.fire.recordException(error);
+      throw error;
     }
   }
 
@@ -558,16 +531,13 @@ export class AuthProcessService {
    * SignOut the currently authenticated user.
    */
   async signOut() {
-    if (this.afa) {
-      try {
-        await this.afa.signOut();
-        if (this.credFactory) {
-          this.credFactory.signOut();
-        }
-      } catch (error) {
-        await this.handleError(error);
+    try {
+      await this.afa.signOut();
+      if (this.credFactory) {
+        this.credFactory.signOut();
       }
-      // this.onSignOutEmitter.emit();
+    } catch (error) {
+      await this.handleError(error);
     }
   }
 
@@ -578,44 +548,41 @@ export class AuthProcessService {
    *                   the properties actually to be changed. Others should be ommitted.
    */
   public async updateUserInfo(userInfo: Partial<UserInfo>): Promise<void> {
-    if (this.afa) {
-
-      try {
-        const user: User | null = await this.afa.currentUser;
-        if (!user) {
-          throw new Error('No currentUser');
-        }
-
-        if (userInfo.email) {
-          await user.updateEmail(userInfo.email);
-        }
-
-        if (userInfo.phoneNumber) {
-          await user.updatePhoneNumber(userInfo.phoneNumber as any); // TODO - bet this doesn't actually work
-        }
-
-        if (userInfo.displayName || userInfo.photoURL) {
-          await user.updateProfile({
-            displayName: userInfo.displayName,
-            photoURL: userInfo.photoURL
-          });
-        }
-        await this.afa.updateCurrentUser(user);
-
-        if (this.config.authUi.enableFirestoreSync) {
-          // await this.fireStoreService.updateUserData(user.uid, this.parseUserInfo(user));
-          await this.fireStoreService.updateUserData(user.uid, {
-            displayName: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL
-          });
-        }
-
-        this.onUserUpdatedEmitter.emit();
-
-      } catch (error) {
-        this.fire.recordException(error);
+    try {
+      const user: User | null = await this.afa.currentUser;
+      if (!user) {
+        throw new Error('No currentUser');
       }
+
+      if (userInfo.email) {
+        await user.updateEmail(userInfo.email);
+      }
+
+      if (userInfo.phoneNumber) {
+        await user.updatePhoneNumber(userInfo.phoneNumber as any); // TODO - bet this doesn't actually work
+      }
+
+      if (userInfo.displayName || userInfo.photoURL) {
+        await user.updateProfile({
+          displayName: userInfo.displayName,
+          photoURL: userInfo.photoURL
+        });
+      }
+      await this.afa.updateCurrentUser(user);
+
+      if (this.config.authUi.enableFirestoreSync) {
+        // await this.fireStoreService.updateUserData(user.uid, this.parseUserInfo(user));
+        await this.fireStoreService.updateUserData(user.uid, {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL
+        });
+      }
+
+      this.onUserUpdatedEmitter.emit();
+
+    } catch (error) {
+      this.fire.recordException(error);
     }
   }
 
@@ -650,7 +617,7 @@ export class AuthProcessService {
    * ToDo - this would probably bet better inside a user-photo component
    */
   public getUserPhotoUrl(): Observable<string | null> {
-    return this._user$.pipe(
+    return this.user$.pipe(
       map((user: User | null) => {
         if (!user) {
           return null;
@@ -678,7 +645,6 @@ export class AuthProcessService {
     if (null === cred.user) {
       throw new Error('user is null whilst handling sucessful login');
     }
-    // this.onSuccessEmitter.next(cred.user);
     if (this.config.authUi.enableFirestoreSync) {
       try {
         const userData = this.parseUserInfo(cred.user);
@@ -700,7 +666,7 @@ export class AuthProcessService {
    *  Refresh user info. Can be useful for instance to get latest status regarding email verification.
    */
   async reloadUserInfo() {
-    const user = await this._user$.pipe(take(1)).toPromise();
+    const user = await this.user$.pipe(take(1)).toPromise();
     if (user) {
       await user.reload();
     }
@@ -710,23 +676,21 @@ export class AuthProcessService {
    * Deletes the current user
    */
   async deleteUser() {
-    if (this.afa) {
-      const currentUser = await this.afa.currentUser;
-      const currentUid = currentUser?.uid;
-      if (!currentUser || !currentUid) {
-        throw new Error('Unable to delete currentUser if null');
+    const currentUser = await this.afa.currentUser;
+    const currentUid = currentUser?.uid;
+    if (!currentUser || !currentUid) {
+      throw new Error('Unable to delete currentUser if null');
+    }
+    try {
+      // If currentUser.delete fails we are left with a user, but not synced data.
+      await this.fireStoreService.deleteUserData(currentUid);
+      await currentUser.delete();
+      this.onUserDeletedEmitter.emit();
+    } catch (error) {
+      if (error.code !== FirebaseErrorCodes.requiresRecentLogin) {
+        this.fire.recordException(error);
       }
-      try {
-        // If currentUser.delete fails we are left with a user, but not synced data.
-        await this.fireStoreService.deleteUserData(currentUid);
-        await currentUser.delete();
-        this.onUserDeletedEmitter.emit();
-      } catch (error) {
-        if (error.code !== FirebaseErrorCodes.requiresRecentLogin) {
-          this.fire.recordException(error);
-        }
-        throw (error);
-      }
+      throw (error);
     }
   }
 

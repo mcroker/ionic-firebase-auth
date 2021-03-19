@@ -1,0 +1,17 @@
+<ion-header>
+    <ion-toolbar color="toolbar">
+        <ion-title id="gome_title">
+            NGX-FIREBASE
+        </ion-title>
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <mal-auth-avatar [showIfAnon]="true"></mal-auth-avatar>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-text>This page is protected with a route-guard</ion-text>
+</ion-content>

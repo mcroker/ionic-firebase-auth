@@ -28,11 +28,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './shared.module';
 import { MalIonicModule } from 'projects/ngx-firebase/ionic';
 import { MalCapacitorModule } from 'projects/ngx-firebase/capacitor';
+import { GuardedPage } from './components/guarded/guarded.page';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomePage
+    HomePage,
+    GuardedPage
   ],
   imports: [
     SharedModule,

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 
 import { LoggedInGuard, VerifyEmailGuard } from 'ngx-firebase';
+import { GuardedPage } from './components/guarded/guarded.page';
 import { HomePage } from './components/home-page/home.page';
 
 const routes: Routes = [
@@ -12,8 +13,12 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomePage,
-    canActivate: [VerifyEmailGuard]
+    component: HomePage
+  },
+  {
+    path: 'guarded',
+    component: GuardedPage,
+    canActivate: [LoggedInGuard]
   },
   {
     path: 'auth',
