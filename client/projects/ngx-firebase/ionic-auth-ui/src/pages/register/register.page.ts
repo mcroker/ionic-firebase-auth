@@ -1,19 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, forwardRef, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { UiService, FirebaseService } from 'ngx-firebase';
+import { UiService, FirebaseService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
+import { NgxAuthFirebaseuiAnimations } from '../../animations';
 
 @Component({
   templateUrl: 'register.page.html',
-  styleUrls: ['../../ionic-auth-ui.scss']
+  styleUrls: ['../../ionic-auth-ui.scss'],
+  animations: NgxAuthFirebaseuiAnimations
 })
 export class AuthRegisterPage implements OnInit {
+
+  readonly logoUrl?: string = this.config.authUi.logoUrl;
 
   constructor(
     private ui: UiService,
     private fire: FirebaseService,
     private activatedRoute: ActivatedRoute,
-    private navController: NavController
+    private navController: NavController,
+    @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig,
   ) { }
 
   ngOnInit() {

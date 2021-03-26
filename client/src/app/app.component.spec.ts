@@ -3,15 +3,12 @@ import { SharedModule } from 'src/app/shared.module';
 import { MalTestingModule } from 'ngx-firebase/testing';
 
 import { AppComponent } from './app.component';
-import { PersistState } from '@datorama/akita';
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let persistStorage: jasmine.SpyObj<PersistState>;
 
   beforeEach(async () => {
-    persistStorage = jasmine.createSpyObj('PersistState', [' clear']);
     await TestBed.configureTestingModule({
       declarations: [AppComponent],
       imports: [
@@ -19,7 +16,6 @@ describe('AppComponent', () => {
         MalTestingModule
       ],
       providers: [
-        { provide: 'persistStorage', useValue: persistStorage }
       ]
     }).compileComponents();
 

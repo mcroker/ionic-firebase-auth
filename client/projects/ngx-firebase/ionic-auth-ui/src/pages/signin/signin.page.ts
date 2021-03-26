@@ -17,6 +17,8 @@ export interface SocialProvider {
 })
 export class AuthSignInPage implements OnInit {
 
+  readonly logoUrl?: string = this.config.authUi.logoUrl;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private aps: AuthProcessService,

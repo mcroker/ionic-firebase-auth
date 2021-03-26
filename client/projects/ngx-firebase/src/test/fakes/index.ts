@@ -1,4 +1,3 @@
-export * from './MalInternalFakeFirestoreSyncService';
 export * from './MalInternalFakeCrashyticsService';
 export * from './MalInternalFakeUiService';
 export * from './MalInternalFakeAngularFireAuth';

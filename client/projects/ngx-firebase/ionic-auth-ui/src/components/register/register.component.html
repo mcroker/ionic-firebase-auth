@@ -1,81 +1,37 @@
 <div fxLayout="column" fxLayoutAlign="center center" id="register-wrapper" class="authui-wrapper">
   <div [@animateStagger]="{ value: '50' }" id="register-inner" class="authui-inner-wrapper">
 
-    <div *ngIf="logoUrl" class="authui-logo">
-      <img [@animate]="{ value: '*', params: { x: '50px' } }" [src]="logoUrl" alt="logo">
+    <mal-authui-register-with-email *ngIf="showEmail === 'inline'">
+      (createAccountClick)="doCreateAccount($event)">
+    </mal-authui-register-with-email>
+
+    <div fxLayoutAlign="stretch"
+         fxLayout="column"
+         class="provider-buttons">
+
+      <div *ngIf="showEmail === 'popover'">
+        <ion-button (click)="doSignUpWithEmail()"
+                    [@animate]="{ value: '*', params: { x: '-100px' } }"
+                    color="primary"
+                    class="authui-provider-button">
+          <ion-icon name="mail-outline"></ion-icon>
+          <ion-label slot="end">{{ "auth.register.emailButton" | translate }}</ion-label>
+        </ion-button>
+      </div>
+
+      <div *ngIf="guestEnabled$ | async">
+        <ion-button (click)="doSignUpAnonymously()"
+                    [@animate]="{ value: '*', params: { x: '-100px' } }"
+                    color="primary"
+                    class="authui-provider-button">
+          <ion-icon name="finger-print-outline"></ion-icon>
+          <ion-label slot="end">{{ "auth.register.guestButton" | translate }}</ion-label>
+        </ion-button>
+      </div>
     </div>
-
-    <form [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"
-          [formGroup]="registerForm"
-          novalidate>
-
-      <mal-authui-name-field formControlName="name"
-                             [@animate]="{ value: '*', params: { x: '50px' } }">
-      </mal-authui-name-field>
-
-      <mal-authui-email-field formControlName="email"
-                              [@animate]="{ value: '*', params: { x: '50px' } }">
-      </mal-authui-email-field>
-
-      <mal-authui-password-field formControlName="password"
-                                 [forUpdate]="true"
-                                 [@animate]="{ value: '*', params: { x: '50px' } }">
-      </mal-authui-password-field>
-
-      <ion-grid class="terms">
-        <ion-row *ngIf="this.tosUrl">
-          <ion-col size="2">
-            <ion-checkbox color="primary" attr.aria-label="{{ 'auth.legal.readAndAccept' | translate }} {{ 'auth.legal.termsAndConditions'
-                          | translate }}" formControlName="tos"> </ion-checkbox>
-          </ion-col>
-          <ion-col>
-            <ion-text color="text"> {{ "auth.legal.readAndAccept" | translate }}</ion-text>
-            <a target="_blank" [href]="this.tosUrl">
-              {{ "auth.legal.termsAndConditions" | translate }}
-            </a>
-          </ion-col>
-        </ion-row>
-        <ion-row *ngIf="this.privacyPolicyUrl">
-          <ion-col size="2">
-            <ion-checkbox color="primary" attr.aria-label="{{ 'auth.legal.readAndAccept' | translate }} {{ 'auth.legal.privacyPolicy'
-            | translate }}" formControlName="privacyPolicy"></ion-checkbox>
-          </ion-col>
-          <ion-col>
-            <ion-text color="text">{{ "auth.legal.readAndAccept" | translate }}</ion-text>
-            <a target="_blank" [href]="this.privacyPolicyUrl">
-              {{ "auth.legal.privacyPolicy" | translate }}
-            </a>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-
-      <ion-button (click)="doCreateAccount()"
-                  color="primary"
-                  [disabled]="registerForm.invalid"
-                  aria-label="CREATE AN ACCOUNT"
-                  class="authui-submit-button"
-                  id="createAccountButton">
-        {{ "auth.register.createAccountButton" | translate }}
-      </ion-button>
-
-    </form>
-
-    <ion-button (click)="doSignUpAnonymously()"
-                *ngIf="guestEnabled$ | async"
-                [@animate]="{ value: '*', params: { x: '-100px' } }"
-                color="primary"
-                style="margin-top: 20px">
-      <ion-icon name="finger-print-outline"></ion-icon>
-      {{ "auth.register.guestButton" | translate }}
-    </ion-button>
-
-    <!--mal-authui-or-divider *ngIf="providers.length> 0"
-                           [@animate]="{ value: '*', params: { z: '50px', delay: '50ms', scale: '0.2' } }">
-    </mal-authui-or-divider-->
 
     <mal-authui-providers [providers]="providers"
                           (providerClick)="doProviderClick($event)"
-                          fxLayoutAlign="center center"
                           layout="column">
     </mal-authui-providers>
 
@@ -95,6 +51,4 @@
       </a>
 
     </div>
-
   </div>
-</div>

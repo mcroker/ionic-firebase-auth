@@ -1,0 +1,28 @@
+<form [formGroup]="termsForm">
+  <ion-grid class="terms">
+    <ion-row *ngIf="this.tosUrl">
+      <ion-col size="2">
+        <ion-checkbox color="primary" attr.aria-label="{{ 'auth.legal.readAndAccept' | translate }} {{ 'auth.legal.termsAndConditions'
+                          | translate }}" formControlName="tos"> </ion-checkbox>
+      </ion-col>
+      <ion-col>
+        <ion-text color="text"> {{ "auth.legal.readAndAccept" | translate }}</ion-text>
+        <a target="_blank" [href]="this.tosUrl">
+          {{ "auth.legal.termsAndConditions" | translate }}
+        </a>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="this.privacyPolicyUrl">
+      <ion-col size="2">
+        <ion-checkbox color="primary" attr.aria-label="{{ 'auth.legal.readAndAccept' | translate }} {{ 'auth.legal.privacyPolicy'
+            | translate }}" formControlName="privacyPolicy"></ion-checkbox>
+      </ion-col>
+      <ion-col>
+        <ion-text color="text">{{ "auth.legal.readAndAccept" | translate }}</ion-text>
+        <a target="_blank" [href]="this.privacyPolicyUrl">
+          {{ "auth.legal.privacyPolicy" | translate }}
+        </a>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</form>

@@ -14,7 +14,6 @@ import { NgxAuthFirebaseuiAnimations } from '../../animations';
 })
 export class AuthUISignInComponent implements AfterViewInit {
 
-  @Input() logoUrl?: string = this.config.authUi.logoUrl;
   @Input() providers: string[] | string = AuthProvider.ALL; //  google, facebook, twitter, github as array or all as one single string
   @Input() registrationEnabled = true;
   @Input() resetPasswordEnabled = true;

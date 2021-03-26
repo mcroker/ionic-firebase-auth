@@ -4,7 +4,7 @@ import { AuthProvider, IAuthMergeUserService, malSharedConfigFactory, MalSharedC
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
     MalInternalFakeAngularFireAuth,
-    MalInternalFakeUserCredential, DUMMYAUTHERROR, MalInternalFakeFirestoreSyncService, MalInternalFakeUiService, MalInternalFakeFirebaseService
+    MalInternalFakeUserCredential, DUMMYAUTHERROR, MalInternalFakeUiService, MalInternalFakeFirebaseService
 } from '../../test/fakes';
 import { User, AuthCredential } from '@firebase/auth-types';
 import { UiService } from './ui.service';
@@ -22,7 +22,7 @@ describe('AuthProcessService', () => {
     let config: MalSharedConfig;
     let spyMergeUserService: jasmine.SpyObj<IAuthMergeUserService>;
     let spyCredFactory: jasmine.SpyObj<ICredentialFactoryProvider>;
-    let fakeFirestoreSyncService: FirestoreSyncService & MalInternalFakeFirestoreSyncService;
+    let spyFirestoreSyncService: jasmine.SpyObj<FirestoreSyncService>;
     let fakeAfa: AngularFireAuth & MalInternalFakeAngularFireAuth;
     let fakeUiService: MalInternalFakeUiService & UiService;
     let fakeFirebaseService: MalInternalFakeFirebaseService & FirebaseService;
@@ -33,7 +33,7 @@ describe('AuthProcessService', () => {
         spyMergeUserService = jasmine.createSpyObj('AuthMergeUserService', ['prepareSource', 'applyToTarget']);
         spyCredFactory = jasmine.createSpyObj(FakeCredFactory, ['getCredential', 'isProviderSupported']);
         spyCredFactory.isProviderSupported.and.resolveTo(false);
-        fakeFirestoreSyncService = MalInternalFakeFirestoreSyncService.create();
+        spyFirestoreSyncService = jasmine.createSpyObj(FirestoreSyncService, ['getUserData', 'setUserData', 'updateUserData']);
         fakeAfa = MalInternalFakeAngularFireAuth.create();
         fakeUiService = MalInternalFakeUiService.create();
         fakeFirebaseService = MalInternalFakeFirebaseService.create();
@@ -42,7 +42,7 @@ describe('AuthProcessService', () => {
             config,
             spyMergeUserService,
             spyCredFactory,
-            fakeFirestoreSyncService,
+            spyFirestoreSyncService,
             fakeAfa,
             fakeFirebaseService,
             fakeUiService
@@ -127,7 +127,7 @@ describe('AuthProcessService', () => {
                 expect(fakeCredResponse.user.updateProfile).toHaveBeenCalledWith(
                     { displayName: 'testDisplayName', photoURL: undefined }
                 );
-                expect(fakeFirestoreSyncService.updateUserData).toHaveBeenCalledWith(
+                expect(spyFirestoreSyncService.updateUserData).toHaveBeenCalledWith(
                     fakeCredResponse.user.uid, { displayName: fakeCredResponse.user.displayName, email: undefined, photoURL: undefined }
                 );
                 expect(fakeAfa.updateCurrentUser).toHaveBeenCalled();
@@ -199,7 +199,7 @@ describe('AuthProcessService', () => {
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeCredResponse.user.sendEmailVerification).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).not.toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
+                expect(spyFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
             });
 
             /**
@@ -216,7 +216,7 @@ describe('AuthProcessService', () => {
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeCredResponse.user.sendEmailVerification).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).not.toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
+                expect(spyFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
             });
 
             /**
@@ -235,7 +235,7 @@ describe('AuthProcessService', () => {
                 expect(userCred).toBeNull();
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.createUserWithEmailAndPassword).toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
+                expect(spyFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
             });
 
         });
@@ -252,7 +252,6 @@ describe('AuthProcessService', () => {
                 expect(userCred).toBe(fakeCredResponse);
                 expect(fakeCredResponse.user.sendEmailVerification).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).not.toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.createUserData).not.toHaveBeenCalled();
                 expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
             });
 
@@ -265,6 +264,7 @@ describe('AuthProcessService', () => {
                         providerId: 'firebase-facebook'
                     }
                 });
+                fakeUiService.confirmTos.and.resolveTo(true);
                 fakeAfa.signInWithPopup.and.callFake(async () => {
                     fakeAfa._user$.next(fakeCredResponse.user);
                     return fakeCredResponse;
@@ -273,7 +273,6 @@ describe('AuthProcessService', () => {
                 expect(userCred).toBe(fakeCredResponse);
                 expect(fakeCredResponse.user.sendEmailVerification).not.toHaveBeenCalled();
                 expect(fakeCredResponse.user.updateProfile).not.toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.createUserData).not.toHaveBeenCalled();
                 expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
             });
 
@@ -470,7 +469,7 @@ describe('AuthProcessService', () => {
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.createUserWithEmailAndPassword).not.toHaveBeenCalled();
                 expect(fakeUiService.confirmTos).not.toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
+                expect(spyFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
                 expect(fakeAfa.updateCurrentUser).not.toHaveBeenCalled();
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
             });
@@ -485,7 +484,7 @@ describe('AuthProcessService', () => {
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInWithPopup).not.toHaveBeenCalled();
                 expect(fakeUiService.confirmTos).not.toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
+                expect(spyFirestoreSyncService.updateUserData).not.toHaveBeenCalled();
                 expect(fakeAfa.updateCurrentUser).not.toHaveBeenCalled();
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
             });
@@ -513,7 +512,6 @@ describe('AuthProcessService', () => {
                 fakeCurrentUser.delete.and.callFake(async () => fakeAfa._user$.next(null));
                 await aps.deleteUser();
                 expect(fakeCurrentUser.delete).toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.deleteUserData).toHaveBeenCalled();
                 expect(aps.user).toBeNull();
             });
 
@@ -527,7 +525,6 @@ describe('AuthProcessService', () => {
                 fakeCurrentUser.delete.and.rejectWith(DUMMYAUTHERROR.requiresRecentLogin);
                 await expectAsync(aps.deleteUser()).toBeRejectedWith(DUMMYAUTHERROR.requiresRecentLogin);
                 expect(fakeCurrentUser.delete).toHaveBeenCalled();
-                expect(fakeFirestoreSyncService.deleteUserData).toHaveBeenCalled();
                 expect(aps.user).toBe(fakeCurrentUser);
             });
 

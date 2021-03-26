@@ -106,6 +106,7 @@
             "cardTitle": "Registration",
             "buttonText": "Register",
             "guestButton": "Continue as guest",
+            "emailButton": "Register with email",
             "createAccountButton": "Create account",
             "alreadyHaveAccount": "Already have an account?",
             "passwordConfirmation": "Password Confirmation",
@@ -122,6 +123,15 @@
             "signOut": "Sign Out",
             "sendNewVerificationEmail": "Send new confirmation e-mail",
             "onConfirmationSuccess": "A new confirmation e-mail has been sent. Please check your inbox."
+        },
+        "provider": {
+            "google": "Google",
+            "apple": "Sign in with Apple",
+            "facebook": "Facebook",
+            "twitter": "Twitter",
+            "github": "GitHub",
+            "microsoft": "Microsoft",
+            "yahoo": "Yahoo"
         }
     }
 }

@@ -3,7 +3,6 @@ import {
   AfterViewInit, ChangeDetectorRef, Component, EventEmitter, forwardRef, Inject, Input, OnDestroy, OnInit,
   Output, ViewEncapsulation
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 // RxJS
 import { Observable, Subject } from 'rxjs';
@@ -11,6 +10,8 @@ import { Observable, Subject } from 'rxjs';
 // Mal
 import { NgxAuthFirebaseuiAnimations } from '../../animations';
 import { AuthProcessService, AuthProvider, UiService, MalSharedConfig, MalSharedConfigToken } from 'ngx-firebase';
+import { CreateAccountFormData } from '../register-with-email/register-with-email.component';
+import { PopoverController } from '@ionic/angular';
 
 
 @Component({
@@ -20,32 +21,20 @@ import { AuthProcessService, AuthProvider, UiService, MalSharedConfig, MalShared
   encapsulation: ViewEncapsulation.None,
   animations: NgxAuthFirebaseuiAnimations
 })
-export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AuthUIRegisterComponent implements OnDestroy, AfterViewInit {
 
-  @Input() logoUrl?: string = this.config.authUi.logoUrl;
+  @Input() showEmail: 'inline' | 'popover' | 'none' = 'popover';
   @Input() providers: string[] | string = AuthProvider.ALL; //  google, facebook, twitter, github as array or all as one single string
 
   // Events
   // tslint:disable no-output-on-prefix
-  @Output() onSuccess: EventEmitter<any> = this.aps.onSignInEmitter;
+  @Output() onSuccess: EventEmitter<any> = this.aps.onRegisterEmitter;
   @Output() onError: EventEmitter<any> = this.aps.onErrorEmitter;
   @Output() onLoginRequested: EventEmitter<void> = new EventEmitter<void>();
   // tslint:enable no-output-on-prefix
 
-  registerForm: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
-    tos: new FormControl(true, []),
-    privacyPolicy: new FormControl(true, [])
-  });
-
   // Prevent somebody already logged in as guest - relogging in as gyest
   guestEnabled$: Observable<boolean> = this.aps.canSignInAsGuest$;
-
-  // Config
-  tosUrl = this.config.authUi.tosUrl;
-  privacyPolicyUrl = this.config.authUi.privacyPolicyUrl;
 
   // Private
   private destroy$: Subject<void> = new Subject<void>();
@@ -55,19 +44,9 @@ export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit
     @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig,
     public aps: AuthProcessService,
     private ui: UiService,
+    private popover: PopoverController,
     private changeDetectorRef: ChangeDetectorRef
   ) {
-  }
-
-  ngOnInit(): void {
-    // If tos or privacy policy url set, ensure that the two form items are required
-    if (this.config.authUi.tosUrl) {
-      this.registerForm.controls.tos.setValidators(Validators.requiredTrue);
-    }
-    if (this.config.authUi.privacyPolicyUrl) {
-      this.registerForm.controls.privacyPolicy.setValidators(Validators.requiredTrue);
-    }
-    this.registerForm.updateValueAndValidity();
   }
 
   ngAfterViewInit() {
@@ -79,17 +58,17 @@ export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit
     this.destroy$.complete();
   }
 
-  async doCreateAccount(): Promise<void> {
+  async doCreateAccount(data: CreateAccountFormData): Promise<void> {
     try {
       this.changeDetectorRef.markForCheck();
       await this.aps.registerWith(
         AuthProvider.EmailAndPassword,
         {
           credentials: {
-            email: this.registerForm.controls.email.value,
-            password: this.registerForm.controls.password.value
+            email: data.email,
+            password: data.password
           },
-          displayName: this.registerForm.controls.name.value,
+          displayName: data.name,
           skipTosCheck: true
         }
       );
@@ -104,6 +83,36 @@ export class AuthUIRegisterComponent implements OnInit, OnDestroy, AfterViewInit
     try {
       this.changeDetectorRef.markForCheck();
       await this.aps.signInWith(AuthProvider.ANONYMOUS);
+    } catch (error) {
+      this.ui.logError(error);
+    } finally {
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
+  doSignUpWithEmailModal() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { AuthUIRegisterWithEmailPopoverComponent } = await import('../register-with-email-popover/register-with-email-popover.component');
+        const modal = await this.popover.create({
+          component: AuthUIRegisterWithEmailPopoverComponent,
+          cssClass: ['wide-popover', 'dark-backdrop']
+        })
+        modal.onDidDismiss().then((data: any) => {
+          resolve(data);
+        });
+        await modal.present();
+      } catch (error) {
+        this.ui.logError(error);
+        reject(error);
+      }
+    });
+  }
+
+  async doSignUpWithEmail() {
+    try {
+      const data = await this.doSignUpWithEmailModal();
+      console.log(data);
     } catch (error) {
       this.ui.logError(error);
     } finally {

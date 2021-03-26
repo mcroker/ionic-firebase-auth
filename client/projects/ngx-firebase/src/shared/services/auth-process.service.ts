@@ -29,6 +29,7 @@ export class AuthProcessService {
 
   public readonly onErrorEmitter: EventEmitter<any> = new EventEmitter<any>();
   public readonly onSignInEmitter: EventEmitter<User> = new EventEmitter<User>();
+  public readonly onRegisterEmitter: EventEmitter<User> = new EventEmitter<User>();
   public readonly onSignOutEmitter: EventEmitter<void> = new EventEmitter<void>();
   public readonly onUserUpdatedEmitter: EventEmitter<UserInfo> = new EventEmitter<UserInfo>();
   public readonly onUserDeletedEmitter: EventEmitter<void> = new EventEmitter<void>();
@@ -128,7 +129,6 @@ export class AuthProcessService {
     this.authState$.subscribe(user => {
       this.fire.setUserId(user?.uid || null);
     });
-    this.onSignIn$.subscribe(user => this.onSignInEmitter.emit(user));
     this.onSignOut$.subscribe(() => this.onSignOutEmitter.emit());
   }
 
@@ -228,14 +228,17 @@ export class AuthProcessService {
         mergeContext = await this.mergeService.prepareSource(currentUser);
       }
 
-      loading.present();
-
       switch (provider) {
         case AuthProvider.ANONYMOUS:
           if (currentUser) {
             throw new Error('Cannot signIn anonymously whilst already signedIn, SignOut first');
           }
-          userCred = await this.afa.signInAnonymously();
+          if (await this.confirmTos(null, options)) {
+            loading.present();
+            userCred = await this.afa.signInAnonymously();
+            await loading.dismiss();
+            await this.confirmTos(userCred, { skipTosCheck: true }); // Save tosAcceptance in firestore
+          }
           break;
 
         case AuthProvider.EmailAndPassword:
@@ -245,7 +248,13 @@ export class AuthProcessService {
           if (!options?.credentials) {
             throw new Error('Credentials are required when signing in with AuthProvider.EmailAndPassword');
           }
+          loading.present();
           userCred = await this.afa.signInWithEmailAndPassword(options.credentials.email, options.credentials.password);
+          await loading.dismiss();
+          if (!await this.confirmTos(userCred, options)) {
+            await this.signOut();
+            userCred = null;
+          };
           break;
 
         case AuthProvider.PhoneNumber:
@@ -257,15 +266,24 @@ export class AuthProcessService {
             throw new Error('Cannot signIn whilst already signedIn, SignOut first');
           }
           if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
+            loading.present();
             const factoryCred = await this.credFactory.getCredential(provider);
             if (factoryCred) {
               userCred = await this.afa.signInWithCredential(factoryCred);
             }
+            await loading.dismiss();
           } else if (this.isWebPlatform) {
+            loading.present();
             userCred = await this.afa.signInWithPopup(this.getAuthProvider(provider));
+            await loading.dismiss();
           } else {
             throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
           }
+          await loading.dismiss();
+          if (!await this.confirmTos(userCred, options)) {
+            await this.signOut();
+            userCred = null;
+          };
           break;
       }
 
@@ -281,6 +299,7 @@ export class AuthProcessService {
             this.fire.recordException(error);
           }
         }
+        this.onSignInEmitter.emit(userCred.user);
       }
 
       await loading.dismiss();
@@ -451,18 +470,14 @@ export class AuthProcessService {
         return this.linkCurrentUserToProvider(provider, options);
       } else if (null !== currentUser) { // Non-Anonymous User
         throw new Error('Cannot Register whilst signed in as a non-Anonymous user. SignOut first');
-      } else { // No User
-        if (!options?.skipTosCheck) {
-          // Don't show TOS if currentUser (assume current user has aleady agreed)
-          if (!await this.confirmTos()) {
-            this.fire.addLogMessage('User declined TOS during register');
-            return null;
-          }
-        }
+      } else if (!await this.confirmTos(null, options)) { // No current user
+        this.fire.addLogMessage('User declined TOS during register');
+        return null;
       }
 
       let userCred: UserCredential | null = null;
       switch (provider) {
+
         case AuthProvider.EmailAndPassword:
           if (!options?.credentials || !options?.displayName) {
             throw new Error('Credentials & displayName required to SignUp by email');
@@ -474,6 +489,9 @@ export class AuthProcessService {
             throw new Error('User is null following successful signUp');
           }
           await this.updateUserInfo({ displayName: options.displayName });
+          console.log('USERCRED2>', userCred);
+          await this.confirmTos(userCred, { skipTosCheck: true }); // To save the tosAcceptance
+          console.log('USERCRED3>', userCred);
           if (this.config.authUi.enableEmailVerification) {
             await userCred.user.sendEmailVerification();
           }
@@ -482,12 +500,18 @@ export class AuthProcessService {
           this.emailToConfirm = userCred.user.email || undefined;
           await this.handleSignInSuccess(userCred);
           await loading.dismiss();
-          return userCred || null;
+          console.log('USERCRED>', userCred);
+          break;
 
         default:
-          return this.signInWith(provider, { ...options, skipTosCheck: true });
+          userCred = await this.signInWith(provider, { ...options, skipTosCheck: true });
 
       }
+
+      if (userCred.user) {
+        this.onRegisterEmitter.emit(userCred.user);
+      }
+      return userCred || null;
     } catch (error) {
       // This is where I would handle merge
       await this.handleError(error);
@@ -503,10 +527,31 @@ export class AuthProcessService {
    *
    * @returns True if either user agrees to TOS/PrivacyUrl || no TOS/PrivacyUrl configured.
    */
-  private async confirmTos() {
+  private async confirmTos(userCred: UserCredential | null = null, options: { skipTosCheck?: boolean } = {}): Promise<boolean> {
     if (this.config.authUi.tosUrl || this.config.authUi.privacyPolicyUrl) {
-      return await this.ui.confirmTos();
-    } else {
+      let acceptedTos: string | null = (options.skipTosCheck) ? new Date().toISOString() : null;
+
+      console.log('1');
+      if (!acceptedTos && userCred?.user && !userCred?.additionalUserInfo?.isNewUser && this.config.authUi.enableFirestoreSync) {
+      console.log('2');
+        const userData = await this.fireStoreService.getUserData(userCred.user.uid);
+        acceptedTos = userData?.acceptedTos || null;
+      }
+
+      if (!acceptedTos && await this.ui.confirmTos()) {
+      console.log('3');
+        acceptedTos = new Date().toISOString();
+      }
+
+      if (userCred?.user && this.config.authUi.enableFirestoreSync) {
+      console.log('4');
+        await this.fireStoreService.setUserData(userCred.user.uid, { acceptedTos }, { merge: true });
+      console.log('5');
+      }
+
+      return !!acceptedTos;
+
+    } else { // No tosUrl || privacyPolicyUrl
       return true;
     }
   }
@@ -645,15 +690,15 @@ export class AuthProcessService {
     if (null === cred.user) {
       throw new Error('user is null whilst handling sucessful login');
     }
-    if (this.config.authUi.enableFirestoreSync) {
-      try {
-        const userData = this.parseUserInfo(cred.user);
-        this.fire.addLogMessage(`About to create user data in firestore; user=${JSON.stringify(userData)}`);
-        // Now done by server-side trigger await this.fireStoreService.createUserData(userData);
-      } catch (error) {
-        this.fire.recordException(error);
-      }
-    }
+    // if (this.config.authUi.enableFirestoreSync) {
+    // Now done by server-side trigger await this.fireStoreService.createUserData(userData);
+    // try {
+    //   const userData = this.parseUserInfo(cred.user);
+    //   this.fire.addLogMessage(`About to create user data in firestore; user=${JSON.stringify(userData)}`);
+    // } catch (error) {
+    //   this.fire.recordException(error);
+    // }
+    // }
     if (this.config.authUi.toastMessageOnAuthSuccess) {
       const successMessage = ('string' === typeof this.config.authUi.toastMessageOnAuthSuccess)
         ? this.config.authUi.toastMessageOnAuthSuccess
@@ -682,8 +727,7 @@ export class AuthProcessService {
       throw new Error('Unable to delete currentUser if null');
     }
     try {
-      // If currentUser.delete fails we are left with a user, but not synced data.
-      await this.fireStoreService.deleteUserData(currentUid);
+      // Userdata deleted by DB trigger
       await currentUser.delete();
       this.onUserDeletedEmitter.emit();
     } catch (error) {

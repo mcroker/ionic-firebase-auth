@@ -4,8 +4,6 @@ import { AuthProcessService } from 'ngx-firebase';
 import { MalTestingModule } from 'ngx-firebase/testing';
 
 
-import { MalIonicUISharedModule } from '../../ionic-auth-ui-shared.module';
-
 describe('AuthUISignInComponent', () => {
   let component: AuthUISignInComponent;
   let fixture: ComponentFixture<AuthUISignInComponent>;
@@ -15,8 +13,7 @@ describe('AuthUISignInComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MalTestingModule,
-        MalIonicUISharedModule
+        MalTestingModule
       ],
       declarations: [
         AuthUISignInComponent

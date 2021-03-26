@@ -4,7 +4,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmailConfirmationComponent } from './email-confirmation.component';
 import { AuthProcessService } from 'ngx-firebase';
 import { MalTestingModule } from '../../../../testing';
-import { MalIonicUISharedModule } from '../../ionic-auth-ui-shared.module';
 
 describe('EmailConfirmationComponent', () => {
   let component: EmailConfirmationComponent;
@@ -15,8 +14,7 @@ describe('EmailConfirmationComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MalTestingModule,
-        MalIonicUISharedModule
+        MalTestingModule
       ],
       declarations: [
         EmailConfirmationComponent

@@ -1,20 +1,19 @@
 <div [@animateStagger]="{ value: '50' }">
 
   <!--default icon buttons-->
-  <div [fxLayoutAlign]="layout == 'row' ? 'space-around center' : 'stretch'"
+  <div [fxLayoutAlign]="layout == 'row' ? 'center' : 'stretch'"
        [fxLayout]="layout"
        fxLayout.xs="column"
-       class="buttons-ionic">
+       class="provider-buttons">
 
-    <div>
-      <ion-button *ngFor="let provider of (displayProviders$ | async)"
+    <div *ngFor="let provider of (displayProviders$ | async)">
+      <ion-button 
                   (click)="providerClick.emit(provider.name)"
                   [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"
-                  [class]="provider.name"
-                  [ngClass.xs]="{'space-full-xs':true}">
+                  [class]="provider.name + ' authui-provider-button'">
 
         <ion-icon *ngIf="provider.icon" slot="start" [name]="provider.icon"></ion-icon>
-        <ion-label slot="end">{{ provider.label }}</ion-label>
+        <ion-label slot="end">{{ 'auth.provider.' + provider.name | translate }}</ion-label>
 
       </ion-button>
     </div>

@@ -11,52 +11,34 @@ $yahoo: #720e9e;
   display: block;
 }
 
-.space-full-xs {
-  width: 100%;
-  margin: 0.4rem;
+ion-button.google {
+  color: $google !important;
 }
 
-.buttons-ionic {
-  ion-button {
-    @media screen and (max-width: 599px) {
-      width: 60%;
-    }
-    text-align: center;
-    --background: var(--auth-provider-background-color, white);
-  }
+ion-button.apple {
+  color: $apple !important;
+}
 
-  ion-button.google {
-    color: $google !important;
-  }
+ion-button.facebook {
+  color: $facebook !important;
+}
 
-  ion-button.apple {
-    color: $apple !important;
-  }
+ion-button.twitter {
+  color: $twitter !important;
+}
 
-  ion-button.facebook {
-    color: $facebook !important;
-    ion-icon {
-      width: 3em;
-    }
-  }
+ion-button.github {
+  color: $github !important;
+}
 
-  ion-button.twitter {
-    color: $twitter !important;
-  }
+ion-button.microsoft {
+  color: $microsoft !important;
+}
 
-  ion-button.github {
-    color: $github !important;
-  }
+ion-button.yahoo {
+  color: $yahoo !important;
+}
 
-  ion-button.microsoft {
-    color: $microsoft !important;
-  }
-
-  ion-button.yahoo {
-    color: $yahoo !important;
-  }
-
-  ion-button.phone {
-    color: $phone;
-  }
+ion-button.phone {
+  color: $phone;
 }

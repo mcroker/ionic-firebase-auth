@@ -8,7 +8,14 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="auth-page">
-  <mal-authui-register [providers]="['google', 'apple', 'facebook']" (onSuccess)="doSuccess()"
-                       (onLoginRequested)="doLoginRequested()">
-  </mal-authui-register>
+  <div fxLayout="column" fxLayoutAlign="center center" id="register-page-wrapper">
+
+    <div *ngIf="logoUrl" class="authui-logo">
+      <img [@animate]="{ value: '*', params: { x: '50px' } }" [src]="logoUrl" alt="logo">
+    </div>
+
+    <mal-authui-register (onSuccess)="doSuccess()" (onLoginRequested)="doLoginRequested()">
+    </mal-authui-register>
+
+  </div>
 </ion-content>

@@ -26,8 +26,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from './shared.module';
-import { MalIonicModule } from 'projects/ngx-firebase/ionic';
-import { MalCapacitorModule } from 'projects/ngx-firebase/capacitor';
+import { MalIonicModule } from 'ngx-firebase/ionic';
+import { MalCapacitorModule } from 'ngx-firebase/capacitor';
 import { GuardedPage } from './components/guarded/guarded.page';
 
 @NgModule({
@@ -65,13 +65,13 @@ import { GuardedPage } from './components/guarded/guarded.page';
         authGuardFallbackURL: '/home',
         guardProtectedRoutesUntilEmailIsVerified: true,
         authGuardVerifyEmailURL: '/auth/verify',
-        logoUrl: '/assets/images/logo.png',
+        logoUrl: '/assets/logo.png',
         reSignInUrl: '/auth/signin',
         verifyEmailBackground: 'background-girl-reading-1',
         supportedProviders: [AuthProvider.Apple, AuthProvider.Facebook, AuthProvider.Google],
         tosUrl: environment.uri.tosUrl,
         privacyPolicyUrl: environment.uri.privacyUrl,
-        enableFirestoreSync: false,
+        enableFirestoreSync: true,
         guestEnabled: true
       }
     }),

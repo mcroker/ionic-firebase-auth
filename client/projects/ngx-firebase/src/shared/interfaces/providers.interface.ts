@@ -17,12 +17,6 @@ export interface ICrashlyticsProvider {
     setUserId(uid: string | null): void;
 }
 
-export interface IUserDatabaseProvider {
-    getUserData(uid: string): Promise<UserInfo | null>;
-    deleteUserData(uid: string): Promise<void>;
-    updateUserData(uid: string, user: Partial<UserInfo>): Promise<void>;
-}
-
 export interface ICredentialFactoryProvider {
     isProviderSupported(provider: AuthProvider): Promise<boolean>;
     getCredential(provider: AuthProvider): Promise<AuthCredential | null>;

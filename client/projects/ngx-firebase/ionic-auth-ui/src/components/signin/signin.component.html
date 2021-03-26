@@ -1,10 +1,6 @@
 <div fxLayout="column" fxLayoutAlign="center center" id="signin-wrapper" class="authui-wrapper">
   <div [@animateStagger]="{ value: '50' }" id="signin-inner" class="authui-inner-wrapper">
 
-    <div *ngIf="logoUrl" class="authui-logo">
-      <img [@animate]="{ value: '*', params: { x: '50px' } }" [src]="logoUrl" alt="logo">
-    </div>
-
     <form [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}" [formGroup]="signInForm" name="signInForm"
           novalidate>
 
@@ -48,7 +44,6 @@
     </mal-authui-or-divider> -->
 
     <mal-authui-providers [providers]="providers"
-                          fxLayoutAlign="center center"
                           (providerClick)="providerClick($event)"
                           layout="column"></mal-authui-providers>
 

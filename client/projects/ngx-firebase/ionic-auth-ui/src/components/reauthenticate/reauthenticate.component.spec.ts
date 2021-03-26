@@ -3,7 +3,6 @@ import { AuthUIReauthenticateComponent } from './reauthenticate.component';
 import { AuthProcessService } from 'ngx-firebase';
 import { MalTestingModule } from '../../../../testing';
 
-import { MalIonicUISharedModule } from '../../ionic-auth-ui-shared.module';
 
 describe('AuthUIReauthenticateComponent', () => {
   let component: AuthUIReauthenticateComponent;
@@ -14,8 +13,7 @@ describe('AuthUIReauthenticateComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MalTestingModule,
-        MalIonicUISharedModule
+        MalTestingModule
       ],
       declarations: [
         AuthUIReauthenticateComponent

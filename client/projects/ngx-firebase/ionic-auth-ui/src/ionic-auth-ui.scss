@@ -1,6 +1,11 @@
-div.authuo-logo {
-    width: 128px;
+div.authui-logo {
     margin: 32px auto;
+    width: 30%;
+    img {
+        display: block;
+        max-width: 120px;
+        border-radius: 20px;
+    }
 }
 
 div.authui-title {
@@ -26,13 +31,23 @@ div.resend-confirmation {
     text-align: center;
 }
 
+ion-button.authui-provider-button {
+    width: 220px;
+    margin: 8px auto;
+    display: block;
+    text-align: center;
+    @media screen and (max-width: 599px) {
+        width: 100%;
+    }
+    --background: var(--auth-provider-background-color, white);
+}
+
 ion-button.authui-submit-button {
     width: 220px;
     margin: 16px auto;
     display: block;
-
     @media screen and (max-width: 599px) {
-        width: 90%;
+        width: 100%;
     }
 }
 
@@ -58,15 +73,6 @@ div.forgot-password {
     }
 }
 
-div.authui-logo img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 30%;
-    max-width: 120px;
-    border-radius: 20px;
-}
-
 div.auth-ui-form {
     width: 384px;
     max-width: 384px;
@@ -87,7 +93,6 @@ div.auth-ui-form {
 
 div.authui-wrapper {
     width: 100%;
-    //background: url("/assets/images/backgrounds/dark-material-bg.jpg") no-repeat;
     background-size: cover;
 
     flex: 1 0 auto;
@@ -96,23 +101,17 @@ div.authui-wrapper {
     @media screen and (max-width: 599px) {
         padding: 16px;
     }
-
-    div.authui-inner-wrapper {
-        width: 384px;
-        max-width: 384px;
-        padding: 32px;
-        text-align: center;
-        //@include mat-elevation(16);
-
-        @media screen and (max-width: 599px) {
-            padding: 24px;
-            width: 100%;
-        }
-    }
 }
 
 // This will match the class that we set up to the btn in the alert config.
 // and color the btn text to grey only when it is disabled
 button.confirm:disabled {
     color: grey;
+}
+
+div.email-popover-outer {
+    width: 100%;
+    div.email-popover-inner {
+        padding: 10%;
+    }
 }

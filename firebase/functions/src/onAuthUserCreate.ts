@@ -10,6 +10,6 @@ export async function onAuthUserCreate(user: admin.auth.UserRecord) {
         displayName: user.displayName,
         email: user.email,
         emailVerified: user.emailVerified
-    });
+    }, { merge: true });
     functions.logger.info(`User firestore record created: uid=${user.uid}, displayName=${user.displayName}`);
 }

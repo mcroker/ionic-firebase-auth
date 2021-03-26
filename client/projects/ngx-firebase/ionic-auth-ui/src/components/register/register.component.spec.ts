@@ -4,7 +4,6 @@ import { AuthProcessService } from 'ngx-firebase';
 import { MalTestingModule } from '../../../../testing';
 
 import { AuthProvidersComponent } from '../providers/providers.component';
-import { MalIonicUISharedModule } from '../../ionic-auth-ui-shared.module';
 
 describe('AuthUIRegisterComponent', () => {
   let component: AuthUIRegisterComponent;
@@ -15,8 +14,7 @@ describe('AuthUIRegisterComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        MalTestingModule,
-        MalIonicUISharedModule
+        MalTestingModule
       ],
       declarations: [
         AuthProvidersComponent,

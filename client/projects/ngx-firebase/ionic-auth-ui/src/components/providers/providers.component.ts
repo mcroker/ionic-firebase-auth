@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, Inject, forwardRef } from '@angular/core';
 import { AuthProcessService, AuthProvider, MalSharedConfigToken, MalSharedConfig, UiService } from 'ngx-firebase';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { NgxAuthFirebaseuiAnimations } from '../../animations';
 
 export enum Layout {
