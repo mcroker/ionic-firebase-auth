@@ -489,9 +489,7 @@ export class AuthProcessService {
             throw new Error('User is null following successful signUp');
           }
           await this.updateUserInfo({ displayName: options.displayName });
-          console.log('USERCRED2>', userCred);
           await this.confirmTos(userCred, { skipTosCheck: true }); // To save the tosAcceptance
-          console.log('USERCRED3>', userCred);
           if (this.config.authUi.enableEmailVerification) {
             await userCred.user.sendEmailVerification();
           }
@@ -531,22 +529,17 @@ export class AuthProcessService {
     if (this.config.authUi.tosUrl || this.config.authUi.privacyPolicyUrl) {
       let acceptedTos: string | null = (options.skipTosCheck) ? new Date().toISOString() : null;
 
-      console.log('1');
       if (!acceptedTos && userCred?.user && !userCred?.additionalUserInfo?.isNewUser && this.config.authUi.enableFirestoreSync) {
-      console.log('2');
         const userData = await this.fireStoreService.getUserData(userCred.user.uid);
         acceptedTos = userData?.acceptedTos || null;
       }
 
       if (!acceptedTos && await this.ui.confirmTos()) {
-      console.log('3');
         acceptedTos = new Date().toISOString();
       }
 
       if (userCred?.user && this.config.authUi.enableFirestoreSync) {
-      console.log('4');
         await this.fireStoreService.setUserData(userCred.user.uid, { acceptedTos }, { merge: true });
-      console.log('5');
       }
 
       return !!acceptedTos;
