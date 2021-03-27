@@ -7,7 +7,7 @@
        class="provider-buttons">
 
     <div *ngFor="let provider of (displayProviders$ | async)">
-      <ion-button 
+      <ion-button [id]="'auth_provider_' + provider.name + '_btn'"
                   (click)="providerClick.emit(provider.name)"
                   [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"
                   [class]="provider.name + ' authui-provider-button'">

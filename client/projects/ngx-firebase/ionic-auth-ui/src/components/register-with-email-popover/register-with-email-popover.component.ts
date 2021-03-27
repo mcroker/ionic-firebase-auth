@@ -1,5 +1,7 @@
 // Angular & Inionc
 import { Component, ViewEncapsulation } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
+import { CreateAccountFormData } from '../register-with-email/register-with-email.component';
 
 // RxJS
 
@@ -14,5 +16,13 @@ import { NgxAuthFirebaseuiAnimations } from '../../animations';
   animations: NgxAuthFirebaseuiAnimations
 })
 export class AuthUIRegisterWithEmailPopoverComponent {
+
+  constructor(
+    private popoverController:PopoverController
+  ) { }
+
+  doCreateAccountClick(data: CreateAccountFormData) {
+    this.popoverController.dismiss(data);
+  }
 
 }

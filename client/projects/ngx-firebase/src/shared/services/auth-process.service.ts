@@ -498,7 +498,6 @@ export class AuthProcessService {
           this.emailToConfirm = userCred.user.email || undefined;
           await this.handleSignInSuccess(userCred);
           await loading.dismiss();
-          console.log('USERCRED>', userCred);
           break;
 
         default:

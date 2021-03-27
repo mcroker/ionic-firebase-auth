@@ -10,7 +10,8 @@
          class="provider-buttons">
 
       <div *ngIf="showEmail === 'popover'">
-        <ion-button (click)="doSignUpWithEmail()"
+        <ion-button id="auth_register_email_btn"
+                    (click)="doRegisterWithEmailPopover()"
                     [@animate]="{ value: '*', params: { x: '-100px' } }"
                     color="primary"
                     class="authui-provider-button">
@@ -20,7 +21,8 @@
       </div>
 
       <div *ngIf="guestEnabled$ | async">
-        <ion-button (click)="doSignUpAnonymously()"
+        <ion-button id="auth_register_anon_btn"
+                    (click)="doRegisterAnonymously()"
                     [@animate]="{ value: '*', params: { x: '-100px' } }"
                     color="primary"
                     class="authui-provider-button">

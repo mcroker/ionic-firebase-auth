@@ -13,6 +13,9 @@ import { AuthProcessService, AuthProvider, UiService, MalSharedConfig, MalShared
 import { CreateAccountFormData } from '../register-with-email/register-with-email.component';
 import { PopoverController } from '@ionic/angular';
 
+function isCreateAccountFormData(x: any): x is CreateAccountFormData {
+  return x && x.email && x.password;
+}
 
 @Component({
   selector: 'mal-authui-register',
@@ -79,7 +82,7 @@ export class AuthUIRegisterComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  async doSignUpAnonymously() {
+  async doRegisterAnonymously() {
     try {
       this.changeDetectorRef.markForCheck();
       await this.aps.signInWith(AuthProvider.ANONYMOUS);
@@ -90,33 +93,35 @@ export class AuthUIRegisterComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  doSignUpWithEmailModal() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const { AuthUIRegisterWithEmailPopoverComponent } = await import('../register-with-email-popover/register-with-email-popover.component');
-        const modal = await this.popover.create({
-          component: AuthUIRegisterWithEmailPopoverComponent,
-          cssClass: ['wide-popover', 'dark-backdrop']
-        })
-        modal.onDidDismiss().then((data: any) => {
-          resolve(data);
-        });
-        await modal.present();
-      } catch (error) {
-        this.ui.logError(error);
-        reject(error);
-      }
-    });
-  }
-
-  async doSignUpWithEmail() {
+  async doRegisterWithEmailPopover() {
     try {
-      const data = await this.doSignUpWithEmailModal();
-      console.log(data);
+      const data = await new Promise<CreateAccountFormData | null>(
+        async (resolve, reject) => {
+          try {
+            const { AuthUIRegisterWithEmailPopoverComponent } = await import('../register-with-email-popover/register-with-email-popover.component');
+            const popover = await this.popover.create({
+              component: AuthUIRegisterWithEmailPopoverComponent,
+              cssClass: ['wide-popover', 'dark-backdrop']
+            })
+            popover.onDidDismiss().then((resp: any) => {
+              if (isCreateAccountFormData(resp?.data)) {
+                resolve(resp.data);
+              } else {
+                resolve(null);
+              }
+            });
+            await popover.present();
+          } catch (error) {
+            this.ui.logError(error);
+            reject(error);
+          }
+        }
+      );
+      if (data) {
+        await this.doCreateAccount(data);
+      }
     } catch (error) {
       this.ui.logError(error);
-    } finally {
-      this.changeDetectorRef.markForCheck();
     }
   }
 
