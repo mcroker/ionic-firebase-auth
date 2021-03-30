@@ -276,6 +276,12 @@ export class AuthProcessService {
             loading.present();
             userCred = await this.afa.signInWithPopup(this.getAuthProvider(provider));
             await loading.dismiss();
+            /*
+            a: null
+code: "auth/popup-closed-by-user"
+message: "The popup has been closed by the user before finalizing the operation."
+__proto__: Error
+*/
           } else {
             throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
           }

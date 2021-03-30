@@ -9,7 +9,7 @@
                 "deleteAccount": "Delete account",
                 "signOut": "Sign out"
             },
-            "mesage": {
+            "message": {
                 "confirmDelete": "Confirm you wish to delete the current account {{userName}}. This operations is not reversible.",
                 "acountDeleted": "Your account has been successfully deleted!",
                 "deleteError": "Error occurred while deleting your account: {{error}}"
