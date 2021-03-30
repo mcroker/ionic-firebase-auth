@@ -20,7 +20,6 @@ export class VerifyEmailGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     return this.aps.user$.pipe(
       map(user => {
-        console.log('VEG', user);
         if (user
           && !user.emailVerified
           && !user.isAnonymous
