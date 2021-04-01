@@ -1,6 +1,6 @@
 import { AuthProcessService } from './auth-process.service';
 import { FirestoreSyncService } from './firestore-sync.service';
-import { AuthProvider, IAuthMergeUserService, malSharedConfigFactory, MalSharedConfig, ICredentialFactoryProvider } from '../interfaces';
+import { AuthProvider, IAuthHooksService, malSharedConfigFactory, MalSharedConfig, ICredentialFactoryProvider } from '../interfaces';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
     MalInternalFakeAngularFireAuth,
@@ -20,7 +20,7 @@ describe('AuthProcessService', () => {
 
     let aps: AuthProcessService;
     let config: MalSharedConfig;
-    let spyMergeUserService: jasmine.SpyObj<IAuthMergeUserService>;
+    let spyAuthHooks: jasmine.SpyObj<IAuthHooksService>;
     let spyCredFactory: jasmine.SpyObj<ICredentialFactoryProvider>;
     let spyFirestoreSyncService: jasmine.SpyObj<FirestoreSyncService>;
     let fakeAfa: AngularFireAuth & MalInternalFakeAngularFireAuth;
@@ -30,7 +30,7 @@ describe('AuthProcessService', () => {
     beforeEach(() => {
 
         config = malSharedConfigFactory({ firebase: null });
-        spyMergeUserService = jasmine.createSpyObj('AuthMergeUserService', ['prepareSource', 'applyToTarget']);
+        spyAuthHooks = jasmine.createSpyObj('AuthMergeUserService', ['prepareMergeSource', 'applyMergeToTarget']);
         spyCredFactory = jasmine.createSpyObj(FakeCredFactory, ['getCredential', 'isProviderSupported']);
         spyCredFactory.isProviderSupported.and.resolveTo(false);
         spyFirestoreSyncService = jasmine.createSpyObj(FirestoreSyncService, ['getUserData', 'setUserData', 'updateUserData']);
@@ -40,7 +40,7 @@ describe('AuthProcessService', () => {
 
         aps = new AuthProcessService(
             config,
-            spyMergeUserService,
+            spyAuthHooks,
             spyCredFactory,
             spyFirestoreSyncService,
             fakeAfa,
@@ -317,15 +317,15 @@ describe('AuthProcessService', () => {
 
             it('Success', async () => {
                 const fakeCredResponse = new MalInternalFakeUserCredential();
-                spyMergeUserService.prepareSource.and.resolveTo(true);
+                spyAuthHooks.prepareMergeSource.and.resolveTo(true);
                 fakeAfa.signInWithEmailAndPassword.and.resolveTo(fakeCredResponse);
                 const userCred = await aps.signInWith(AuthProvider.EmailAndPassword, {
                     credentials: { email: 'm@m.com', password: 'p' }
                 });
                 expect(userCred).toBe(fakeCredResponse);
                 expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
-                expect(spyMergeUserService.prepareSource).toHaveBeenCalled();
-                expect(spyMergeUserService.applyToTarget).toHaveBeenCalled();
+                expect(spyAuthHooks.prepareMergeSource).toHaveBeenCalled();
+                expect(spyAuthHooks.applyMergeToTarget).toHaveBeenCalled();
             });
 
             /**
@@ -333,15 +333,15 @@ describe('AuthProcessService', () => {
              */
             it('Merge returns null', async () => {
                 const fakeCredResponse = new MalInternalFakeUserCredential();
-                spyMergeUserService.prepareSource.and.resolveTo(null);
+                spyAuthHooks.prepareMergeSource.and.resolveTo(null);
                 fakeAfa.signInWithEmailAndPassword.and.resolveTo(fakeCredResponse);
                 const userCred = await aps.signInWith(AuthProvider.EmailAndPassword, {
                     credentials: { email: 'm@m.com', password: 'p' }
                 });
                 expect(userCred).toBe(fakeCredResponse);
                 expect(fakeFirebaseService.recordException).not.toHaveBeenCalled();
-                expect(spyMergeUserService.prepareSource).toHaveBeenCalled();
-                expect(spyMergeUserService.applyToTarget).not.toHaveBeenCalled();
+                expect(spyAuthHooks.prepareMergeSource).toHaveBeenCalled();
+                expect(spyAuthHooks.applyMergeToTarget).not.toHaveBeenCalled();
             });
 
             /**
@@ -350,7 +350,7 @@ describe('AuthProcessService', () => {
              */
             it('Merge Part 1 (prepareSource) Fails', async () => {
                 const fakeCredResponse = new MalInternalFakeUserCredential();
-                spyMergeUserService.prepareSource.and.rejectWith();
+                spyAuthHooks.prepareMergeSource.and.rejectWith();
                 fakeAfa.signInWithEmailAndPassword.and.resolveTo(fakeCredResponse);
                 const userCred = await aps.signInWith(AuthProvider.EmailAndPassword, {
                     credentials: { email: 'm@m.com', password: 'p' }
@@ -358,8 +358,8 @@ describe('AuthProcessService', () => {
                 expect(userCred).toBeNull();
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
                 expect(fakeAfa.signInWithEmailAndPassword).not.toHaveBeenCalled();
-                expect(spyMergeUserService.prepareSource).toHaveBeenCalled();
-                expect(spyMergeUserService.applyToTarget).not.toHaveBeenCalled();
+                expect(spyAuthHooks.prepareMergeSource).toHaveBeenCalled();
+                expect(spyAuthHooks.applyMergeToTarget).not.toHaveBeenCalled();
             });
 
             /**
@@ -368,16 +368,16 @@ describe('AuthProcessService', () => {
              */
             it('Merge Part 2 (applyToTarget) Fails', async () => {
                 const fakeCredResponse = new MalInternalFakeUserCredential();
-                spyMergeUserService.applyToTarget.and.rejectWith();
-                spyMergeUserService.prepareSource.and.resolveTo(true);
+                spyAuthHooks.applyMergeToTarget.and.rejectWith();
+                spyAuthHooks.prepareMergeSource.and.resolveTo(true);
                 fakeAfa.signInWithEmailAndPassword.and.resolveTo(fakeCredResponse);
                 const userCred = await aps.signInWith(AuthProvider.EmailAndPassword, {
                     credentials: { email: 'm@m.com', password: 'p' }
                 });
                 expect(userCred).toEqual(fakeCredResponse);
                 expect(fakeFirebaseService.recordException).toHaveBeenCalled();
-                expect(spyMergeUserService.prepareSource).toHaveBeenCalled();
-                expect(spyMergeUserService.applyToTarget).toHaveBeenCalled();
+                expect(spyAuthHooks.prepareMergeSource).toHaveBeenCalled();
+                expect(spyAuthHooks.applyMergeToTarget).toHaveBeenCalled();
             });
 
         });

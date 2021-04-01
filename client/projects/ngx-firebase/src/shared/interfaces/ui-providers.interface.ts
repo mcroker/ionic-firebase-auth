@@ -46,6 +46,7 @@ export interface IOkAlertOptions {
 // PICKER
 
 export interface IPickerUIProvider {
+    picker<T>(options: IPickerServiceOptions): Promise<T | null>;
 }
 
 export interface IPickerServiceOptions {

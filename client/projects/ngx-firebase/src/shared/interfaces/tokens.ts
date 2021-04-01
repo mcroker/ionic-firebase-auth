@@ -2,7 +2,7 @@
 import { InjectionToken } from '@angular/core';
 
 import { MalSharedConfig, MalUserProvidedConfig } from './config.interface';
-import { IAnalyticsProvider, IAuthMergeUserService, IAuthProcessService, ICrashlyticsProvider, ICredentialFactoryProvider } from './providers.interface';
+import { IAnalyticsProvider, IAuthHooksService, IAuthProcessService, ICrashlyticsProvider, ICredentialFactoryProvider } from './providers.interface';
 import { ILoadingUIProvider, IAlertsUIProvider, IPickerUIProvider, IToastUIProvider, ILegalityDialogUIProvider} from './ui-providers.interface'
 
 // Firebase Functional Areas
@@ -11,7 +11,7 @@ export const MalCrashlyticsProviderToken = new InjectionToken<ICrashlyticsProvid
 export const MalAuthServiceProviderToken = new InjectionToken<IAuthProcessService>('MalAuthServiceProviderToken');
 
 // Auth Process Service
-export const MalMergeUserServiceToken = new InjectionToken<IAuthMergeUserService>('MalMergeUserServiceToken');
+export const AuthHooksProviderToken = new InjectionToken<IAuthHooksService>('AuthHooksProviderToken');
 export const MalCredentialFactoryProviderToken = new InjectionToken<ICredentialFactoryProvider>('MalCredentialFactoryProviderToken');
 
 // Configuration

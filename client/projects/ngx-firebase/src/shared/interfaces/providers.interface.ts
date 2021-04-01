@@ -66,7 +66,8 @@ export interface IAuthProcessService {
     getAuthProvider(provider: AuthProvider): FirebaseAuthProvider;
 }
 
-export interface IAuthMergeUserService {
-    prepareSource(sourceUser: User): Promise<any>;
-    applyToTarget(targetUser: User, context: any): Promise<void>;
+export interface IAuthHooksService {
+    prepareMergeSource?: { (sourceUser: User): Promise<any> };
+    applyMergeToTarget?: { (targetUser: User, context: any): Promise<void> };
+    beforeDelete?: { (user: User): Promise<boolean> };
 }

@@ -2,7 +2,7 @@
 import { EventEmitter, forwardRef, Inject, Injectable, Optional } from '@angular/core';
 
 // RXJS
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 
 // Firebase & AngularFire
@@ -15,8 +15,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { FirestoreSyncService } from './firestore-sync.service';
 import {
   MalCredentialFactoryProviderToken,
-  MalMergeUserServiceToken, MalSharedConfigToken,
-  MalSharedConfig, AuthProvider, ISignInOptions, Accounts, IAuthMergeUserService,
+  AuthHooksProviderToken, MalSharedConfigToken,
+  MalSharedConfig, AuthProvider, ISignInOptions, Accounts, IAuthHooksService,
   ICredentialFactoryProvider, FirebaseErrorCodes
 } from '../interfaces';
 import { UiService } from './ui.service';
@@ -93,6 +93,9 @@ export class AuthProcessService {
     map(user => user as User)
   );
 
+  /**
+   * Provides an array of authentication providers that are valid for the currently signed-in user
+   */
   public get reauthenticateProviders$(): Observable<AuthProvider[]> {
     return this.user$.pipe(
       map(user => (user?.providerData || [])
@@ -107,17 +110,14 @@ export class AuthProcessService {
     );
   }
 
+  /**
+   * Triggers subscriber actions when the current user token is refreshed
+   */
   private readonly tokenRefreshed$: Subject<void> = new Subject<void>();
-
-  // Legacy field that is set to true after sign up.
-  // Value is lost in case of reload. The idea here is to know if we just sent a verification email.
-  emailConfirmationSent?: boolean;
-  // Legacy fieled that contain the mail to confirm. Same lifecycle than emailConfirmationSent.
-  emailToConfirm?: string;
 
   constructor(
     @Inject(forwardRef(() => MalSharedConfigToken)) public config: MalSharedConfig,
-    @Optional() @Inject(forwardRef(() => MalMergeUserServiceToken)) public mergeService: IAuthMergeUserService,
+    @Optional() @Inject(forwardRef(() => AuthHooksProviderToken)) public hooksService: IAuthHooksService,
     @Optional() @Inject(forwardRef(() => MalCredentialFactoryProviderToken)) public credFactory: ICredentialFactoryProvider,
     private fireStoreService: FirestoreSyncService,
     private afa: AngularFireAuth, // TODO should be private
@@ -141,12 +141,18 @@ export class AuthProcessService {
 
   /**
    * Indicates if the specified provider is supported on the current platform
+   * 
+   * A provider is supported if it is configured to be so in authUi.supportProviders and either the platform is a webplatform
+   * (in which case @anguluar/fire will be used). Or the provider is supported by the injected credFactory (such as that provided by /capacitor).
    */
   async isProviderSupported(provider: AuthProvider): Promise<boolean> {
     return (this.config.authUi.supportedProviders === AuthProvider.ALL || this.config.authUi.supportedProviders.includes(provider))
       && (this.isWebPlatform || (this.credFactory && await this.credFactory.isProviderSupported(provider)));
   }
 
+  /**
+   * Refreshes the current user IdToken, and triggers the tokenRefreshed$ subject
+   */
   public async refreshToken(): Promise<void> {
     const user = await this.afa.currentUser;
     if (user) {
@@ -155,8 +161,16 @@ export class AuthProcessService {
     }
   }
 
+  /**
+   * Provides an observable that subscribes to the current user token and returns the value of the specified claim.
+   * 
+   * @param claim Claim to be returned
+   * @returns Observable for: Value of claim within current user token || null (if not signed in) || undefined (if no such claim exists)
+   */
   public selectCurrentUserClaim<T>(claim: string): Observable<T | null | undefined> {
     return new Observable<T | null | undefined>(subscriber => {
+      // Handler function to process the ID token
+      // Emits the claim || undefined || null
       const handleTokenRefresh = async (user: User | null) => {
         if (user) {
           const token = await user.getIdTokenResult();
@@ -165,22 +179,31 @@ export class AuthProcessService {
           subscriber.next(null);
         }
       };
+      // Subscribe to token refresh events
       this.tokenRefreshed$.subscribe(async () => {
         const user = await this.afa.currentUser;
         await handleTokenRefresh(user);
       });
+      // Subscribe to user update events
       this.afa.user.subscribe(async user => {
         await handleTokenRefresh(user);
       });
     });
   }
 
+  /**
+   * Get the value for a custom claim for the current user (extracted from their ID token)
+   * 
+   * @param claim Claim to be returned
+   * @returns Value of claim within current user token || null (if not signed in) || undefined (if no such claim exists)
+   */
   public getCurrentUserClaim<T>(claim: string): Promise<T | null | undefined> {
     return this.selectCurrentUserClaim<T>(claim).pipe(take(1)).toPromise();
   }
 
   /**
-   * Reset the password of currently authenticated user via email
+   * Reset the password of currently authenticated user via email,
+   * Firebase sends an email to the user - and managed the reset process directly via google's hosted pages.
    *
    * @param email - the email to reset
    */
@@ -211,8 +234,7 @@ export class AuthProcessService {
    * @param provider - the provider to authenticate with (google, facebook, twitter, github)
    * @param credentials optional email and password
    */
-  public async signInWith(provider: AuthProvider, options?: ISignInOptions)
-    : Promise<UserCredential | null> {
+  public async signInWith(provider: AuthProvider, options?: ISignInOptions): Promise<UserCredential | null> {
 
     this.fire.addLogMessage(`SignInWithProvider; provider=${provider}`);
     const loading = await this.ui.createLoading();
@@ -221,11 +243,13 @@ export class AuthProcessService {
 
       const currentUser = await this.afa.currentUser;
 
-      // Only merge an anonymous user >>> non-anonymous user
+      // Trigger hook for user merge where an anonymoust user >>> non-anonymous user.
+      // Two merge hooks are provided, one run as source user (prepareMergeSource) and once the new non-anonymous user is created
+      // a second hook applyMergeToTarget is subsequenrly run. The output from prepareMergeSource is passed into applyMergeToTarget.
       // Don't catch any errors, so they are caught by function and trigger a login abort.
       let mergeContext: any = null;
-      if (currentUser && currentUser.isAnonymous && this.mergeService && provider !== AuthProvider.ANONYMOUS) {
-        mergeContext = await this.mergeService.prepareSource(currentUser);
+      if (currentUser && currentUser.isAnonymous && this.hooksService?.prepareMergeSource && provider !== AuthProvider.ANONYMOUS) {
+        mergeContext = await this.hooksService.prepareMergeSource(currentUser);
       }
 
       switch (provider) {
@@ -236,8 +260,8 @@ export class AuthProcessService {
           if (await this.confirmTos(null, options)) {
             loading.present();
             userCred = await this.afa.signInAnonymously();
+            await this.confirmTos(userCred, { skipTosCheck: true }); // Save tosAcceptance in firestore if sync enabled
             await loading.dismiss();
-            await this.confirmTos(userCred, { skipTosCheck: true }); // Save tosAcceptance in firestore
           }
           break;
 
@@ -250,11 +274,11 @@ export class AuthProcessService {
           }
           loading.present();
           userCred = await this.afa.signInWithEmailAndPassword(options.credentials.email, options.credentials.password);
-          await loading.dismiss();
           if (!await this.confirmTos(userCred, options)) {
             await this.signOut();
             userCred = null;
           };
+          await loading.dismiss();
           break;
 
         case AuthProvider.PhoneNumber:
@@ -262,43 +286,23 @@ export class AuthProcessService {
           break;
 
         default:
-          if (currentUser && !currentUser.isAnonymous) {
-            throw new Error('Cannot signIn whilst already signedIn, SignOut first');
-          }
-          if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
-            loading.present();
-            const factoryCred = await this.credFactory.getCredential(provider);
-            if (factoryCred) {
-              userCred = await this.afa.signInWithCredential(factoryCred);
-            }
-            await loading.dismiss();
-          } else if (this.isWebPlatform) {
-            loading.present();
-            userCred = await this.afa.signInWithPopup(this.getAuthProvider(provider));
-            await loading.dismiss();
-            /*
-            a: null
-code: "auth/popup-closed-by-user"
-message: "The popup has been closed by the user before finalizing the operation."
-__proto__: Error
-*/
-          } else {
-            throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
-          }
-          await loading.dismiss();
-          if (!await this.confirmTos(userCred, options)) {
-            await this.signOut();
-            userCred = null;
-          };
+          userCred = await this.socialSignIn(provider, options);
           break;
       }
 
       // Will be null if user cancels operation
       if (userCred) {
-        await this.handleSignInSuccess(userCred);
-        if (userCred.user && mergeContext && this.mergeService) {
+        if (this.config.authUi.toastMessageOnAuthSuccess) {
+          const successMessage = ('string' === typeof this.config.authUi.toastMessageOnAuthSuccess)
+            ? this.config.authUi.toastMessageOnAuthSuccess
+            : `Hello ${userCred.user.displayName ? userCred.user.displayName : ''}!`;
+          this.ui.toast(successMessage, { duration: this.config.authUi.toastDefaultDurationMil });
+        }
+
+        // Run the merge hook if present and mergeContext has been generated by the prepare hook above.
+        if (userCred.user && mergeContext && this.hooksService?.applyMergeToTarget) {
           try {
-            await this.mergeService.applyToTarget(userCred.user, mergeContext);
+            await this.hooksService.applyMergeToTarget(userCred.user, mergeContext);
           } catch (error) {
             // If a failure occurs in merge applyToTarget we can't do much about it (we are already logged in as new user)
             // but we should at least log it. The onus is really on the applyToTarget function to handle it's own errors.
@@ -320,9 +324,10 @@ __proto__: Error
   }
 
   /**
+   * Reauthenicate the current user - a recent authentication is required for some sensitive operations
+   * such as changing account details
    */
-  public async reauthenicateWithProvider(provider: AuthProvider, options?: ISignInOptions)
-    : Promise<UserCredential | null> {
+  public async reauthenicateWithProvider(provider: AuthProvider, options?: ISignInOptions): Promise<UserCredential | null> {
 
     this.fire.addLogMessage(`reauthenicateWithProvider; provider=${provider}`);
     const loading = await this.ui.createLoading();
@@ -343,7 +348,7 @@ __proto__: Error
 
         case AuthProvider.EmailAndPassword:
           if (!options?.credentials) {
-            throw new Error('Credentials are required when signing in with AuthProvider.EmailAndPassword');
+            throw new Error('Credentials are required when reauthenticating with AuthProvider.EmailAndPassword');
           }
           if (!currentUser.email) {
             throw new Error('Cannot reauthenticate with email for an account without email');
@@ -444,7 +449,6 @@ __proto__: Error
           this.fire.addLogMessage(`Updating user profile; displayName=${userData.displayName}, photoUrl=${userData.photoURL}`);  // tslint:disable-line max-line-length
           await this.updateUserInfo({ displayName: userData.displayName, photoURL: userData.photoURL });
         }
-        await this.handleSignInSuccess(userCred);
       }
 
       await loading.dismiss();
@@ -499,15 +503,11 @@ __proto__: Error
           if (this.config.authUi.enableEmailVerification) {
             await userCred.user.sendEmailVerification();
           }
-          // Legacy fields
-          this.emailConfirmationSent = true;
-          this.emailToConfirm = userCred.user.email || undefined;
-          await this.handleSignInSuccess(userCred);
           await loading.dismiss();
           break;
 
         default:
-          userCred = await this.signInWith(provider, { ...options, skipTosCheck: true });
+          userCred = await this.socialSignIn(provider, { ...options, skipTosCheck: true });
 
       }
 
@@ -522,6 +522,48 @@ __proto__: Error
       return null;
     }
 
+  }
+
+  /**
+   * Authenticates the user using social provider.
+   * 
+   * @param provider social auth provider
+   * @param options 
+   * @returns user credentials || null if not signed in.
+   */
+  private async socialSignIn(provider: AuthProvider, options: ISignInOptions): Promise<UserCredential | null> {
+    const currentUser = await this.afa.currentUser;
+    const loading = await this.ui.createLoading();
+    let userCred: UserCredential | null
+    if (currentUser && !currentUser.isAnonymous) {
+      throw new Error('Cannot signIn whilst already signedIn, SignOut first');
+    }
+    if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
+      loading.present();
+      const factoryCred = await this.credFactory.getCredential(provider);
+      if (factoryCred) {
+        userCred = await this.afa.signInWithCredential(factoryCred);
+      }
+      await loading.dismiss();
+    } else if (this.isWebPlatform) {
+      loading.present();
+      userCred = await this.afa.signInWithPopup(this.getAuthProvider(provider));
+      await loading.dismiss();
+      /*
+      a: null
+  code: "auth/popup-closed-by-user"
+  message: "The popup has been closed by the user before finalizing the operation."
+  __proto__: Error
+  */
+    } else {
+      throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
+    }
+    await loading.dismiss();
+    if (!await this.confirmTos(userCred, options)) {
+      await this.signOut();
+      userCred = null;
+    };
+    return userCred;
   }
 
   /**
@@ -678,34 +720,6 @@ __proto__: Error
   }
 
   /**
-   * Common handler for successful signIn
-   * Refreshes FireStore User document based on current user (if enabled)
-   * And provides welcome back toast (if enabled)
-   *
-   * @param cred UserCredential object provided by signIn function
-   */
-  async handleSignInSuccess(cred: UserCredential) {
-    if (null === cred.user) {
-      throw new Error('user is null whilst handling sucessful login');
-    }
-    // if (this.config.authUi.enableFirestoreSync) {
-    // Now done by server-side trigger await this.fireStoreService.createUserData(userData);
-    // try {
-    //   const userData = this.parseUserInfo(cred.user);
-    //   this.fire.addLogMessage(`About to create user data in firestore; user=${JSON.stringify(userData)}`);
-    // } catch (error) {
-    //   this.fire.recordException(error);
-    // }
-    // }
-    if (this.config.authUi.toastMessageOnAuthSuccess) {
-      const successMessage = ('string' === typeof this.config.authUi.toastMessageOnAuthSuccess)
-        ? this.config.authUi.toastMessageOnAuthSuccess
-        : `Hello ${cred.user.displayName ? cred.user.displayName : ''}!`;
-      this.ui.toast(successMessage, { duration: this.config.authUi.toastDefaultDurationMil });
-    }
-  }
-
-  /**
    *  Refresh user info. Can be useful for instance to get latest status regarding email verification.
    */
   async reloadUserInfo() {
@@ -724,15 +738,19 @@ __proto__: Error
     if (!currentUser || !currentUid) {
       throw new Error('Unable to delete currentUser if null');
     }
-    try {
-      // Userdata deleted by DB trigger
-      await currentUser.delete();
-      this.onUserDeletedEmitter.emit();
-    } catch (error) {
-      if (error.code !== FirebaseErrorCodes.requiresRecentLogin) {
-        this.fire.recordException(error);
+    const canDelete = (this.hooksService?.beforeDelete) ? await this.hooksService.beforeDelete(currentUser) : true;
+    // Allow exception from beforeDelete to propgate
+    if (canDelete) {
+      try {
+        // Userdata deleted by DB trigger
+        await currentUser.delete();
+        this.onUserDeletedEmitter.emit();
+      } catch (error) {
+        if (error.code !== FirebaseErrorCodes.requiresRecentLogin) {
+          this.fire.recordException(error);
+        }
+        throw (error);
       }
-      throw (error);
     }
   }
 
