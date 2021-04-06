@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MalIonicAuthUiModule } from '../../ionic-auth-ui.module';
-import { MalTestingModule } from '../../../../testing';
+import { AuthTestingModule } from '../../../../testing';
 import { AuthSignInPage } from './signin.page';
 
 describe('AuthSignInPage', () => {
@@ -11,7 +11,7 @@ describe('AuthSignInPage', () => {
     TestBed.configureTestingModule({
       declarations: [AuthSignInPage],
       imports: [
-        MalTestingModule,
+        AuthTestingModule,
         MalIonicAuthUiModule
       ]
     }).compileComponents();

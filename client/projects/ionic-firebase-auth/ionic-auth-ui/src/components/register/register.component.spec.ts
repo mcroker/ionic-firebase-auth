@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthUIRegisterComponent } from './register.component';
 import { AuthProcessService } from 'ionic-firebase-auth';
-import { MalTestingModule } from '../../../../testing';
+import { AuthTestingModule } from '../../../../testing';
 
 import { AuthProvidersComponent } from '../providers/providers.component';
 
@@ -14,7 +14,7 @@ describe('AuthUIRegisterComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        MalTestingModule
+        AuthTestingModule
       ],
       declarations: [
         AuthProvidersComponent,

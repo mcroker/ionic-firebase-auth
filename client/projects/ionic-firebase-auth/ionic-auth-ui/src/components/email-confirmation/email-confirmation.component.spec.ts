@@ -1,26 +1,26 @@
 // import 'core-js/es7/reflect'; // needed for unit testing
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EmailConfirmationComponent } from './email-confirmation.component';
+import { AuthEmailConfirmationComponent } from './email-confirmation.component';
 import { AuthProcessService } from 'ionic-firebase-auth';
-import { MalTestingModule } from '../../../../testing';
+import { AuthTestingModule } from '../../../../testing';
 
 describe('EmailConfirmationComponent', () => {
-  let component: EmailConfirmationComponent;
-  let fixture: ComponentFixture<EmailConfirmationComponent>;
+  let component: AuthEmailConfirmationComponent;
+  let fixture: ComponentFixture<AuthEmailConfirmationComponent>;
   let componentService: AuthProcessService;
 
   beforeEach(async () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MalTestingModule
+        AuthTestingModule
       ],
       declarations: [
-        EmailConfirmationComponent
+        AuthEmailConfirmationComponent
       ]
     }).compileComponents().then(() => {
-      fixture = TestBed.createComponent(EmailConfirmationComponent);
+      fixture = TestBed.createComponent(AuthEmailConfirmationComponent);
       component = fixture.componentInstance;
 
       // AuthService provided by Component, (should return MockAuthService)

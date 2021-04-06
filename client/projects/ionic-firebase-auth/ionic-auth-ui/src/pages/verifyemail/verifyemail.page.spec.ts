@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MalTestingModule } from 'ionic-firebase-auth/testing';
+import { AuthTestingModule } from 'ionic-firebase-auth/testing';
 
 import { AuthVerifyEmailPage } from './verifyemail.page';
 
@@ -11,7 +11,7 @@ describe('AuthVerifyEmailPage', () => {
     TestBed.configureTestingModule({
       declarations: [AuthVerifyEmailPage],
       imports: [
-        MalTestingModule
+        AuthTestingModule
       ]
     }).compileComponents();
 

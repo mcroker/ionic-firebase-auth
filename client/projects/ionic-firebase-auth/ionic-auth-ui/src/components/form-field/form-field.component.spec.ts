@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AuthProcessService } from 'ionic-firebase-auth';
-import { MalTestingModule } from 'ionic-firebase-auth/testing';
+import { AuthTestingModule } from 'ionic-firebase-auth/testing';
 
 import { AuthUIFormFieldComponent } from './form-field.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ describe('AuthUIEmailFieldComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MalTestingModule,
+        AuthTestingModule,
         FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule

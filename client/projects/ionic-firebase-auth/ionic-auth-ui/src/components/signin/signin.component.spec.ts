@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthUISignInComponent } from './signin.component';
 import { AuthProcessService } from 'ionic-firebase-auth';
-import { MalTestingModule } from 'ionic-firebase-auth/testing';
+import { AuthTestingModule } from 'ionic-firebase-auth/testing';
 
 
 describe('AuthUISignInComponent', () => {
@@ -13,7 +13,7 @@ describe('AuthUISignInComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MalTestingModule
+        AuthTestingModule
       ],
       declarations: [
         AuthUISignInComponent

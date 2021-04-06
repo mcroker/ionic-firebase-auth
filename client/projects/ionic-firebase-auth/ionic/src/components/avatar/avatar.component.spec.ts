@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AuthAvatarComponent } from './avatar.component';
 import { IonicModule } from '@ionic/angular';
-import {MalTestingModule } from 'ionic-firebase-auth/testing';
+import {AuthTestingModule } from 'ionic-firebase-auth/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AuthAvatarComponent', () => {
@@ -14,7 +14,7 @@ describe('AuthAvatarComponent', () => {
       imports: [
         IonicModule,
         RouterTestingModule,
-        MalTestingModule
+        AuthTestingModule
       ],
       declarations: [
         AuthAvatarComponent

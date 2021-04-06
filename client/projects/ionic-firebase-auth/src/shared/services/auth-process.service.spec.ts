@@ -1,6 +1,6 @@
 import { AuthProcessService } from './auth-process.service';
 import { AuthFirestoreSyncService } from './firestore-sync.service';
-import { AuthProvider, IAuthHooksService, malSharedConfigFactory, AuthSharedConfig, ICredentialFactoryProvider } from '../interfaces';
+import { AuthProvider, IAuthHooksService, authSharedConfigFactory, AuthSharedConfig, ICredentialFactoryProvider } from '../interfaces';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthInternalFakeAngularFireAuth, AuthInternalFakeUserCredential, DUMMYAUTHERROR, AuthInternalFakeUiService, AuthInternalFakeFirebaseService } from '../../test/fakes';
 import { User, AuthCredential } from '@firebase/auth-types';
@@ -26,7 +26,7 @@ describe('AuthProcessService', () => {
 
     beforeEach(() => {
 
-        config = malSharedConfigFactory({ firebase: null });
+        config = authSharedConfigFactory({ firebase: null });
         spyAuthHooks = jasmine.createSpyObj('AuthMergeUserService', ['prepareMergeSource', 'applyMergeToTarget']);
         spyCredFactory = jasmine.createSpyObj(FakeCredFactory, ['getCredential', 'isProviderSupported']);
         spyCredFactory.isProviderSupported.and.resolveTo(false);

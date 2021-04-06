@@ -6,7 +6,7 @@ import { AuthProvidersComponent, Layout } from './providers.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AuthProvider } from 'ionic-firebase-auth';
 import { BehaviorSubject } from 'rxjs';
-import { MalTestingModule } from 'ionic-firebase-auth/testing';
+import { AuthTestingModule } from 'ionic-firebase-auth/testing';
 
 describe('AuthProvidersComponent', () => {
   let comp: AuthProvidersComponent;
@@ -65,7 +65,7 @@ describe('AuthProvidersComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MalTestingModule,
+        AuthTestingModule,
         FlexLayoutModule
       ],
       declarations: [AuthProvidersComponent],
