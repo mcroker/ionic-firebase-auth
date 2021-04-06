@@ -1,0 +1,13 @@
+<auth-authui-form-field [control]="parentControl"
+                label="auth.name.label"
+                [hintEnd]="(control.value?.length || 0 ) + ' / ' + config.authUi.nameMaxLength"
+                errorPrefix="auth.name.errors">
+
+    <ion-input [placeholder]="'auth.name.placeholder' | translate"
+               [maxlength]="config.authUi.nameMaxLength"
+               [minlength]="config.authUi.nameMinLength"
+               color="text"
+               [formControl]="control">
+    </ion-input>
+
+</auth-authui-form-field>

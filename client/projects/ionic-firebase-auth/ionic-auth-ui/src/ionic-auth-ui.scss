@@ -1,0 +1,87 @@
+div.auth-logo {
+    margin: 32px auto;
+    width: 30%;
+    img {
+        display: block;
+        max-width: 120px;
+        border-radius: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+div.auth-title {
+    font-size: 20px;
+    margin: 16px 0 16px 0;
+}
+
+div.auth-alternate-action {
+    margin: 32px auto 24px auto;
+    font-weight: 500;
+    .text {
+        margin-right: 8px;
+    }
+}
+
+ion-content.auth-page {
+    --background: var(--auth-pages-background, --background);
+}
+
+div.resend-confirmation {
+    margin: 24px 0 24px 0;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+ion-button.auth-provider-button {
+    width: 220px;
+    margin: 8px auto;
+    display: block;
+    text-align: center;
+    @media screen and (max-width: 599px) {
+        width: 100%;
+    }
+    --background: var(--auth-provider-background-color, white);
+}
+
+ion-button.auth-submit-button {
+    width: 220px;
+    margin: 16px auto;
+    display: block;
+    @media screen and (max-width: 599px) {
+        width: 100%;
+    }
+}
+
+ion-grid.auth-terms {
+    width: 100%;
+    margin: 24px 0 24px 0;
+    text-align: left;
+    font-size: 0.9em;
+    ion-col ion-row a {
+        font-size: 16px;
+        margin-left: 4px;
+    }
+}
+
+div.auth-forgot-password {
+    margin: 24px 0 24px 0;
+    font-size: 0.9em;
+}
+
+@media (prefers-color-scheme: dark) {
+    a {
+        color: white;
+    }
+}
+
+button.confirm:disabled {
+    color: grey;
+}
+
+div.email-popover-outer {
+    width: 100%;
+    div.email-popover-inner {
+        padding: 10%;
+    }
+}

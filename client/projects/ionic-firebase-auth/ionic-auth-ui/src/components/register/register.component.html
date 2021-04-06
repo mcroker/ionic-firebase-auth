@@ -1,0 +1,56 @@
+<div fxLayout="column" fxLayoutAlign="center center" id="auth-register-wrapper" class="authui-wrapper">
+  <div [@animateStagger]="{ value: '50' }" id="auth-register-inner" class="authui-inner-wrapper">
+
+    <auth-authui-register-with-email *ngIf="showEmail === 'inline'">
+      (createAccountClick)="doCreateAccount($event)">
+    </auth-authui-register-with-email>
+
+    <div fxLayoutAlign="stretch"
+         fxLayout="column"
+         class="provider-buttons">
+
+      <div *ngIf="showEmail === 'popover'">
+        <ion-button id="auth-register-email-btn"
+                    (click)="doRegisterWithEmailPopover()"
+                    [@animate]="{ value: '*', params: { x: '-100px' } }"
+                    color="primary"
+                    class="auth-provider-button">
+          <ion-icon name="mail-outline"></ion-icon>
+          <ion-label slot="end">{{ "auth.register.emailButton" | translate }}</ion-label>
+        </ion-button>
+      </div>
+
+      <div *ngIf="guestEnabled$ | async">
+        <ion-button id="auth-register-anon-btn"
+                    (click)="doRegisterAnonymously()"
+                    [@animate]="{ value: '*', params: { x: '-100px' } }"
+                    color="primary"
+                    class="auth-provider-button">
+          <ion-icon name="finger-print-outline"></ion-icon>
+          <ion-label slot="end">{{ "auth.register.guestButton" | translate }}</ion-label>
+        </ion-button>
+      </div>
+    </div>
+
+    <auth-authui-providers [providers]="providers"
+                          (providerClick)="doProviderClick($event)"
+                          layout="column">
+    </auth-authui-providers>
+
+    <div [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"
+         class="alternate-action"
+         fxLayout="column"
+         fxLayoutAlign="center center">
+
+      <ion-text color="text" [@animate]="{ value: '*', params: { x: '100px' } }">
+        {{ "auth.register.alreadyHaveAccount" | translate }}
+      </ion-text>
+
+      <a (click)="onLoginRequested.emit()"
+         [@animate]="{ value: '*', params: { x: '-100px' } }"
+         id="auth-register-signin-btn">
+        {{"auth.register.signInButton" | translate}}
+      </a>
+
+    </div>
+  </div>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 
-import { LoggedInGuard, VerifyEmailGuard } from 'ngx-firebase';
+import { LoggedInGuard, VerifyEmailGuard } from 'ionic-firebase-auth';
 import { GuardedPage } from './components/guarded/guarded.page';
 import { HomePage } from './components/home-page/home.page';
 

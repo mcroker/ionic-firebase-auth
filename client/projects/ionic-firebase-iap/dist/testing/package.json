@@ -1,0 +1,29 @@
+{
+  "peerDependencies": {
+    "@angular/animations": "~11.1.2",
+    "@angular/cdk": "^11.1.2",
+    "@angular/common": "^11.1.2",
+    "@angular/core": "^11.1.2",
+    "@angular/fire": "^6.1.4",
+    "@angular/flex-layout": "^11.0.0-beta.33",
+    "@angular/forms": "^11.1.2",
+    "@angular/platform-browser": "^11.1.2",
+    "@angular/platform-browser-dynamic": "~11.1.2",
+    "@angular/router": "^11.1.2",
+    "@ionic-native/core": "^5.30.0",
+    "@ionic/angular": "^5.5.0",
+    "@ngx-translate/core": "^13.0.0",
+    "rxjs": "~6.5.4",
+    "zone.js": "^0.11.3",
+    "firebase": "^8.1.1"
+  },
+  "main": "../bundles/ionic-firebase-iap-testing.umd.js",
+  "module": "../fesm2015/ionic-firebase-iap-testing.js",
+  "es2015": "../fesm2015/ionic-firebase-iap-testing.js",
+  "esm2015": "../esm2015/testing/ionic-firebase-iap-testing.js",
+  "fesm2015": "../fesm2015/ionic-firebase-iap-testing.js",
+  "typings": "ionic-firebase-iap-testing.d.ts",
+  "metadata": "ionic-firebase-iap-testing.metadata.json",
+  "sideEffects": false,
+  "name": "ionic-firebase-iap/testing"
+}

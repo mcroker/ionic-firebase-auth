@@ -42,7 +42,7 @@ jobs:
         run: npm ci --prefix ./client
 
       - name: Install dependencies (lib)
-        run: npm ci --prefix ./client/projects/ngx-firebase
+        run: npm ci --prefix ./client/projects/ionic-firebase-auth
 
       - name: Install Sonar-Scanner
         if: steps.sonar-scanner-cache.outputs.cache-hit != 'true'

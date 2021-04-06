@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { AuthProcessService, AuthProvider, FirebaseService, UiService } from 'ngx-firebase';
+import { AuthProcessService, AuthProvider, FirebaseService, UiService } from 'ionic-firebase-auth';
 import { Observable, ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { User } from '@firebase/auth-types';

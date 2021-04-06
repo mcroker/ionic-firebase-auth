@@ -1,0 +1,46 @@
+<div fxLayout="column" fxLayoutAlign="center center" id="auth-signin-wrapper" class="authui-wrapper">
+  <div [@animateStagger]="{ value: '50' }" id="auth-signin-inner" class="authui-inner-wrapper">
+
+    <div *ngIf="logoUrl" class="auth-logo">
+      <img [@animate]="{ value: '*', params: { x: '50px' } }" [src]="logoUrl" alt="logo">
+    </div>
+
+    <div [@animate]="{ value: '*', params: { x: '-50px' } }" class="auth-title">
+      {{ "auth.reauthenticate.tabTitle" | translate }}
+    </div>
+
+    {{ message }}
+
+    <form *ngIf="showPasswordProvider$ | async"
+          [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"
+          [formGroup]="reauthForm"
+          name="reauthForm"
+          novalidate>
+
+      <auth-authui-password-field formControlName="password"
+                                 [@animate]="{ value: '*', params: { x: '50px' } }">
+      </auth-authui-password-field>
+
+      <ion-button (click)="doReauthenticateWithPassword()"
+                  color="primary"
+                  [disabled]="reauthForm.invalid"
+                  aria-label="LOG IN"
+                  fxLayoutAlign="center center"
+                  class="auth-submit-button"
+                  id="loginButton">
+        {{"auth.signIn.loginButton" | translate }}
+      </ion-button>
+
+    </form>
+
+    <auth-authui-or-divider *ngIf="showDivider$ | async"
+                           [@animate]="{ value: '*', params: { z: '50px', delay: '50ms', scale: '0.2' } }">
+    </auth-authui-or-divider>
+
+    <auth-authui-providers [providers]="providers$ | async"
+                          (providerClick)="doProviderClick($event)"
+                          fxLayoutAlign="center center"
+                          layout="column"></auth-authui-providers>
+
+  </div>
+</div>

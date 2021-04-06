@@ -1,0 +1,67 @@
+<div fxLayout="column" fxLayoutAlign="center center" id="auth-signin-wrapper" class="authui-wrapper">
+  <div [@animateStagger]="{ value: '50' }" id="auth-signin-inner" class="authui-inner-wrapper">
+
+    <form [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}" [formGroup]="signInForm" name="signInForm"
+          novalidate>
+
+      <auth-authui-email-field formControlName="email"
+                              [@animate]="{ value: '*', params: { x: '50px' } }">
+      </auth-authui-email-field>
+
+      <auth-authui-password-field formControlName="password"
+                                 [@animate]="{ value: '*', params: { x: '50px' } }">
+      </auth-authui-password-field>
+
+      <div [@animate]="{ value: '*', params: { x: '50px' } }"
+           class="auth-forgot-password"
+           fxLayout="row"
+           fxLayout.xs="column"
+           fxLayoutAlign="space-between center">
+
+        <a (click)="doPasswordReset()"
+           *ngIf="resetPasswordEnabled"
+           [@animate]="{ value: '*', params: { x: '-50px' } }"
+           class="auth-forgot-password"
+           type="button">
+          {{ "auth.signIn.forgotPassword" | translate }}
+        </a>
+      </div>
+
+      <ion-button (click)="signIn()"
+                  color="primary"
+                  [disabled]="signInForm.invalid"
+                  aria-label="LOG IN"
+                  fxLayoutAlign="center center"
+                  class="auth-submit-button"
+                  id="auth-signin-btn">
+        {{"auth.signIn.signInButton" | translate }}
+      </ion-button>
+
+    </form>
+
+    <!--auth-authui-or-divider *ngIf="providers.length > 0"
+                           [@animate]="{ value: '*', params: { z: '50px', delay: '50ms', scale: '0.2' } }">
+    </auth-authui-or-divider> -->
+
+    <auth-authui-providers [providers]="providers"
+                          (providerClick)="providerClick($event)"
+                          layout="column"></auth-authui-providers>
+
+    <div *ngIf=" registrationEnabled" [@animateStagger]="{ value: '100' }"
+         class="auth-alternate-action"
+         fxLayout="column"
+         fxLayoutAlign="center center">
+      <ion-text [@animate]="{ value: '*', params: { x: '100px' } }"
+                color="text"
+                class="text">
+        {{"auth.signIn.dontHaveAccount" | translate}}
+      </ion-text>
+      <a (click)="onCreateAccountRequested.emit()"
+         [@animate]="{ value: '*', params: { x: '-100px' } }"
+         id="auth-signin-create-account-btn">
+        {{"auth.signIn.createAccountButton" | translate}}
+      </a>
+    </div>
+
+  </div>
+</div>

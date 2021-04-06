@@ -21,11 +21,17 @@
       "dom"
     ],
     "paths": {
-      "ngx-firebase/*": [
-        "dist/ngx-firebase/*"
+      "ionic-firebase-auth/*": [
+        "dist/ionic-firebase-auth/*"
       ],
-      "ngx-firebase": [
-        "dist/ngx-firebase"
+      "ionic-firebase-auth": [
+        "dist/ionic-firebase-auth"
+      ],
+      "ionic-firebase-iap": [
+        "dist/ionic-firebase-iap"
+      ],
+      "ionic-firebase-iap/*": [
+        "dist/ionic-firebase-iap/*"
       ]
     }
   },

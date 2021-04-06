@@ -1,0 +1,16 @@
+ion-grid.auth-terms {
+    width: 100%;
+    margin: 24px 0 24px 0;
+    text-align: left;
+    font-size: 0.9em;
+    ion-col ion-row a {
+        font-size: 16px;
+        margin-left: 4px;
+    }
+}
+
+// This will match the class that we set up to the btn in the alert config.
+// and color the btn text to grey only when it is disabled
+button.confirm:disabled {
+    color: grey;
+}

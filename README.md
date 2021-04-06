@@ -1,4 +1,4 @@
-# ngx-firebase
+# ionic-firebase-auth
 
 ![Architecture Overview](docs/assets/arch_overview.png)
 

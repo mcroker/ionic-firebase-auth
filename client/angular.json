@@ -4,38 +4,38 @@
   "defaultProject": "app",
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-firebase": {
+    "ionic-firebase-auth": {
       "projectType": "library",
-      "root": "projects/ngx-firebase",
-      "sourceRoot": "projects/ngx-firebase/src",
+      "root": "projects/ionic-firebase-auth",
+      "sourceRoot": "projects/ionic-firebase-auth/src",
       "prefix": "mal",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/ngx-firebase/tsconfig.lib.json",
-            "project": "projects/ngx-firebase/package.json"
+            "tsConfig": "projects/ionic-firebase-auth/tsconfig.lib.json",
+            "project": "projects/ionic-firebase-auth/package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ngx-firebase/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ionic-firebase-auth/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/ngx-firebase/src/test.ts",
-            "tsConfig": "projects/ngx-firebase/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-firebase/karma.conf.js"
+            "main": "projects/ionic-firebase-auth/src/test.ts",
+            "tsConfig": "projects/ionic-firebase-auth/tsconfig.spec.json",
+            "karmaConfig": "projects/ionic-firebase-auth/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/ngx-firebase/tsconfig.lib.json",
-              "projects/ngx-firebase/tsconfig.spec.json"
+              "projects/ionic-firebase-auth/tsconfig.lib.json",
+              "projects/ionic-firebase-auth/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -229,10 +229,49 @@
           "options": {}
         }
       }
+    },
+    "ionic-firebase-iap": {
+      "projectType": "library",
+      "root": "projects/ionic-firebase-iap",
+      "sourceRoot": "projects/ionic-firebase-iap/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ionic-firebase-iap/tsconfig.lib.json",
+            "project": "projects/ionic-firebase-iap/package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ionic-firebase-iap/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ionic-firebase-iap/src/test.ts",
+            "tsConfig": "projects/ionic-firebase-iap/tsconfig.spec.json",
+            "karmaConfig": "projects/ionic-firebase-iap/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ionic-firebase-iap/tsconfig.lib.json",
+              "projects/ionic-firebase-iap/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
-    "defaultCollection": "@datorama/akita"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {

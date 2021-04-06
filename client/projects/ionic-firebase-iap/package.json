@@ -1,0 +1,30 @@
+{
+  "name": "ionic-firebase-iap",
+  "version": "0.0.0-semantically-versioned",
+  "peerDependencies": {
+    "@angular/common": "^11.2.5",
+    "@angular/core": "^11.2.5",
+    "@ngx-translate/core": "^13.0.0",
+    "@ionic-native/core": "^5.30.0",
+    "@ionic-native/in-app-purchase-2": "^5.30.0",
+    "@capacitor/core": "2.4.2",
+    "@capacitor/ios": "^2.4.3",
+    "capacitor-firebase-auth": "file:../../../capacitor-firebase-auth-2.3.2-firebase8.tgz",
+    "zone.js": "^0.11.3",
+    "rxjs": "~6.5.4"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
+  "ngPackage": {
+    "lib": {
+      "entryFile": "src/public-api.ts",
+      "umdModuleIds": {
+        "@ionic/angular": "ionic.angular",
+        "@capacitor/core": "Capacitor",
+        "@ionic-native/in-app-purchase-2/ngx": "InAppPurchase2",
+        "@ionic-native/in-app-purchase-2/ngx/index": "InAppPurchase2"
+      }
+    }
+  }
+}

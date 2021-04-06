@@ -8,7 +8,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 // Mal
-import { MalSharedModule, AuthProvider } from 'ngx-firebase';
+import { AuthSharedModule, AuthProvider } from 'ionic-firebase-auth';
 
 // Capacitor
 import { environment } from '../environments/environment';
@@ -26,8 +26,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from './shared.module';
-import { MalIonicModule } from 'ngx-firebase/ionic';
-import { MalCapacitorModule } from 'ngx-firebase/capacitor';
+import { AuthCapacitorModule } from 'ionic-firebase-auth/capacitor';
 import { GuardedPage } from './components/guarded/guarded.page';
 
 @NgModule({
@@ -55,10 +54,10 @@ import { GuardedPage } from './components/guarded/guarded.page';
         deps: [HttpClient]
       }
     }),
-    MalIonicModule,
-    MalCapacitorModule.forRoot(environment),
+    AuthSharedModule,
+    AuthCapacitorModule.forRoot(environment),
     AppRoutingModule,
-    MalSharedModule.forRoot({
+    AuthSharedModule.forRoot({
       ...environment,
       authUi: {
         toastMessageOnAuthSuccess: false,

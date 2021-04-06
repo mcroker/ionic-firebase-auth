@@ -7,7 +7,7 @@ import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { CapacitorFirebaseDynamicLinks } = Plugins;
 
 // Mal
-import { RemoteConfigService, AuthProcessService, UiService, FirebaseService } from 'ngx-firebase';
+import { RemoteConfigService, AuthProcessService, UiService, FirebaseService } from 'ionic-firebase-auth';
 
 // Local
 import { environment } from 'src/environments/environment';

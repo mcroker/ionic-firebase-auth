@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar class="box-shadow" color="toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title id="auth-signin-title">{{ "auth.signIn.pageTitle" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="auth-page">
+  <div fxLayout="column" fxLayoutAlign="center center" id="auth-register-wrapper" class="authui-wrapper">
+
+    <div *ngIf="logoUrl" class="auth-logo">
+      <img [@animate]="{ value: '*', params: { x: '50px' } }" [src]="logoUrl" alt="logo">
+    </div>
+
+    <auth-authui-signin (onCreateAccountRequested)="doCreateAccountRequested()" (onSuccess)="doSuccess($event)"
+                       [providers]="['google', 'apple', 'facebook']"></auth-authui-signin>
+
+  </div>
+</ion-content>

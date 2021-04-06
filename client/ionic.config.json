@@ -1,5 +1,5 @@
 {
-  "name": "ngx-firebase",
+  "name": "ionic-firebase-auth",
   "integrations": {
     "cordova": {},
     "capacitor": {}

@@ -5,7 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 // Mal
-import { MalSharedModule } from 'ngx-firebase';
+import { AuthSharedModule } from 'ionic-firebase-auth';
+import { AuthIonicModule } from 'ionic-firebase-auth/ionic';
 
 // Ionic
 import { IonicModule } from '@ionic/angular';
@@ -21,7 +22,8 @@ export const MODULES = [
   CommonModule,
   FormsModule,
   ReactiveFormsModule,
-  MalSharedModule,
+  AuthSharedModule,
+  AuthIonicModule,
   IonicModule
 ];
 

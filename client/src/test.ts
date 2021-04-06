@@ -6,7 +6,7 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
-// import { patchConsole } from 'ngx-firebase/src/lib/mal/test/utils';
+// import { patchConsole } from 'ionic-firebase-auth/src/lib/mal/test/utils';
 
 declare const require: any;
 

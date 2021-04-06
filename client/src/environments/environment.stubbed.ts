@@ -15,9 +15,9 @@ export const environment: EnvConfig = {
   firebase: {
     apiKey: 'fake',
     measurementId: '',
-    authDomain: 'ngx-firebase-app.firebaseapp.com',
-    projectId: 'ngx-firebase-app',
-    storageBucket: 'ngx-firebase-app.appspot.com',
+    authDomain: 'ionic-firebase-auth-app.firebaseapp.com',
+    projectId: 'ionic-firebase-auth-app',
+    storageBucket: 'ionic-firebase-auth-app.appspot.com',
     messagingSenderId: '',
     appId: ''
   },

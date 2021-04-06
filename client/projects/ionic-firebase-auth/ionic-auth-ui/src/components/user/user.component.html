@@ -1,0 +1,76 @@
+<div *ngIf="user$ | async; then authenticated else none" class="authui-form">
+</div>
+
+<ng-template #authenticated>
+  <ion-card *ngIf="(user$ | async) as user">
+
+    <!--card header-->
+    <ion-card-header fxLayout="column" fxLayoutAlign="center center">
+
+      <ion-avatar>
+        <img [alt]="user.name" *ngIf="(userPhotoUrl$ | async) as photoUrl" [src]="photoUrl">
+      </ion-avatar>
+
+      <div *ngIf="user.emailVerified; then emailVerified else emailNotVerified"></div>
+      <ng-template #emailVerified>
+        <ion-icon name="shield-checkmark-outline" color="primary" [tooltip]="'auth.email.isVerified' | translate"> </ion-icon>
+      </ng-template>
+      <ng-template #emailNotVerified>
+        <ion-icon name="warning-outline" color="warn" [tooltip]="'auth.email.notVerified' | translate"> </ion-icon>
+      </ng-template>
+
+    </ion-card-header>
+
+    <!--card content-->
+    <ion-card-content>
+
+      <form (submit)="save()" [formGroup]="updateFormGroup" name="updateFormGroup">
+
+        <div fxLayout="column" fxLayoutAlign="center center">
+
+          <ion-button *ngIf="canEditAccount && !editMode" (click)="changeEditMode()" class="edit-button"
+                      color="primary">
+            {{ "auth.user.edit" | translate }}
+          </ion-button>
+        </div>
+
+        <auth-authui-name-field formControlName="name"></auth-authui-name-field>
+        <auth-authui-email-field formControlName="email"></auth-authui-email-field>
+
+        <!--phone number-->
+        <auth-authui-form-field [control]="updateFormGroup.controls.phoneNumber"
+                               icon="call-outline"
+                               label="auth.phoneNumber.label"
+                               *ngIf="false"
+                               class="full-width"
+                               hintEnd="auth.phoneNumber.hintEnd"
+                               errorPrefix="auth.phoneNumber.errors">
+          <ion-input formControlName="phoneNumber" [placeholder]="'auth.phoneNumber.placeholder' | translate" type="tel">
+          </ion-input>
+        </auth-authui-form-field>
+
+      </form>
+
+      <div class="card-actions" fxLayout="row" fxLayoutAlign="center center">
+        <ion-button *ngIf="editMode" (click)="changeEditMode()" class="edit-button" color="warning">
+          {{ "shared.button.cancel" | translate }}
+        </ion-button>
+        <ion-button expand="block" *ngIf="editMode" color="primary" (click)="save()">{{ "auth.user.actions.save" | translate }} </ion-button>
+      </div>
+      <div class="card-actions" fxLayout="row" fxLayoutAlign="center center">
+        <a expand="block" (click)="signOut()" *ngIf="canLogout" color="primary">{{ "auth.user.actions.signOut" | translate }}</a>
+        <a expand="block" (click)="deleteAccount()" *ngIf="canDeleteAccount" color="warning">{{ "auth.user.actions.deleteAccount" | translate }} </a>
+      </div>
+
+    </ion-card-content>
+  </ion-card>
+</ng-template>
+
+<ng-template #none>
+  <ion-card class="none-card" fxLayout="row" fxLayoutAlign="center center">
+    <ion-card-content fxLayout="row" fxLayoutAlign="center center">
+      <ion-icon color="accent">warning</ion-icon>
+      <span>{{ "auth.user.notLoggedIn" | translate }}</span>
+    </ion-card-content>
+  </ion-card>
+</ng-template>
