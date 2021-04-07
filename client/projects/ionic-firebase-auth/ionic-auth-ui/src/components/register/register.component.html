@@ -1,9 +1,9 @@
 <div fxLayout="column" fxLayoutAlign="center center" id="auth-register-wrapper" class="authui-wrapper">
   <div [@animateStagger]="{ value: '50' }" id="auth-register-inner" class="authui-inner-wrapper">
 
-    <auth-authui-register-with-email *ngIf="showEmail === 'inline'">
+    <auth-register-with-email *ngIf="showEmail === 'inline'">
       (createAccountClick)="doCreateAccount($event)">
-    </auth-authui-register-with-email>
+    </auth-register-with-email>
 
     <div fxLayoutAlign="stretch"
          fxLayout="column"
@@ -32,10 +32,10 @@
       </div>
     </div>
 
-    <auth-authui-providers [providers]="providers"
+    <auth-providers [providers]="providers"
                           (providerClick)="doProviderClick($event)"
                           layout="column">
-    </auth-authui-providers>
+    </auth-providers>
 
     <div [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}"
          class="alternate-action"

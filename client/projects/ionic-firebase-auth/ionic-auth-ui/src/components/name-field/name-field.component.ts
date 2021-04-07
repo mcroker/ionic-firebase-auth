@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators, NG_VA
 import { AuthSharedConfigToken, AuthSharedConfig, ValueAccessorControlComponent } from 'ionic-firebase-auth';
 
 @Component({
-    selector: 'auth-authui-name-field',
+    selector: 'auth-name-field',
     templateUrl: 'name-field.component.html',
     styleUrls: ['../../ionic-auth-ui.scss'],
     providers: [

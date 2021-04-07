@@ -14,8 +14,8 @@
       <img [@animate]="{ value: '*', params: { x: '50px' } }" [src]="logoUrl" alt="logo">
     </div>
 
-    <auth-authui-register (onSuccess)="doSuccess()" (onLoginRequested)="doLoginRequested()">
-    </auth-authui-register>
+    <auth-register (onSuccess)="doSuccess()" (onLoginRequested)="doLoginRequested()">
+    </auth-register>
 
   </div>
 </ion-content>

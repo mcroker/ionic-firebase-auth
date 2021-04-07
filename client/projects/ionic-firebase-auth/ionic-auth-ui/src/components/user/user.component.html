@@ -34,11 +34,11 @@
           </ion-button>
         </div>
 
-        <auth-authui-name-field formControlName="name"></auth-authui-name-field>
-        <auth-authui-email-field formControlName="email"></auth-authui-email-field>
+        <auth-name-field formControlName="name"></auth-name-field>
+        <auth-email-field formControlName="email"></auth-email-field>
 
         <!--phone number-->
-        <auth-authui-form-field [control]="updateFormGroup.controls.phoneNumber"
+        <auth-form-field [control]="updateFormGroup.controls.phoneNumber"
                                icon="call-outline"
                                label="auth.phoneNumber.label"
                                *ngIf="false"
@@ -47,7 +47,7 @@
                                errorPrefix="auth.phoneNumber.errors">
           <ion-input formControlName="phoneNumber" [placeholder]="'auth.phoneNumber.placeholder' | translate" type="tel">
           </ion-input>
-        </auth-authui-form-field>
+        </auth-form-field>
 
       </form>
 

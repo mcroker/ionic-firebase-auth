@@ -7,7 +7,7 @@ import { NavController, PopoverController } from '@ionic/angular';
 import { UserInfo, User } from '@firebase/auth-types';
 
 @Component({
-  selector: 'auth-authui-user',
+  selector: 'auth-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss', '../../ionic-auth-ui.scss']
 })

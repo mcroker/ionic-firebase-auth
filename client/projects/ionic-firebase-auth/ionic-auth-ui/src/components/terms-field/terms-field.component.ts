@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 
 type ValueType = boolean | undefined;
 @Component({
-  selector: 'auth-authui-terms-field',
+  selector: 'auth-terms-field',
   templateUrl: './terms-field.component.html',
   styleUrls: ['../../ionic-auth-ui.scss'],
   providers: [

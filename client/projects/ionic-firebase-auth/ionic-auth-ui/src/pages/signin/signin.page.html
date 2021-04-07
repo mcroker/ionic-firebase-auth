@@ -14,8 +14,8 @@
       <img [@animate]="{ value: '*', params: { x: '50px' } }" [src]="logoUrl" alt="logo">
     </div>
 
-    <auth-authui-signin (onCreateAccountRequested)="doCreateAccountRequested()" (onSuccess)="doSuccess($event)"
-                       [providers]="['google', 'apple', 'facebook']"></auth-authui-signin>
+    <auth-signin (onCreateAccountRequested)="doCreateAccountRequested()" (onSuccess)="doSuccess($event)"
+                       [providers]="['google', 'apple', 'facebook']"></auth-signin>
 
   </div>
 </ion-content>

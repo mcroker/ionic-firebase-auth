@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SharedModule } from 'src/app/shared.module';
-import { MalTestingModule } from 'ionic-firebase-auth/testing';
+import { AuthTestingModule } from 'ionic-firebase-auth/testing';
 
 import { AppComponent } from './app.component';
 
@@ -13,7 +13,7 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       imports: [
         SharedModule,
-        MalTestingModule
+        AuthTestingModule
       ],
       providers: [
       ]

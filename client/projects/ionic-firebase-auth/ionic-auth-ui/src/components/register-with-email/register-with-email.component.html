@@ -2,22 +2,22 @@
       [formGroup]="registerForm"
       novalidate>
 
-  <auth-authui-name-field formControlName="name"
+  <auth-name-field formControlName="name"
                          [@animate]="{ value: '*', params: { x: '50px' } }">
-  </auth-authui-name-field>
+  </auth-name-field>
 
-  <auth-authui-email-field formControlName="email"
+  <auth-email-field formControlName="email"
                           [@animate]="{ value: '*', params: { x: '50px' } }">
-  </auth-authui-email-field>
+  </auth-email-field>
 
-  <auth-authui-password-field formControlName="password"
+  <auth-password-field formControlName="password"
                              [forUpdate]="true"
                              [@animate]="{ value: '*', params: { x: '50px' } }">
-  </auth-authui-password-field>
+  </auth-password-field>
 
-  <auth-authui-terms-field formControlName="terms"
+  <auth-terms-field formControlName="terms"
                           [@animate]="{ value: '*', params: { x: '50px' } }">
-  </auth-authui-terms-field>
+  </auth-terms-field>
 
   <ion-button (click)="doCreateAccount()"
               color="primary"

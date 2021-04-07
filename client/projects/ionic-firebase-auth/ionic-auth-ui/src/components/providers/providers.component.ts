@@ -27,7 +27,7 @@ const displayProviders: { [key: string]: DisplayProvider } = {
 declare type ProviderType = AuthProvider[] | AuthProvider;
 
 @Component({
-  selector: 'auth-authui-providers',
+  selector: 'auth-providers',
   templateUrl: 'providers.component.html',
   styleUrls: ['providers.component.scss', '../../ionic-auth-ui.scss'],
   animations: NgxAuthFirebaseuiAnimations

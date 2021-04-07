@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { NgxAuthFirebaseuiAnimations } from '../../animations';
 
 @Component({
-  selector: 'auth-authui-signin',
+  selector: 'auth-signin',
   templateUrl: './signin.component.html',
   styleUrls: ['../../ionic-auth-ui.scss'],
   encapsulation: ViewEncapsulation.None,

@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { NgxAuthFirebaseuiAnimations } from '../../animations';
 
 @Component({
-  selector: 'auth-authui-reauthenticate',
+  selector: 'auth-reauthenticate',
   templateUrl: './reauthenticate.component.html',
   styleUrls: ['../../ionic-auth-ui.scss'],
   encapsulation: ViewEncapsulation.None,

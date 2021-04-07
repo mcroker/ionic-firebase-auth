@@ -18,7 +18,7 @@ function isCreateAccountFormData(x: any): x is CreateAccountFormData {
 }
 
 @Component({
-  selector: 'auth-authui-register',
+  selector: 'auth-register',
   templateUrl: './register.component.html',
   styleUrls: ['../../ionic-auth-ui.scss'],
   encapsulation: ViewEncapsulation.None,

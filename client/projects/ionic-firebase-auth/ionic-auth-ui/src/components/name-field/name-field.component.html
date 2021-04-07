@@ -1,4 +1,4 @@
-<auth-authui-form-field [control]="parentControl"
+<auth-form-field [control]="parentControl"
                 label="auth.name.label"
                 [hintEnd]="(control.value?.length || 0 ) + ' / ' + config.authUi.nameMaxLength"
                 errorPrefix="auth.name.errors">
@@ -10,4 +10,4 @@
                [formControl]="control">
     </ion-input>
 
-</auth-authui-form-field>
+</auth-form-field>

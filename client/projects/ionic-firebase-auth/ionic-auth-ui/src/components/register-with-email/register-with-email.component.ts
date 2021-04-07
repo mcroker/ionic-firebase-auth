@@ -19,7 +19,7 @@ export interface CreateAccountFormData {
 }
 
 @Component({
-  selector: 'auth-authui-register-with-email',
+  selector: 'auth-register-with-email',
   templateUrl: './register-with-email.component.html',
   styleUrls: ['../../ionic-auth-ui.scss'],
   encapsulation: ViewEncapsulation.None,

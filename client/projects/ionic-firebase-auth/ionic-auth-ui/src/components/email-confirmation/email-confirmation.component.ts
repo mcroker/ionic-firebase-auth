@@ -11,7 +11,7 @@ interface VerifyEmailContext {
 }
 
 @Component({
-  selector: 'auth-authui-email-confirmation',
+  selector: 'auth-email-confirmation',
   templateUrl: './email-confirmation.component.html',
   styleUrls: ['./email-confirmation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

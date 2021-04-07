@@ -4,13 +4,13 @@
     <form [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}" [formGroup]="signInForm" name="signInForm"
           novalidate>
 
-      <auth-authui-email-field formControlName="email"
+      <auth-email-field formControlName="email"
                               [@animate]="{ value: '*', params: { x: '50px' } }">
-      </auth-authui-email-field>
+      </auth-email-field>
 
-      <auth-authui-password-field formControlName="password"
+      <auth-password-field formControlName="password"
                                  [@animate]="{ value: '*', params: { x: '50px' } }">
-      </auth-authui-password-field>
+      </auth-password-field>
 
       <div [@animate]="{ value: '*', params: { x: '50px' } }"
            class="auth-forgot-password"
@@ -39,13 +39,13 @@
 
     </form>
 
-    <!--auth-authui-or-divider *ngIf="providers.length > 0"
+    <!--auth-or-divider *ngIf="providers.length > 0"
                            [@animate]="{ value: '*', params: { z: '50px', delay: '50ms', scale: '0.2' } }">
-    </auth-authui-or-divider> -->
+    </auth-or-divider> -->
 
-    <auth-authui-providers [providers]="providers"
+    <auth-providers [providers]="providers"
                           (providerClick)="providerClick($event)"
-                          layout="column"></auth-authui-providers>
+                          layout="column"></auth-providers>
 
     <div *ngIf=" registrationEnabled" [@animateStagger]="{ value: '100' }"
          class="auth-alternate-action"

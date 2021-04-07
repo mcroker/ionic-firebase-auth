@@ -7,7 +7,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 type ControlType = NgControl | FormControl | undefined | null;
 
 @Component({
-  selector: 'auth-authui-form-field',
+  selector: 'auth-form-field',
   templateUrl: 'form-field.component.html',
   styleUrls: ['form-field.component.scss', '../../ionic-auth-ui.scss']
 })

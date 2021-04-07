@@ -11,7 +11,7 @@ import { confirmPasswordValidator, passwordStrengthValidator } from './passwordV
 type ValueType = string | undefined;
 
 @Component({
-    selector: 'auth-authui-password-field',
+    selector: 'auth-password-field',
     templateUrl: 'password-field.component.html',
     styleUrls: ['../../ionic-auth-ui.scss'],
     providers: [

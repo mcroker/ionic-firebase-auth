@@ -3,7 +3,7 @@ import { FormControl, NG_VALUE_ACCESSOR, Validators, NG_VALIDATORS } from '@angu
 import { ValueAccessorControlComponent } from 'ionic-firebase-auth';
 
 @Component({
-    selector: 'auth-authui-email-field',
+    selector: 'auth-email-field',
     templateUrl: 'email-field.component.html',
     styleUrls: ['../../ionic-auth-ui.scss'],
     providers: [
