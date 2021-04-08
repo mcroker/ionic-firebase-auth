@@ -6,6 +6,10 @@ import {
 } from '../interfaces';
 import { FirebaseService } from './firebase.service';
 
+function isError(x: any): x is Error {
+    return x && x.code && x.message;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UiService implements IUIProvider {
 
@@ -33,11 +37,12 @@ export class UiService implements IUIProvider {
     ) {
     }
 
-    logError(error: Error, messagePrefix?: string | null) {
+    logError(error: Error | string, messagePrefix?: string | null) {
+        const eObj = isError(error) ? error : new Error(error);
         console.log(error);
-        this.fire.recordException(error);
+        this.fire.recordException(eObj);
         if (messagePrefix !== null) {
-            this.toastService.errorToast(error, messagePrefix);
+            this.toastService.errorToast(eObj, messagePrefix);
         }
     }
 
