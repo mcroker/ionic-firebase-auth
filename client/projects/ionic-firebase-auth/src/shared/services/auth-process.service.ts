@@ -550,16 +550,20 @@ export class AuthProcessService {
     permitNamedUserExec: boolean,
     withCredentialFn: (credential: AuthCredential, currentUser: User | null) => Promise<UserCredential>,
     withProviderFn: (FirebaseAuthProvider: FirebaseAuthProvider, currentUser: User | null) => Promise<UserCredential>,
-    onSuccessFn?: (UserCredential) => Promise<UserCredential>
+    onSuccessFn?: (userCred: UserCredential) => Promise<UserCredential>
   }): Promise<UserCredential | null> {
     const currentUser = await this.afa.currentUser;
     let userCred: UserCredential | null = null;
 
-    if (false === options.permitNamedUserExec && !!currentUser && !currentUser.isAnonymous) {
+    const isNamedUser = !!currentUser && !currentUser.isAnonymous;
+    const isAnonUser = !!currentUser && currentUser.isAnonymous;
+    const isNullUser = !currentUser;
+
+    if (false === options.permitNamedUserExec && isNamedUser) {
       throw new Error('Cannot perfom operation whilst signedIn, SignOut first');
-    } else if (false === options.permitAnonUserExec && !!currentUser && currentUser.isAnonymous) {
+    } else if (false === options.permitAnonUserExec && isAnonUser) {
       throw new Error('Cannot perfom operation whilst signedIn anonymously, SignOut first');
-    } else if (false === options.permitNullUserExec && !currentUser) {
+    } else if (false === options.permitNullUserExec && isNullUser) {
       throw new Error('Cannot perfom operation whilst not signed in.');
     }
 
@@ -567,6 +571,7 @@ export class AuthProcessService {
     if (!!this.credFactory) {
       credFactorySupportsProvider = await this.credFactory.isProviderSupported(provider);
     }
+    console.log(credFactorySupportsProvider);
     if (credFactorySupportsProvider) {
       const factoryCred = await this.credFactory.getCredential(provider);
       if (factoryCred) {

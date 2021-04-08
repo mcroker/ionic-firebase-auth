@@ -1,5 +1,5 @@
-<div fxLayout="column" fxLayoutAlign="center center" id="auth-signin-wrapper" class="authui-wrapper">
-  <div [@animateStagger]="{ value: '50' }" id="auth-signin-inner" class="authui-inner-wrapper">
+<div fxLayout="column" fxLayoutAlign="center center" id="auth_signin_wrapper" class="authui-wrapper">
+  <div [@animateStagger]="{ value: '50' }" id="auth_signin_inner" class="authui-inner-wrapper">
 
     <form [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}" [formGroup]="signInForm" name="signInForm"
           novalidate>
@@ -33,7 +33,7 @@
                   aria-label="LOG IN"
                   fxLayoutAlign="center center"
                   class="auth-submit-button"
-                  id="auth-signin-btn">
+                  id="auth_signin_btn">
         {{"auth.signIn.signInButton" | translate }}
       </ion-button>
 
@@ -58,7 +58,7 @@
       </ion-text>
       <a (click)="onCreateAccountRequested.emit()"
          [@animate]="{ value: '*', params: { x: '-100px' } }"
-         id="auth-signin-create-account-btn">
+         id="auth_signin_create_account_btn">
         {{"auth.signIn.createAccountButton" | translate}}
       </a>
     </div>

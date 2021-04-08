@@ -1,5 +1,5 @@
-<div fxLayout="column" fxLayoutAlign="center center" id="auth-register-wrapper" class="authui-wrapper">
-  <div [@animateStagger]="{ value: '50' }" id="auth-register-inner" class="authui-inner-wrapper">
+<div fxLayout="column" fxLayoutAlign="center center" id="auth_register_wrapper" class="authui-wrapper">
+  <div [@animateStagger]="{ value: '50' }" id="auth_register_inner" class="authui-inner-wrapper">
 
     <auth-register-with-email *ngIf="showEmail === 'inline'">
       (createAccountClick)="doCreateAccount($event)">
@@ -10,7 +10,7 @@
          class="provider-buttons">
 
       <div *ngIf="showEmail === 'popover'">
-        <ion-button id="auth-register-email-btn"
+        <ion-button id="auth_register_email_btn"
                     (click)="doRegisterWithEmailPopover()"
                     [@animate]="{ value: '*', params: { x: '-100px' } }"
                     color="primary"
@@ -21,7 +21,7 @@
       </div>
 
       <div *ngIf="guestEnabled$ | async">
-        <ion-button id="auth-register-anon-btn"
+        <ion-button id="auth_register_anon_btn"
                     (click)="doRegisterAnonymously()"
                     [@animate]="{ value: '*', params: { x: '-100px' } }"
                     color="primary"
@@ -48,7 +48,7 @@
 
       <a (click)="onLoginRequested.emit()"
          [@animate]="{ value: '*', params: { x: '-100px' } }"
-         id="auth-register-signin-btn">
+         id="auth_register_signin_btn">
         {{"auth.register.signInButton" | translate}}
       </a>
 

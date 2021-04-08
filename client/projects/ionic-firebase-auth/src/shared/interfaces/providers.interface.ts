@@ -18,7 +18,7 @@ export interface ICrashlyticsProvider {
 }
 
 export interface ICredentialFactoryProvider {
-    isProviderSupported(provider: AuthProvider): Promise<boolean | undefined>;
+    isProviderSupported(provider: AuthProvider): Promise<boolean>;
     getCredential(provider: AuthProvider): Promise<AuthCredential | null>;
     signOut(): Promise<void>;
 }

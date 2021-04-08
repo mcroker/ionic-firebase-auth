@@ -3,12 +3,12 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ "auth.register.pageTitle" | translate }}</ion-title>
+    <ion-title id="auth_register_page_title">{{ "auth.register.pageTitle" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="auth-page">
-  <div fxLayout="column" fxLayoutAlign="center center" id="auth-register-page-wrapper">
+  <div fxLayout="column" fxLayoutAlign="center center" id="auth_register_page_wrapper">
 
     <div *ngIf="logoUrl" class="auth-logo">
       <img [@animate]="{ value: '*', params: { x: '50px' } }" [src]="logoUrl" alt="logo">

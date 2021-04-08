@@ -8,7 +8,7 @@ import { UiService } from './ui.service';
 import { FirebaseService } from './firebase.service';
 
 class FakeCredFactory implements ICredentialFactoryProvider {
-    isProviderSupported(provider: AuthProvider): Promise<boolean> { return Promise.resolve(true) };
+    isProviderSupported(provider: AuthProvider): Promise<boolean | undefined> { return Promise.resolve(undefined) };
     getCredential(provider: AuthProvider): Promise<AuthCredential> { return Promise.resolve({} as AuthCredential); };
     signOut(): Promise<void> { return Promise.resolve(); };
 }
@@ -29,7 +29,7 @@ describe('AuthProcessService', () => {
         config = authSharedConfigFactory({ firebase: null });
         spyAuthHooks = jasmine.createSpyObj('AuthMergeUserService', ['prepareMergeSource', 'applyMergeToTarget']);
         spyCredFactory = jasmine.createSpyObj(FakeCredFactory, ['getCredential', 'isProviderSupported']);
-        spyCredFactory.isProviderSupported.and.resolveTo(false);
+        spyCredFactory.isProviderSupported.and.resolveTo(undefined);
         spyFirestoreSyncService = jasmine.createSpyObj(AuthFirestoreSyncService, ['getUserData', 'setUserData', 'updateUserData']);
         fakeAfa = AuthInternalFakeAngularFireAuth.create();
         fakeUiService = AuthInternalFakeUiService.create();
