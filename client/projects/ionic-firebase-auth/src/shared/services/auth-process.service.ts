@@ -572,7 +572,6 @@ export class AuthProcessService {
     if (!!this.credFactory) {
       credFactorySupportsProvider = await this.credFactory.isProviderSupported(provider);
     }
-    console.log(credFactorySupportsProvider);
     if (credFactorySupportsProvider) {
       const factoryCred = await this.credFactory.getCredential(provider);
       if (factoryCred) {
