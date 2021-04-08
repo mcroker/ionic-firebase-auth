@@ -40,9 +40,9 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
     return false;
   }
 
-  public async isProviderSupported(provider: AuthProvider): Promise<boolean> {
+  public async isProviderSupported(provider: AuthProvider): Promise<boolean | undefined> {
     if (Capacitor.platform === 'web') {
-      return false;
+      return undefined;
     }
     switch (provider) {
       case AuthProvider.Apple:
@@ -58,7 +58,7 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
         return Capacitor.isPluginAvailable('CapacitorFirebaseAuth');
 
       default:
-        return false;
+        return undefined;
     }
   }
 

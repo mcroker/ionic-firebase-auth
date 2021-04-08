@@ -8,7 +8,7 @@ import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 // Firebase & AngularFire
 import { firebase } from '@firebase/app';
 import 'firebase/auth';
-import { User, UserInfo, UserCredential, AuthProvider as FirebaseAuthProvider } from '@firebase/auth-types';
+import { User, UserInfo, UserCredential, AuthProvider as FirebaseAuthProvider, AuthCredential } from '@firebase/auth-types';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 // Mal
@@ -146,8 +146,9 @@ export class AuthProcessService {
    * (in which case @anguluar/fire will be used). Or the provider is supported by the injected credFactory (such as that provided by /capacitor).
    */
   async isProviderSupported(provider: AuthProvider): Promise<boolean> {
-    return (this.config.authUi.supportedProviders === AuthProvider.ALL || this.config.authUi.supportedProviders.includes(provider))
-      && (this.isWebPlatform || (this.credFactory && await this.credFactory.isProviderSupported(provider)));
+    const configSupported = (this.config.authUi.supportedProviders === AuthProvider.ALL || this.config.authUi.supportedProviders.includes(provider));
+    const credFactorySupported = (!!this.credFactory) ? await this.credFactory.isProviderSupported(provider) : false;
+    return configSupported && ((this.isWebPlatform && false !== credFactorySupported) || (true === credFactorySupported));
   }
 
   /**
@@ -287,8 +288,22 @@ export class AuthProcessService {
 
         default:
           loading.present();
-          userCred = await this.socialSignIn(provider, options);
-          break;
+          userCred = await this.socialAuth(provider, {
+            ...options,
+            permitNamedUserExec: false,
+            permitAnonUserExec: true,
+            permitNullUserExec: true,
+            withCredentialFn: async (credential, currentUser) => await this.afa.signInWithCredential(credential),
+            withProviderFn: async (fireProvider, currentUser) => await this.afa.signInWithPopup(fireProvider),
+            onSuccessFn: async (userCred: UserCredential) => {
+              if (!await this.confirmTos(userCred, options)) {
+                await this.signOut();
+                userCred = null;
+              };
+              return userCred;
+            }
+          });
+
       }
 
       // Will be null if user cancels operation
@@ -367,17 +382,15 @@ export class AuthProcessService {
           break;
 
         default:
-          if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
-            const factoryCred = await this.credFactory.getCredential(provider);
-            if (factoryCred) {
-              userCred = await currentUser.reauthenticateWithCredential(factoryCred);
-            }
-          } else if (this.isWebPlatform) {
-            userCred = await currentUser.reauthenticateWithPopup(this.getAuthProvider(provider));
-          } else {
-            throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
-          }
-          break;
+          userCred = await this.socialAuth(provider, {
+            ...options,
+            permitNamedUserExec: true,
+            permitNullUserExec: false,
+            permitAnonUserExec: false,
+            withCredentialFn: async (cred, currentUser) => await currentUser.reauthenticateWithCredential(cred),
+            withProviderFn: async (fireProvider, currentUser) => await currentUser.reauthenticateWithPopup(fireProvider)
+          });
+
       }
 
       await loading.dismiss();
@@ -410,7 +423,7 @@ export class AuthProcessService {
       let userCred: UserCredential | null = null;
       switch (provider) {
         case AuthProvider.ANONYMOUS:
-          throw new Error('Linking anonymous user makes no sense');
+          throw new Error('Linking a new anonymous user makes no sense');
 
         case AuthProvider.EmailAndPassword:
           if (!options?.credentials) {
@@ -429,16 +442,14 @@ export class AuthProcessService {
           throw new Error('Linking phone number not suported');
 
         default:
-          if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
-            const factoryCred = await this.credFactory.getCredential(provider);
-            if (factoryCred) {
-              userCred = await currentUser.linkWithCredential(factoryCred);
-            }
-          } else if (this.isWebPlatform) {
-            userCred = await currentUser.linkWithPopup(this.getAuthProvider(provider));
-          } else {
-            throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
-          }
+          userCred = await this.socialAuth(provider, {
+            ...options,
+            permitNamedUserExec: false,
+            permitNullUserExec: false,
+            permitAnonUserExec: true,
+            withCredentialFn: async (cred, currentUser) => await currentUser.linkWithCredential(cred),
+            withProviderFn: async (fireProvider, currentUser) => await currentUser.linkWithPopup(fireProvider)
+          });
       }
 
       if (userCred && userCred.user) { // Null if user cancels (or perhaps fails) sign-in
@@ -508,8 +519,15 @@ export class AuthProcessService {
 
         default:
           await loading.present();
-          userCred = await this.socialSignIn(provider, { ...options, skipTosCheck: true });
-
+          userCred = await this.socialAuth(provider, {
+            ...options,
+            skipTosCheck: true,
+            permitNamedUserExec: false,
+            permitAnonUserExec: true,
+            permitNullUserExec: true,
+            withCredentialFn: async (credential, currentUser) => await this.afa.signInWithCredential(credential),
+            withProviderFn: async (fireProvider, currentUser) => await this.afa.signInWithPopup(fireProvider)
+          });
       }
 
       loading.dismiss();
@@ -526,39 +544,48 @@ export class AuthProcessService {
 
   }
 
-  /**
-   * Authenticates the user using social provider.
-   * 
-   * @param provider social auth provider
-   * @param options 
-   * @returns user credentials || null if not signed in.
-   */
-  private async socialSignIn(provider: AuthProvider, options: ISignInOptions = {}): Promise<UserCredential | null> {
+  private async socialAuth(provider: AuthProvider, options: ISignInOptions & {
+    permitNullUserExec: boolean,
+    permitAnonUserExec: boolean,
+    permitNamedUserExec: boolean,
+    withCredentialFn: (credential: AuthCredential, currentUser: User | null) => Promise<UserCredential>,
+    withProviderFn: (FirebaseAuthProvider: FirebaseAuthProvider, currentUser: User | null) => Promise<UserCredential>,
+    onSuccessFn?: (UserCredential) => Promise<UserCredential>
+  }): Promise<UserCredential | null> {
     const currentUser = await this.afa.currentUser;
     let userCred: UserCredential | null = null;
-    if (currentUser && !currentUser.isAnonymous) {
-      throw new Error('Cannot signIn whilst already signedIn, SignOut first');
+
+    if (false === options.permitNamedUserExec && !!currentUser && !currentUser.isAnonymous) {
+      throw new Error('Cannot perfom operation whilst signedIn, SignOut first');
+    } else if (false === options.permitAnonUserExec && !!currentUser && currentUser.isAnonymous) {
+      throw new Error('Cannot perfom operation whilst signedIn anonymously, SignOut first');
+    } else if (false === options.permitNullUserExec && !currentUser) {
+      throw new Error('Cannot perfom operation whilst not signed in.');
     }
-    if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
+
+    let credFactorySupportsProvider: boolean | undefined = undefined;
+    if (!!this.credFactory) {
+      credFactorySupportsProvider = await this.credFactory.isProviderSupported(provider);
+    }
+    if (credFactorySupportsProvider) {
       const factoryCred = await this.credFactory.getCredential(provider);
       if (factoryCred) {
-        userCred = await this.afa.signInWithCredential(factoryCred);
+        userCred = await options.withCredentialFn(factoryCred, currentUser);
       }
-    } else if (this.isWebPlatform) {
-      userCred = await this.afa.signInWithPopup(this.getAuthProvider(provider));
+    } else if (false !== credFactorySupportsProvider && this.isWebPlatform) {
+      userCred = await options.withProviderFn(this.getAuthProvider(provider), currentUser);
       /*
       a: null
-  code: "auth/popup-closed-by-user"
-  message: "The popup has been closed by the user before finalizing the operation."
-  __proto__: Error
-  */
+    code: "auth/popup-closed-by-user"
+    message: "The popup has been closed by the user before finalizing the operation."
+    __proto__: Error
+    */
     } else {
-      throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
+      throw new Error('Cannot perfom operation on current device.');
     }
-    if (userCred && !await this.confirmTos(userCred, options)) {
-      await this.signOut();
-      userCred = null;
-    };
+    if (userCred && !!options.onSuccessFn) {
+      userCred = await options.onSuccessFn(userCred)
+    }
     return userCred;
   }
 
