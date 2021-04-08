@@ -40,7 +40,7 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
     return false;
   }
 
-  public async isProviderSupported(provider: AuthProvider): Promise<boolean | undefined> {
+  public async isProviderSupported(provider: AuthProvider): Promise<boolean| undefined> {
     if (Capacitor.platform === 'web') {
       return undefined;
     }

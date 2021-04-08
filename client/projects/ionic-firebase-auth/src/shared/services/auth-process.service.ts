@@ -275,11 +275,11 @@ export class AuthProcessService {
           }
           loading.present();
           userCred = await this.afa.signInWithEmailAndPassword(options.credentials.email, options.credentials.password);
+          await loading.dismiss();
           if (!await this.confirmTos(userCred, options)) {
             await this.signOut();
             userCred = null;
           };
-          await loading.dismiss();
           break;
 
         case AuthProvider.PhoneNumber:
@@ -296,6 +296,7 @@ export class AuthProcessService {
             withCredentialFn: async (credential, currentUser) => await this.afa.signInWithCredential(credential),
             withProviderFn: async (fireProvider, currentUser) => await this.afa.signInWithPopup(fireProvider),
             onSuccessFn: async (userCred: UserCredential) => {
+              await loading.dismiss();
               if (!await this.confirmTos(userCred, options)) {
                 await this.signOut();
                 userCred = null;

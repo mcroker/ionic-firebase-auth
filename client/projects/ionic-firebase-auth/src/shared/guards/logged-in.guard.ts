@@ -23,7 +23,7 @@ export class LoggedInGuard implements CanActivate, CanLoad {
       take(1),
       map((user: User | null) => {
         if (user) {
-          if (this.config.authUi.guardProtectedRoutesUntilEmailIsVerified && !user.emailVerified) {
+          if (this.config.authUi.guardProtectedRoutesUntilEmailIsVerified && !user.emailVerified && !user.isAnonymous) {
             if (this.config.authUi.authGuardVerifyEmailURL) {
               return this.router.createUrlTree(
                 [`${this.config.authUi.authGuardVerifyEmailURL}`], { queryParams: { redirectUrl } }
