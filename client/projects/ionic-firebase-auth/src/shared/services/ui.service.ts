@@ -46,4 +46,16 @@ export class UiService implements IUIProvider {
         }
     }
 
+    async fnWithLoading(fn: Function, message?: string) {
+        const loading = await this.loadingService.createLoading(message);
+        await loading.present();
+        try {
+            await fn();
+            await loading.dismiss();
+        } catch (error) {
+            await loading.dismiss();
+            throw error;
+        }
+    }
+
 }

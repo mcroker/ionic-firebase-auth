@@ -286,6 +286,7 @@ export class AuthProcessService {
           break;
 
         default:
+          loading.present();
           userCred = await this.socialSignIn(provider, options);
           break;
       }
@@ -503,22 +504,23 @@ export class AuthProcessService {
           if (this.config.authUi.enableEmailVerification) {
             await userCred.user.sendEmailVerification();
           }
-          await loading.dismiss();
           break;
 
         default:
+          await loading.present();
           userCred = await this.socialSignIn(provider, { ...options, skipTosCheck: true });
 
       }
 
+      loading.dismiss();
       if (userCred?.user) {
         this.onRegisterEmitter.emit(userCred.user);
       }
       return userCred || null;
     } catch (error) {
       // This is where I would handle merge
+      loading.dismiss();
       await this.handleError(error);
-      await loading.dismiss();
       return null;
     }
 
@@ -533,22 +535,17 @@ export class AuthProcessService {
    */
   private async socialSignIn(provider: AuthProvider, options: ISignInOptions = {}): Promise<UserCredential | null> {
     const currentUser = await this.afa.currentUser;
-    const loading = await this.ui.createLoading();
     let userCred: UserCredential | null = null;
     if (currentUser && !currentUser.isAnonymous) {
       throw new Error('Cannot signIn whilst already signedIn, SignOut first');
     }
     if (this.credFactory && await this.credFactory.isProviderSupported(provider)) {
-      loading.present();
       const factoryCred = await this.credFactory.getCredential(provider);
       if (factoryCred) {
         userCred = await this.afa.signInWithCredential(factoryCred);
       }
-      await loading.dismiss();
     } else if (this.isWebPlatform) {
-      loading.present();
       userCred = await this.afa.signInWithPopup(this.getAuthProvider(provider));
-      await loading.dismiss();
       /*
       a: null
   code: "auth/popup-closed-by-user"
@@ -558,7 +555,6 @@ export class AuthProcessService {
     } else {
       throw new Error('A CredentialFactory is required to use AuthProcessService on a non-web platform');
     }
-    await loading.dismiss();
     if (userCred && !await this.confirmTos(userCred, options)) {
       await this.signOut();
       userCred = null;

@@ -46,7 +46,11 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
     }
     switch (provider) {
       case AuthProvider.Apple:
-        return !!this.capConfg.signInWithApple || (await this.deviceSupportsNativeApple() && Capacitor.isPluginAvailable('CapacitorFirebaseAuth'));
+        if (Capacitor.platform === 'ios') {
+          return !!this.capConfg.signInWithApple || (await this.deviceSupportsNativeApple() && Capacitor.isPluginAvailable('CapacitorFirebaseAuth'));
+        } else {
+          return false;
+        }
 
       case AuthProvider.Google:
       case AuthProvider.Facebook:
