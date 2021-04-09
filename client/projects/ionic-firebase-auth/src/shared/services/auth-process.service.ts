@@ -147,7 +147,8 @@ export class AuthProcessService {
    */
   async isProviderSupported(provider: AuthProvider): Promise<boolean> {
     const configSupported = (this.config.authUi.supportedProviders === AuthProvider.ALL || this.config.authUi.supportedProviders.includes(provider));
-    const credFactorySupported = (!!this.credFactory) ? await this.credFactory.isProviderSupported(provider) : false;
+    const credFactorySupported = (!!this.credFactory) ? await this.credFactory.isProviderSupported(provider) : undefined;
+    console.log(provider, configSupported, credFactorySupported, this.isWebPlatform);
     return configSupported && ((this.isWebPlatform && false !== credFactorySupported) || (true === credFactorySupported));
   }
 
@@ -299,7 +300,7 @@ export class AuthProcessService {
               await loading.dismiss();
               if (!await this.confirmTos(userCred, options)) {
                 await this.signOut();
-                userCred = null;
+                return null;
               };
               return userCred;
             }
@@ -388,8 +389,20 @@ export class AuthProcessService {
             permitNamedUserExec: true,
             permitNullUserExec: false,
             permitAnonUserExec: false,
-            withCredentialFn: async (cred, currentUser) => await currentUser.reauthenticateWithCredential(cred),
-            withProviderFn: async (fireProvider, currentUser) => await currentUser.reauthenticateWithPopup(fireProvider)
+            withCredentialFn: async (cred, currentUser) => {
+              if (currentUser) {
+                return await currentUser.reauthenticateWithCredential(cred)
+              } else {
+                throw new Error('Calling reauthenticate when no current user');
+              }
+            },
+            withProviderFn: async (fireProvider, currentUser) => {
+              if (currentUser) {
+                return await currentUser.reauthenticateWithPopup(fireProvider);
+              } else {
+                throw new Error('Calling reauthenticate when no current user');
+              }
+            }
           });
 
       }
@@ -448,8 +461,20 @@ export class AuthProcessService {
             permitNamedUserExec: false,
             permitNullUserExec: false,
             permitAnonUserExec: true,
-            withCredentialFn: async (cred, currentUser) => await currentUser.linkWithCredential(cred),
-            withProviderFn: async (fireProvider, currentUser) => await currentUser.linkWithPopup(fireProvider)
+            withCredentialFn: async (cred, currentUser) => {
+              if (currentUser) {
+                return await currentUser.linkWithCredential(cred)
+              } else {
+                throw new Error('Trying to linkWithCrendential when no current user');
+              }
+            },
+            withProviderFn: async (fireProvider, currentUser) => {
+              if (currentUser) {
+                return await currentUser.linkWithPopup(fireProvider);
+              } else {
+                throw new Error('Trying to linkWithPopup when no current user');
+              }
+            }
           });
       }
 
@@ -551,7 +576,7 @@ export class AuthProcessService {
     permitNamedUserExec: boolean,
     withCredentialFn: (credential: AuthCredential, currentUser: User | null) => Promise<UserCredential>,
     withProviderFn: (FirebaseAuthProvider: FirebaseAuthProvider, currentUser: User | null) => Promise<UserCredential>,
-    onSuccessFn?: (userCred: UserCredential) => Promise<UserCredential>
+    onSuccessFn?: (userCred: UserCredential) => Promise<UserCredential | null>
   }): Promise<UserCredential | null> {
     const currentUser = await this.afa.currentUser;
     let userCred: UserCredential | null = null;
