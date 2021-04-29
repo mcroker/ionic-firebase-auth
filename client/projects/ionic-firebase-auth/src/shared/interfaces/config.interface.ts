@@ -52,6 +52,9 @@ export interface AuthUIConfig {
 
   // Control whether or not email verification is used
   enableEmailVerification: boolean;
+
+  // Avatar
+  avatarShowIfAnon: boolean;
 }
 
 export enum MalServiceEnabled {
@@ -136,7 +139,9 @@ export const defaultAuthFirebaseUIConfig: Omit<AuthSharedConfig, 'firebase' | 'c
     guardProtectedRoutesUntilEmailIsVerified: true,
 
     // Default to email verification on
-    enableEmailVerification: true
+    enableEmailVerification: true,
+
+    avatarShowIfAnon: true
   }
 };
 

@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Inject, Input, Output } from '@angular/core';
 import { User } from '@firebase/auth-types';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PopoverController } from '@ionic/angular';
 import { LinkMenuItem, AuthPopoverMenuComponent } from '../popover-menu';
-import { AuthProcessService, UiService, FirebaseService } from 'ionic-firebase-auth';
+import { AuthProcessService, UiService, FirebaseService, AuthSharedConfigToken, AuthSharedConfig } from 'ionic-firebase-auth';
 
 @Component({
   selector: 'auth-avatar',
@@ -14,25 +14,24 @@ import { AuthProcessService, UiService, FirebaseService } from 'ionic-firebase-a
 export class AuthAvatarComponent {
 
   @Input()
-  layout: 'default' | 'simple' = 'default';
-
-  @Input()
-  canLogout = true;
+  canLogout = this.config.authUi.allowAccountLogout;
 
   @Input()
   links: LinkMenuItem[] = [];
 
   @Input()
-  canViewAccount = true;
+  canViewAccount = this.config.authUi.allowAccountEdit;
 
+  /*
   @Input()
   canDeleteAccount = true;
 
   @Input()
   canEditAccount = true;
+  */
 
   @Input()
-  showIfAnon = false;
+  showIfAnon = this.config.authUi.avatarShowIfAnon;
 
   @Output()
   showProfileDialog: EventEmitter<any> = new EventEmitter<any>();
@@ -62,7 +61,8 @@ export class AuthAvatarComponent {
     public aps: AuthProcessService,
     private popoverController: PopoverController,
     private ui: UiService,
-    private fire: FirebaseService
+    private fire: FirebaseService,
+    @Inject(forwardRef(() => AuthSharedConfigToken)) public config: AuthSharedConfig,
   ) {
   }
 
