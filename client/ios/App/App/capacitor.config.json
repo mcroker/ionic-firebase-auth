@@ -1,31 +1,31 @@
 {
-  "appId": "ltd.croker.ngxFirebase",
-  "appName": "ngxFirebase",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
-    },
-    "CapacitorFirebaseAuth": {
-      "providers": [
-        "google.com",
-        "twitter.com",
-        "facebook.com",
-        "apple.com",
-        "phone"
-      ],
-      "languageCode": "en",
-      "nativeAuth": false,
-      "permissions": {
-        "google": [
-          "profile"
-        ]
-      }
-    }
-  },
-  "Server": {
-    "iosScheme": "**iosScheme**"
-  }
+	"appId": "ltd.croker.ngxFirebase",
+	"appName": "ngxFirebase",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "www",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		},
+		"CapacitorFirebaseAuth": {
+			"providers": [
+				"google.com",
+				"twitter.com",
+				"facebook.com",
+				"apple.com",
+				"phone"
+			],
+			"languageCode": "en",
+			"nativeAuth": false,
+			"permissions": {
+				"google": [
+					"profile"
+				]
+			}
+		}
+	},
+	"Server": {
+		"iosScheme": "**iosScheme**"
+	}
 }

@@ -1,4 +1,4 @@
-platform :ios, '11.0'
+platform :ios, '12.1'
 use_frameworks!
 
 # workaround to avoid Xcode caching of Pods that requires
@@ -7,7 +7,6 @@ use_frameworks!
 install! 'cocoapods', :disable_input_output_paths => true
 
 def capacitor_pods
-  # Automatic Capacitor Pod dependencies, do not delete
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCommunityFirebaseAnalytics', :path => '../../node_modules/@capacitor-community/firebase-analytics'
@@ -16,7 +15,6 @@ def capacitor_pods
   pod 'TurnouttCapacitorFirebaseDynamicLinks', :path => '../../node_modules/@turnoutt/capacitor-firebase-dynamic-links'
   pod 'CapacitorFirebaseAuth', :path => '../../node_modules/capacitor-firebase-auth'
   pod 'CordovaPlugins', :path => '../capacitor-cordova-ios-plugins'
-  # Do not delete
 end
 
 target 'App' do

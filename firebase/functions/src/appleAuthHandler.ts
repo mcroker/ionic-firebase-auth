@@ -37,7 +37,8 @@ export function httpsAppleAuthHandler(req: functions.https.Request, res: functio
         const codeParam = !req.body.error && req.body.code ? `code=${req.body.code}` : undefined;
         const tokenParam = !req.body.error && req.body.id_token ? `id_token=${req.body.id_token}` : undefined;
         const schemeString = CUSTOM_SCHEME ? `&ius=${CUSTOM_SCHEME}` : '';
-        const params = [stateParam, errorParam, codeParam, tokenParam].filter(item => !!item).join('&');
+        const efiParam = 'efi=1';
+        const params = [stateParam, errorParam, codeParam, tokenParam, efiParam].filter(item => !!item).join('&');
         const redirectUrl = params
             ? `${DYNAMIC_LINK_URL}/?link=${encodeURIComponent(`${DEEP_LINK_URL}/?${params}`)}&ibi=${BUNDLE_ID}${schemeString}`
             : `${DYNAMIC_LINK_URL}/?link=${encodeURIComponent(`${DEEP_LINK_URL}`)}&ibi=${BUNDLE_ID}${schemeString}`;

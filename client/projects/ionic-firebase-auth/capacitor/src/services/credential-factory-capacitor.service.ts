@@ -6,13 +6,14 @@ if (!firebase.auth) {
   throw new Error('firebase.auth is undefined');
 }
 import { GoogleSignInResult, FacebookSignInResult, TwitterSignInResult, AppleSignInResult } from 'capacitor-firebase-auth';
-import { Plugins, Capacitor, Device, PluginListenerHandle, WebPluginRegistry } from '@capacitor/core';
+import { Plugins, Capacitor, PluginListenerHandle} from '@capacitor/core';
+import { Device } from '@capacitor/device';
+// import { WebPluginRegistry } from '@capacitor/device';
 import { AuthProvider, ICredentialFactoryProvider, FirebaseService, AuthSharedConfig, AuthSharedConfigToken } from 'ionic-firebase-auth';
 import { AuthCapacitorConfig, AuthCapacitorConfigToken } from '../interfaces';
 import { v4 as uuid } from 'uuid';
 import { sha256 } from 'js-sha256';
 
-WebPluginRegistry
 
 const { Browser, CapacitorFirebaseDynamicLinks, CapacitorFirebaseAuth } = Plugins;
 const fireAuth = firebase.auth;
@@ -40,7 +41,7 @@ export class AuthCredentialFactoryCapacitorService implements ICredentialFactory
     return false;
   }
 
-  public async isProviderSupported(provider: AuthProvider): Promise<boolean| undefined> {
+  public async isProviderSupported(provider: AuthProvider): Promise<boolean | undefined> {
     if (Capacitor.platform === 'web') {
       return undefined;
     }

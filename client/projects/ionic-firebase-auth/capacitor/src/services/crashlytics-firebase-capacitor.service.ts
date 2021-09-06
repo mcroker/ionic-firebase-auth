@@ -1,5 +1,5 @@
 import { Plugins, Capacitor } from '@capacitor/core';
-import { iOSException, AndroidException } from '@capacitor-community/firebase-crashlytics';
+import { RecordExceptionOptions } from '@capacitor-community/firebase-crashlytics';
 import { Injectable } from '@angular/core';
 import { ICrashlyticsProvider } from 'ionic-firebase-auth';
 const { FirebaseCrashlytics } = Plugins;
@@ -17,7 +17,7 @@ export class CrashlyticsFirebaseCapacitorService implements ICrashlyticsProvider
         }
     }
 
-    async recordException(options: iOSException | AndroidException) {
+    async recordException(options: RecordExceptionOptions) {
         if (Capacitor.isPluginAvailable('FirebaseCrashlytics')) {
             await FirebaseCrashlytics.recordException(options);
         } else {

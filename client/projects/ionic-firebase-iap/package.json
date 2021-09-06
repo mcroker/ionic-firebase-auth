@@ -7,9 +7,9 @@
     "@ngx-translate/core": "^13.0.0",
     "@ionic-native/core": "^5.30.0",
     "@ionic-native/in-app-purchase-2": "^5.30.0",
-    "@capacitor/core": "2.4.2",
-    "@capacitor/ios": "^2.4.3",
-    "capacitor-firebase-auth": "file:../../../capacitor-firebase-auth-2.3.2-firebase8.tgz",
+    "@capacitor/ios": "^3.2.2",
+    "@capacitor/android": "^3.2.2",
+    "capacitor-firebase-auth": "^3.0.0",
     "zone.js": "^0.11.3",
     "rxjs": "~6.5.4"
   },

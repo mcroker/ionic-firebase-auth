@@ -3,7 +3,8 @@ import { Component } from '@angular/core';
 import { NavController, Platform } from '@ionic/angular';
 
 // Capacitor
-import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+import { Plugins, Capacitor } from '@capacitor/core';
+import { StatusBarStyle } from '@capacitor/status-bar'
 const { CapacitorFirebaseDynamicLinks } = Plugins;
 
 // Mal
